@@ -1,0 +1,128 @@
+{
+  "filter": {
+    "and": [
+      {
+        "field": "type",
+        "operator": "eq",
+        "value": "swarm-vm"
+      }
+    ]
+  },
+  "views": [
+    {
+      "id": "board-by-status",
+      "name": "VM Pipeline",
+      "type": "board",
+      "groupBy": {
+        "field": "vm_status"
+      },
+      "fields": [
+        {
+          "field": "hostname",
+          "visible": true
+        },
+        {
+          "field": "vmid",
+          "visible": true
+        },
+        {
+          "field": "ip_primary",
+          "visible": true
+        },
+        {
+          "field": "vlan_primary",
+          "visible": true
+        },
+        {
+          "field": "vlan_secondary",
+          "visible": true
+        },
+        {
+          "field": "swarm_role",
+          "visible": true
+        },
+        {
+          "field": "swarm_joined",
+          "visible": true
+        },
+        {
+          "field": "post_boot_run",
+          "visible": true
+        },
+        {
+          "field": "last_updated",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "table-all",
+      "name": "All VMs",
+      "type": "table",
+      "fields": [
+        {
+          "field": "file",
+          "visible": true
+        },
+        {
+          "field": "vmid",
+          "visible": true
+        },
+        {
+          "field": "hostname",
+          "visible": true
+        },
+        {
+          "field": "vm_status",
+          "visible": true
+        },
+        {
+          "field": "ip_primary",
+          "visible": true
+        },
+        {
+          "field": "vlan_primary",
+          "visible": true
+        },
+        {
+          "field": "vlan_secondary",
+          "visible": true
+        },
+        {
+          "field": "swarm_role",
+          "visible": true
+        },
+        {
+          "field": "swarm_joined",
+          "visible": true
+        },
+        {
+          "field": "post_boot_run",
+          "visible": true
+        },
+        {
+          "field": "vcpu",
+          "visible": true
+        },
+        {
+          "field": "ram_gb",
+          "visible": true
+        },
+        {
+          "field": "disk_gb",
+          "visible": true
+        },
+        {
+          "field": "last_updated",
+          "visible": true
+        }
+      ],
+      "sortBy": [
+        {
+          "field": "vmid",
+          "direction": "asc"
+        }
+      ]
+    }
+  ]
+}

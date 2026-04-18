@@ -1,0 +1,27 @@
+filter:
+  and:
+    - field: type
+      operator: eq
+      value: swarm-service
+    - field: external_access
+      operator: eq
+      value: true
+views:
+  - type: table
+    name: External Services
+    id: table-external
+    fields:
+      - field: file
+        visible: true
+      - field: service_name
+        visible: true
+      - field: service_status
+        visible: true
+      - field: vm
+        visible: true
+      - field: port
+        visible: true
+      - field: traefik_entrypoint
+        visible: true
+      - field: url_internal
+        visible: true

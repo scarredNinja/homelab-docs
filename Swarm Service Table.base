@@ -1,0 +1,144 @@
+{
+  "filter": {
+    "and": [
+      {
+        "field": "type",
+        "operator": "eq",
+        "value": "swarm-service"
+      }
+    ]
+  },
+  "views": [
+    {
+      "id": "table-all",
+      "name": "All Services",
+      "type": "table",
+      "fields": [
+        {
+          "field": "file",
+          "visible": true
+        },
+        {
+          "field": "service_name",
+          "visible": true
+        },
+        {
+          "field": "service_status",
+          "visible": true
+        },
+        {
+          "field": "vm",
+          "visible": true
+        },
+        {
+          "field": "vlan",
+          "visible": true
+        },
+        {
+          "field": "port",
+          "visible": true
+        },
+        {
+          "field": "external_access",
+          "visible": true
+        },
+        {
+          "field": "traefik_entrypoint",
+          "visible": true
+        },
+        {
+          "field": "zfs_dataset",
+          "visible": true
+        },
+        {
+          "field": "url_internal",
+          "visible": true
+        },
+        {
+          "field": "last_updated",
+          "visible": true
+        }
+      ],
+      "sortBy": [
+        {
+          "field": "vm",
+          "direction": "asc"
+        },
+        {
+          "field": "service_name",
+          "direction": "asc"
+        }
+      ]
+    },
+    {
+      "id": "board-by-status",
+      "name": "By Status",
+      "type": "board",
+      "groupBy": {
+        "field": "service_status"
+      },
+      "fields": [
+        {
+          "field": "service_name",
+          "visible": true
+        },
+        {
+          "field": "vm",
+          "visible": true
+        },
+        {
+          "field": "port",
+          "visible": true
+        },
+        {
+          "field": "external_access",
+          "visible": true
+        },
+        {
+          "field": "last_updated",
+          "visible": true
+        }
+      ]
+    },
+    {
+      "id": "table-by-vm",
+      "name": "By VM",
+      "type": "table",
+      "groupBy": {
+        "field": "vm"
+      },
+      "fields": [
+        {
+          "field": "file",
+          "visible": true
+        },
+        {
+          "field": "service_status",
+          "visible": true
+        },
+        {
+          "field": "port",
+          "visible": true
+        },
+        {
+          "field": "external_access",
+          "visible": true
+        },
+        {
+          "field": "zfs_dataset",
+          "visible": true
+        }
+      ],
+      "sortBy": [
+        {
+          "field": "vm",
+          "direction": "asc"
+        },
+        {
+          "field": "service_name",
+          "direction": "asc"
+        }
+      ]
+    }
+  ]
+}
