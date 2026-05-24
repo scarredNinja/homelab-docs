@@ -56,6 +56,42 @@ Measured on both worker nodes between **19:40 and 23:55** on May 19, during the 
 
 ---
 
+## ⚡ Live Post-Deployment Verification Results (2026-05-24)
+
+Following the successful automated deployment of the NFS benchmark scripts, we executed the initial validation suite on both guest nodes under low baseline load. These results represent the **peak performance potential** of the Synology NAS storage over the 1Gbps physical network link:
+
+### 1. Read-Only Media Guest (`worker-media-01`)
+Since these mounts are read-only, write tests were skipped for safety. 
+
+* **`/mnt/media/TVShows` Mount**:
+  * Sequential Read (dd): **`97.7 MB/s`**
+* **`/mnt/media/Animation` Mount**:
+  * Sequential Read (dd): **`69.5 MB/s`**
+* **`/mnt/media/Movies` Mount**:
+  * Sequential Read (dd): **`62.1 MB/s`**
+
+### 2. Read-Write Media Management Guest (`worker-mediamanagement-01`)
+This node performs full benchmarks, including sequential writes, sequential reads, and intensive random I/O testing using `fio`.
+
+* **`/mnt/media/TVShows` Mount**:
+  * Sequential Write (dd): **`113.0 MB/s`** *(Fully saturating the 1Gbps physical network bandwidth limit)*
+  * Sequential Read (dd): **`54.8 MB/s`**
+  * Sequential Read (fio): **`72.4 MB/s`**
+  * Random Read IOPS (fio): **`164.3 IOPS`**
+  * Random Read Latency (fio): **`769.07 ms`** *(This massive latency spike at baseline highlights standard spinning-disk random seek congestion)*
+* **`/mnt/media/Animation` Mount**:
+  * Sequential Write (dd): **`108.0 MB/s`**
+  * Sequential Read (dd): **`93.2 MB/s`** (fio Sequential: **`103.6 MB/s`**)
+  * Random Read IOPS (fio): **`376.0 IOPS`**
+  * Random Read Latency (fio): **`337.89 ms`**
+* **`/mnt/media/Movies` Mount**:
+  * Sequential Write (dd): **`110.0 MB/s`**
+  * Sequential Read (dd): **`103.0 MB/s`** (fio Sequential: **`100.5 MB/s`**)
+  * Random Read IOPS (fio): **`4,727.5 IOPS`** *(Indicates highly efficient Synology RAM/SSD cache hits)*
+  * Random Read Latency (fio): **`27.05 ms`**
+
+---
+
 ## 🔍 Critical Gotcha Analysis & Root Cause
 
 ```mermaid
