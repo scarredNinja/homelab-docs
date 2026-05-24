@@ -13,26 +13,26 @@ phase: "Phase 8: Basic Monitoring"
 
 ## Infrastructure
 
-|Component|VM|VLAN|Status|
-|---|---|---|---|
-|`worker-monitoring-01`|Dedicated monitoring VM|60 (Infrastructure)|Pending provisioning|
-|Prometheus|Swarm service on `worker-monitoring-01`|60|Pending|
-|Grafana|Swarm service on `worker-monitoring-01`|60|Pending|
-|Loki|Swarm service on `worker-monitoring-01`|60|Pending|
-|node-exporter|Global — all Swarm nodes|All|Pending|
-|cAdvisor|Global — all Swarm nodes|All|Pending|
-|Promtail|Global — all Swarm nodes|All|Pending|
+| Component              | VM                                      | VLAN                | Status                    |
+| ---------------------- | --------------------------------------- | ------------------- | ------------------------- |
+| `worker-monitoring-01` | Dedicated monitoring VM                 | 60 (Infrastructure) | ✅ Deployed 2026-04-30    |
+| Prometheus             | Swarm service on `worker-monitoring-01` | 60                  | ✅ Deployed 2026-04-30    |
+| Grafana                | Swarm service on `worker-monitoring-01` | 60                  | ✅ Deployed 2026-04-30    |
+| Loki                   | Swarm service on `worker-monitoring-01` | 60                  | ✅ Deployed 2026-04-30    |
+| node-exporter          | Global — all Swarm nodes                | All                 | ✅ Deployed 2026-04-30    |
+| cAdvisor               | Global — all Swarm nodes                | All                 | ✅ Deployed 2026-04-30    |
+| Promtail               | Global — all Swarm nodes                | All                 | ✅ Deployed 2026-04-30    |
 
 **Stack file:** `proxmox-swarm/stacks/monitoring/stack-monitoring.yml` **Config path:** `/mnt/docker-data/prometheus/prometheus.yml` **TSDB path:** `/mnt/docker-tsdb/prometheus`
 
 
 ## Prerequisites (from Phase 1.5)
 
-- [ ] `worker-monitoring-01` provisioned and joined Swarm with `zone=monitoring` label
-- [ ] Core monitoring stack deployed and stable
-- [ ] Grafana accessible at `https://grafana.home.purvishome.com`
-- [ ] Prometheus accessible at `https://prometheus.home.purvishome.com`
-- [ ] All current Swarm nodes appearing in Prometheus targets as UP
+- [x] `worker-monitoring-01` provisioned and joined Swarm with `zone=monitoring` label ✅ 2026-04-30
+- [x] Core monitoring stack deployed and stable ✅ 2026-04-30
+- [x] Grafana accessible at `https://grafana.home.purvishome.com` ✅ 2026-04-30
+- [x] Prometheus accessible at `https://prometheus.home.purvishome.com` ✅ 2026-04-30
+- [x] All current Swarm nodes appearing in Prometheus targets as UP ✅ 2026-04-30
 
 ---
 
@@ -58,29 +58,63 @@ Add scrape job to `prometheus.yml`:
         replacement: pve-exporter:9221
 ```
 
-- [ ] Proxmox API user `prometheus@pve` created with read-only permissions
-- [ ] `pve-exporter` added to monitoring stack
-- [ ] Proxmox metrics appearing in Prometheus
-- [ ] Grafana dashboard imported: ID `10347`
+- [x] Proxmox API user `prometheus@pve` created with read-only permissions ✅ 2026-04-30
+- [x] `pve-exporter` added to monitoring stack ✅ 2026-04-30
+- [x] Proxmox metrics appearing in Prometheus ✅ 2026-04-30
+- [x] Grafana dashboard imported: ID `10347` ✅ 2026-04-30
 
 ---
 
 ### pfSense Metrics
 
-- [ ] pfSense node_exporter package installed (pfSense UI → System → Package Manager)
-- [ ] Scrape job added to `prometheus.yml` targeting pfSense IP
-- [ ] pfSense metrics appearing in Prometheus
+- [x] pfSense node_exporter package installed (pfSense UI → System → Package Manager) [priority:: 3] ✅ 2026-05-20
+- [x] Scrape job added to `prometheus.yml` targeting pfSense IP [priority:: 3] ✅ 2026-05-20
+- [x] pfSense metrics appearing in Prometheus [priority:: 3] ✅ 2026-05-20
 
 ---
 
 ### Alertmanager
 
-- [ ] Alertmanager added to monitoring stack
-- [ ] `alerting` block added to `prometheus.yml`
-- [ ] Alert rules file created at `/mnt/docker-data/prometheus/alerts/`
-- [ ] Discord webhook configured
-- [ ] Basic alerts: node down, disk > 80%, service restart loop
-- [ ] Test alert fired and received
+- [x] Alertmanager added to monitoring stack ✅ 2026-05-20 — PR #48; prom/alertmanager:v0.27.0, pinned to zone=monitoring, UI at `alertmanager.home.purvishome.com`
+- [x] `alerting` block added to `prometheus.yml` ✅ 2026-05-20 — pointing to `tasks.monitoring_alertmanager:9093`
+- [x] Alert rules file created ✅ 2026-05-20 — `config/monitoring/alert-rules.yml`; 7 rules deployed
+- [x] Discord webhook configured in Alertmanager ✅ 2026-05-20 — URL stored at `/etc/alertmanager/discord-webhook` on Proxmox host; injected by copy-swarm-config.sh
+- [x] Test alert fired and received in Discord ✅ 2026-05-20
+
+#### Hardware Alert Rules (target thresholds)
+
+| Alert | Metric | Threshold | Severity |
+|---|---|---|---|
+| Node down | `up == 0` | any node offline > 1m | critical |
+| CPU high | `node_cpu_seconds_total` | > 85% sustained 5m | warning |
+| Memory high | `node_memory_MemAvailable_bytes` | < 10% free sustained 5m | warning |
+| Disk high | `node_filesystem_avail_bytes` | < 15% free on any mount | warning |
+| Disk critical | `node_filesystem_avail_bytes` | < 5% free on any mount | critical |
+| ZFS pool degraded | `node_zfs_pool_state != 0` | any state other than ONLINE | critical |
+| Service restart loop | `rate(container_last_seen[5m])` | container restarting repeatedly | warning |
+| High load average | `node_load15` | > (num_cores × 0.8) for 15m | warning |
+| Swap in use | `node_memory_SwapFree_bytes` | < 50% swap free | warning |
+| Proxmox host down | `up{job="proxmox-node"}` | host unreachable > 1m | critical |
+
+- [x] Add hardware alert rules file `config/monitoring/alerts/hardware.yml` [priority:: 2] ✅ 2026-05-22 — Deployed modular alert files on `feature/modular-alerting-rules`
+- [x] Add ZFS pool health alert rules `config/monitoring/alerts/zfs.yml` [priority:: 2] ✅ 2026-05-22 — Deployed modular alert files on `feature/modular-alerting-rules`
+- [x] Add Swarm service alert rules (node down, service replica count) `config/monitoring/alerts/swarm.yml` [priority:: 2] ✅ 2026-05-22 — Deployed modular alert files on `feature/modular-alerting-rules`
+
+---
+
+### Next Session Tasks
+
+#### PR #48 Cleanup
+- [x] Merge PR #48 (feat(monitoring): Alertmanager + Discord webhook alerting) to main ✅ 2026-05-20
+- [x] Add DNS A record: `alertmanager.home.purvishome.com` → Traefik/DMZ IP (same as `prometheus.home.purvishome.com`) [priority:: 2] ✅ 2026-05-20
+
+#### Phase 2 — Inter-VLAN SSH + Automated Script Deploy
+- [x] Add pfSense firewall rule: VLAN60 (10.0.60.0/25) → VLAN50 (10.0.50.0/24) TCP/22 ✅ 2026-05-20
+- [x] Test SSH from manager-01: `ssh docker@worker-media-01` [priority:: 1] ✅ 2026-05-22 — verified from both manager-01 and pve directly
+- [x] Test remote deploy: `bash /mnt/docker-swarm/scripts/deploy-worker-scripts.sh --remote worker-media-01 --no-run` [priority:: 1] ✅ 2026-05-22 — working from pve; dual IdentityFile fallback added; both workers deployed successfully
+
+#### Homepage Dashboard
+- [ ] Homepage dashboard — verify Traefik routing to dashboard.home.purvishome.com; container starts healthy (Next.js Ready in ~4s) but URL not resolving — check DNS entry and Traefik router logs
 
 ---
 
@@ -88,36 +122,49 @@ Add scrape job to `prometheus.yml`:
 
 |Service|Exporter|Status|
 |---|---|---|
-|Sonarr|`exportarr`|After Phase 3|
-|Radarr|`exportarr`|After Phase 3|
-|Home Assistant|Built-in Prometheus integration|After Phase 3|
-|UniFi|`unifi-poller`|After Phase 3|
-|Traefik|Built-in metrics (already scraping)|Done in Phase 1.5|
+|Sonarr|`exportarr`|✅ Active|
+|Radarr|`exportarr`|✅ Active|
+|Home Assistant|Built-in Prometheus integration|Pending|
+|UniFi|`unifi-poller`|✅ Deployed 2026-04-29 — PR #14|
+|Traefik|Built-in metrics — `metrics` entrypoint `:8080` + `prometheus` block|✅ PR #24 2026-05-08 — Prometheus was scraping but metrics endpoint was missing|
 
-- [ ] `exportarr` deployed for Sonarr and Radarr
-- [ ] Home Assistant Prometheus integration enabled
-- [ ] `unifi-poller` deployed
+- [x] `exportarr` deployed for Sonarr and Radarr [priority:: 3] ✅ 2026-05-20 — PR #39 & PR #49; sonarr-exporter port 9707, radarr-exporter port 9708; API keys migrated to prefix-free `API_KEY_FILE` secrets (newline-free `_v2` secrets created via `printf`), scrape target IPs corrected from `.50.30` to `10.0.50.51`, and verified as fully active/UP.
+- [ ] Home Assistant Prometheus integration enabled [priority:: 3]
+- [x] `unifi-poller` deployed ✅ 2026-04-29 — PR #14; scrape target at `tasks.controller_unpoller:9130`
 
 ---
 
 ### Uptime Kuma
 
-- [ ] Uptime Kuma added to monitoring stack, accessible at `https://uptime.home.purvishome.com`
-- [ ] Monitors configured: Traefik, Portainer, Grafana, Plex, Home Assistant, pfSense
+> [!note] Stack deployed and routing confirmed ✅ 2026-05-21. PR #49 fixed hostname (`uptime-kuma.home.purvishome.com`), added `traefik.swarm.network=traefik-public`, and `internal-only@file` middleware.
+
+- [x] Uptime Kuma deployed via Portainer ✅ 2026-05-08 — `https://uptime-kuma.home.purvishome.com`
+- [x] Homepage dashboard — deployed ✅ 2026-05-22 — PR #23 merged; container healthy at localhost:3000; hostname `dashboard.home.purvishome.com`; monitoring network bug fixed; Portainer redeploy pending [priority:: 2]
+- [x] Fix Prometheus + Grafana monitors — use internal Swarm DNS (`http://monitoring_prometheus:9090`, `http://monitoring_grafana:3000`) ✅ 2026-05-08
+- [x] Fix Transmission monitor — added `arr_arr_default` network to uptime-kuma stack, monitor via `http://gluetun:9091` ✅ 2026-05-08 PR `claude/exciting-brahmagupta-e8f897`
+- [x] Fix InfluxDB 502 Bad Gateway — InfluxDB was missing from `traefik-public` network ✅ 2026-05-08 (same PR)
+- [x] Merge PR `claude/exciting-brahmagupta-e8f897` and redeploy uptime-kuma stack [priority:: 1] ✅ 2026-05-16
+- [x] Add arr service monitors (Sonarr, Radarr, Prowlarr) ✅ 2026-05-08
+- [x] Investigate Tautulli — service appears down independently of Uptime Kuma [priority:: 2] ✅ 2026-05-16
+- [x] Add remaining monitors: pfSense (`https://10.0.60.1`), Home Assistant (`http://10.0.60.42:8123`) ✅ 2026-05-08
 
 ---
 
 ### Dashboard Build-out
 
-|Dashboard|Grafana ID|When|
+|Dashboard|Grafana ID|Status|
 |---|---|---|
-|Node Exporter Full|1860|Phase 1.5|
-|Docker cAdvisor|193|Phase 1.5|
-|Docker Swarm|13639|Phase 1.5|
-|Traefik v2/v3|15489|Phase 1.5|
-|Proxmox|10347|After pve-exporter|
-|Loki + Promtail logs|15141|After Loki stable|
-|Custom homelab overview|—|After all sources connected|
+|Node Exporter Full|1860|✅ Phase 1.5|
+|Docker cAdvisor|193|✅ Phase 1.5|
+|Docker Swarm|13639|✅ Phase 1.5|
+|Traefik v2/v3|15489|✅ Phase 1.5|
+|Proxmox|10347|✅ 2026-04-30 (pve-exporter)|
+|UniFi UAP|11311|✅ 2026-05-07 (imported)|
+|UniFi Clients|11315|✅ 2026-05-07 (imported)|
+|UniFi Switches|11312|✅ 2026-05-07 (imported)|
+|Backup Status|custom|✅ 2026-05-07 — PR #18; `backup-status.json`|
+|Loki + Promtail logs|15141|Pending — Loki data source connected, dashboard import not yet done|
+|Custom homelab overview|—|Pending — after all sources connected|
 
 ---
 
