@@ -24,6 +24,7 @@ Deployment reference for running the Finance App locally via Docker Compose. The
 |---|---|---|---|
 |`app`|Built from `Dockerfile`|`3000:3000`|Next.js app + Prisma|
 |`db`|`postgres:16-alpine`|`5432:5432`|PostgreSQL database|
+|`cron`|`alpine:3.19`|—|Hourly Akahu sync _(Phase 2)_|
 
 ---
 
@@ -63,9 +64,39 @@ services:
       # Phase 2 — add when setting up Akahu
       # AKAHU_USER_TOKEN: your_user_token_here
       # AKAHU_APP_TOKEN: your_app_token_here
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3000/api/akahu/test > /dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
     depends_on:
       db:
         condition: service_healthy
+
+  # Phase 2 — Akahu scheduled sync
+  # Uncomment when Phase 2 Akahu integration is active
+  #
+  # cron:
+  #   image: alpine:3.19
+  #   restart: unless-stopped
+  #   depends_on:
+  #     app:
+  #       condition: service_healthy
+  #   environment:
+  #     CRON_SECRET: your_long_random_secret_here
+  #   command: >
+  #     sh -c "
+  #       echo 'Cron service started';
+  #       while true; do
+  #         echo \"[$(date -u)] Running Akahu sync...\";
+  #         wget -qO-
+  #           --header=\"X-Cron-Secret: $$CRON_SECRET\"
+  #           http://app:3000/api/akahu/cron/sync
+  #           || echo '[cron] Sync failed';
+  #         sleep 3600;
+  #       done
+  #     "
 
 volumes:
   postgres_data:
@@ -144,6 +175,7 @@ Three issues were hit and fixed during the initial deployment:
 |---|---|---|
 |`AKAHU_USER_TOKEN`|`my.akahu.nz/apps` → Developers page|Your personal user access token|
 |`AKAHU_APP_TOKEN`|`my.akahu.nz/apps` → Developers page|Your personal app ID token|
+|`CRON_SECRET`|Generate with `openssl rand -hex 32`|Shared secret for cron → app auth; set in both app and cron environment blocks|
 
 Add these to the `app.environment` block in `docker-compose.yml`. Never commit them to source control.
 
@@ -159,6 +191,23 @@ DATABASE_URL="postgresql://finance:finance@localhost:5432/financedb"
 ```
 
 `.env` is gitignored. An `.env.example` with placeholder values should be committed.
+
+---
+
+## Cron service details _(Phase 2)_
+
+The `cron` service uses an Alpine Linux container running a `while true` shell loop, calling `GET /api/akahu/cron/sync` every hour.
+
+**Why Alpine + wget?** Zero extra dependencies, simple to read, easy to adjust interval (`sleep 3600`), logs appear in `docker compose logs -f cron`.
+
+**Security:** Authenticated via `X-Cron-Secret` header. The route returns 401 if the header is missing or incorrect.
+
+**Adjusting frequency:** Change `sleep 3600` to any number of seconds. Syncing more often than hourly won't yield fresher data — Akahu's personal app refresh schedule is daily unless you explicitly call `POST /refresh`.
+
+**Viewing logs:**
+```bash
+docker compose logs -f cron
+```
 
 ---
 
@@ -205,6 +254,7 @@ The `CMD` in the Dockerfile runs `prisma migrate deploy` on every container star
 ```bash
 docker compose logs -f app       # App logs only
 docker compose logs -f db        # Postgres logs only
+docker compose logs -f cron      # Cron sync logs (Phase 2)
 docker compose logs -f           # All services
 ```
 

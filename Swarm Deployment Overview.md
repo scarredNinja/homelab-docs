@@ -1,14 +1,13 @@
 ---
-
-project_id: Homelab-2025 
-phase: "Phase 5: Docker Swarm" 
+type: reference
+project_id: Homelab-2025
+phase: "Phase 5: Docker Swarm"
 tags:
-
-- DockerSwarm
-- Proxmox
-- Tracking
-- Overview updated: 2026-03-31
-
+  - DockerSwarm
+  - Proxmox
+  - Tracking
+  - Overview
+last_updated: 2026-04-26
 ---
 
 # 🖥️ Swarm Deployment Overview
@@ -62,53 +61,71 @@ graph TD
 
 ## 📋 VM Status
 
-|VM|VMID|Primary VLAN|Secondary VLAN|vCPU|RAM|Status|Swarm Role|Node Label|
-|---|---|---|---|---|---|---|---|---|
-|`manager-01`|200|60|—|2|4GB|🟢 Running|Manager|`node.role=manager`|
-|`traefik-dmz-01`|201|80|60|2|1GB|🟢 Running|Worker|`zone=public`|
-|`worker-media-01`|202|50|—|4|8GB|⚪ Not provisioned|Worker|`type=media`|
-|`worker-controller-01`|203|60|20|2|4GB|⚪ Not provisioned|Worker|`zone=controller`|
-|`worker-general-01`|204|40|—|2|4GB|⚪ Not provisioned|Worker|`zone=homelab`|
+```dataviewjs
+const pages = dv.pages('"10 - Projects"')
+  .where(p => p.type === "swarm-vm")
+  .sort(p => p.vmid ?? 999, "asc");
 
-**Status key:** 🟢 Running · 🟡 Provisioned / Post-boot pending · 🔴 Error · ⚪ Not provisioned · 🔵 In progress
+const statusIcon = s => ({
+  "not-created": "⬜",
+  "provisioned": "🟡",
+  "post-boot-complete": "🟠",
+  "running": "🟢",
+}[s] ?? "❓");
+
+dv.table(
+  ["VM", "VMID", "VLAN(s)", "IP", "vCPU", "RAM", "Status", "Role", "Post-Boot", "Joined"],
+  pages.map(p => [
+    p.file.link,
+    p.vmid ?? "—",
+    [p.vlan_primary, p.vlan_secondary].filter(Boolean).join(" + "),
+    p.ip_primary ?? "—",
+    p.vcpu ?? "—",
+    p.ram_gb ? p.ram_gb + "GB" : "—",
+    statusIcon(p.vm_status) + " " + (p.vm_status ?? "—"),
+    p.swarm_role ?? "—",
+    p.post_boot_run ? "✅" : "🔲",
+    p.swarm_joined ? "✅" : "🔲",
+  ])
+);
+```
+
+**Status key:** ⬜ Not created · 🟡 Provisioned · 🟠 Post-boot complete · 🟢 Running · ❓ Unknown
 
 ---
 
 ## 🐳 Service Deployment Status
 
-### Infrastructure Services
+```dataviewjs
+const pages = dv.pages('"10 - Projects"')
+  .where(p => p.type === "swarm-service")
+  .sort(p => p.service_name, "asc");
 
-|Service|Stack|Target VM|Status|Notes|
-|---|---|---|---|---|
-|Portainer (server)|`portainer`|`manager-01`|🟡 Deploying|Port 9443 direct|
-|Portainer agent|`portainer`|All nodes (global)|🟡 Deploying|Auto-scales as nodes join|
-|Traefik v3|`traefik`|`traefik-dmz-01`|⚪ Pending|`acme.json` pre-create required|
+const statusIcon = s => ({
+  "pending":   "⬜",
+  "deploying": "🟡",
+  "deployed":  "🟢",
+  "running":   "🟢",
+  "degraded":  "🔴",
+}[s] ?? "❓");
 
-### Media Services
+dv.table(
+  ["Service", "VM", "Status", "Port", "External", "Internal URL", "ZFS Dataset"],
+  pages.map(p => [
+    p.file.link,
+    p.vm ?? "—",
+    statusIcon(p.service_status) + " " + (p.service_status ?? "—"),
+    p.port ?? "—",
+    p.external_access ? "🌐 Yes" : "🔒 No",
+    p.url_internal ?? "—",
+    p.zfs_dataset ?? "—",
+  ])
+);
+```
 
-|Service|Stack|Target VM|Status|Notes|
-|---|---|---|---|---|
-|Plex|`media`|`worker-media-01`|⚪ Pending|VM not provisioned|
-|Sonarr|`media`|`worker-media-01`|⚪ Pending||
-|Radarr|`media`|`worker-media-01`|⚪ Pending||
-|Prowlarr|`media`|`worker-media-01`|⚪ Pending||
-|Tautulli|`media`|`worker-media-01`|⚪ Pending||
-|Transmission + Gluetun|`media`|`worker-media-01`|⚪ Pending|VPN sidecar|
+**Status key:** ⬜ Pending · 🟡 Deploying · 🟢 Deployed/Running · 🔴 Degraded
 
-### Controller Services
-
-|Service|Stack|Target VM|Status|Notes|
-|---|---|---|---|---|
-|Home Assistant|`controllers`|`worker-controller-01`|⚪ Pending|IoT VLAN 20 access required|
-|UniFi Controller|`controllers`|`worker-controller-01`|⚪ Pending||
-
-### Monitoring Services
-
-|Service|Stack|Target VM|Status|Notes|
-|---|---|---|---|---|
-|Prometheus|`monitoring`|`manager-01`|⚪ Pending|Was running on legacy server|
-|Grafana|`monitoring`|`manager-01`|⚪ Pending|Was running on legacy server|
-|InfluxDB|`monitoring`|`manager-01`|⚪ Pending|Was running on legacy server|
+> [!note] This table is auto-populated from individual `Service - *.md` notes. Update `service_status` in the relevant note to update this view.
 
 ---
 
@@ -120,6 +137,7 @@ graph TD
 |`docker-tsdb`|`rpool/docker-tsdb`|`docker-tsdb`|`/mnt/docker-tsdb`|⚪ Not configured|Prometheus, InfluxDB|
 |`docker-db`|`rpool/docker-db`|`docker-db`|`/mnt/docker-db`|⚪ Not configured|Relational DBs|
 |`docker-swarm`|`rpool/docker-swarm`|`docker-swarm`|`/mnt/docker-swarm`|⚪ Not configured|Stack files, shared configs|
+|`downloads`|`MainStorage/downloads`|`downloads`|`/mnt/downloads`|⚪ Not configured|153G used — downloads staging (seeding in progress)|
 
 > [!warning] ZFS snapshot cron not yet configured All datasets are unprotected by ZFS snapshots. PBS covers VM disks only — virtiofs passthroughs are host-side and not inside any VM zvol. Set up the snapshot cron before migrating live data. See [[Docker Swarm Infrastructure Runbook#Step 0.2]].
 
@@ -153,6 +171,20 @@ graph TD
 |2026-03-31|`traefik-dmz-01` (VMID 201) provisioned, joined Swarm|
 |2026-03-31|Portainer stack rewritten to agent mode, deploying|
 |2026-03-31|Note created|
+|2026-04-21|Bug #21: asymmetric routing on `traefik-dmz-01` temp-fixed (`ip route del`). Permanent netplan fix outstanding.|
+|2026-04-21|Bug #22: overlay subnet collision fixed — all stacks redeployed with pinned `10.200.x.0/24` subnets|
+|2026-04-21|Plex external DNS configured (`plex CNAME → ddns.purvishome.com`). Browser test pending.|
+|2026-04-21|VM notes updated to reflect actual running state. DataviewJS tables added for VM and Service status.|
+|2026-04-26|rpool recovered — 577G free. Stale ZFS datasets destroyed (swarm-mgr* placeholders + manager_test).|
+|2026-04-26|`MainStorage/downloads` created (lz4, atime=off, recordsize=1M). Downloads migrated SSD→MainStorage HDD (153G). Old `rpool/data/vm-204-downloads` 500G zvol destroyed.|
+|2026-04-27|InfluxDB token fixed, v1 compat configured (DBRP + v1 auth). Grafana InfluxQL + Flux datasources working.|
+|2026-04-27|Monitoring stack: InfluxDB added to traefik-public network (Bug #43). Traefik metrics fixed (Bug #44).|
+|2026-04-27|Transmission + Gluetun deployed via compose-vpn.yml. Arr stack (Sonarr, Radarr, Prowlarr) all 1/1.|
+|2026-04-27|MainStorage cleanup: vm-100/106/108 disks destroyed (~208G). downloads quota=500G. backups dataset created (150G reserved).|
+|2026-04-26|`worker-mediamanagement-01` `/mnt/downloads` — virtiofs mounted, fstab persisted (virtiofs entry only).|
+|2026-04-26|Old LXC subvolumes cleared from MainStorage: subvol-101–105, subvol-109 (~150G recovered).|
+|2026-04-26|subvol-110 downloads migration in progress — `mv` running at session end. Destroy after verification.|
+|2026-04-26|Prowlarr indexer sync configured in Sonarr and Radarr.|
 
 ---
 
@@ -162,5 +194,5 @@ graph TD
 - [[VLAN and Subnet Summary Sheet]]
 - [[ZFS Configuration and Setup]]
 - [[Traefik Setup]]
-- [[Session Notes — Docker Swarm Pipeline Fixes]]
+- [[Session Notes — 2026-03-31 — Docker Swarm Pipeline Fixes]]
 - [[Proxmox Network Setup]]

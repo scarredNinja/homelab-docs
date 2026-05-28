@@ -1,144 +1,56 @@
-{
-  "filter": {
-    "and": [
-      {
-        "field": "type",
-        "operator": "eq",
-        "value": "swarm-service"
-      }
-    ]
-  },
-  "views": [
-    {
-      "id": "table-all",
-      "name": "All Services",
-      "type": "table",
-      "fields": [
-        {
-          "field": "file",
-          "visible": true
-        },
-        {
-          "field": "service_name",
-          "visible": true
-        },
-        {
-          "field": "service_status",
-          "visible": true
-        },
-        {
-          "field": "vm",
-          "visible": true
-        },
-        {
-          "field": "vlan",
-          "visible": true
-        },
-        {
-          "field": "port",
-          "visible": true
-        },
-        {
-          "field": "external_access",
-          "visible": true
-        },
-        {
-          "field": "traefik_entrypoint",
-          "visible": true
-        },
-        {
-          "field": "zfs_dataset",
-          "visible": true
-        },
-        {
-          "field": "url_internal",
-          "visible": true
-        },
-        {
-          "field": "last_updated",
-          "visible": true
-        }
-      ],
-      "sortBy": [
-        {
-          "field": "vm",
-          "direction": "asc"
-        },
-        {
-          "field": "service_name",
-          "direction": "asc"
-        }
-      ]
-    },
-    {
-      "id": "board-by-status",
-      "name": "By Status",
-      "type": "board",
-      "groupBy": {
-        "field": "service_status"
-      },
-      "fields": [
-        {
-          "field": "service_name",
-          "visible": true
-        },
-        {
-          "field": "vm",
-          "visible": true
-        },
-        {
-          "field": "port",
-          "visible": true
-        },
-        {
-          "field": "external_access",
-          "visible": true
-        },
-        {
-          "field": "last_updated",
-          "visible": true
-        }
-      ]
-    },
-    {
-      "id": "table-by-vm",
-      "name": "By VM",
-      "type": "table",
-      "groupBy": {
-        "field": "vm"
-      },
-      "fields": [
-        {
-          "field": "file",
-          "visible": true
-        },
-        {
-          "field": "service_status",
-          "visible": true
-        },
-        {
-          "field": "port",
-          "visible": true
-        },
-        {
-          "field": "external_access",
-          "visible": true
-        },
-        {
-          "field": "zfs_dataset",
-          "visible": true
-        }
-      ],
-      "sortBy": [
-        {
-          "field": "vm",
-          "direction": "asc"
-        },
-        {
-          "field": "service_name",
-          "direction": "asc"
-        }
-      ]
-    }
-  ]
-}
+filters:
+  and:
+    - note.type == "swarm-service"
+views:
+  - type: table
+    name: All Services
+    order:
+      - file.name
+      - service_name
+      - service_status
+      - vm
+      - vlan
+      - port
+      - external_access
+      - traefik_entrypoint
+      - swarm_constraint
+      - zfs_dataset
+      - url_internal
+      - last_updated
+    sort:
+      - property: vm
+        direction: ASC
+      - property: service_name
+        direction: ASC
+  - type: table
+    name: By Status
+    order:
+      - file.name
+      - service_status
+      - service_name
+      - vm
+      - port
+      - external_access
+      - url_internal
+      - last_updated
+    sort:
+      - property: service_status
+        direction: ASC
+      - property: service_name
+        direction: ASC
+  - type: table
+    name: By VM
+    order:
+      - file.name
+      - vm
+      - service_name
+      - service_status
+      - port
+      - external_access
+      - url_internal
+      - zfs_dataset
+    sort:
+      - property: vm
+        direction: ASC
+      - property: service_name
+        direction: ASC

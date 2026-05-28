@@ -34,6 +34,12 @@ Akahu is an NZ open banking platform that aggregates bank account data. Since th
 |Scheduled refresh|Daily|Configurable|
 |Manual refresh rest period|1 hour|15 mins (default)|
 
+### CDR transition (December 2025)
+
+As of December 2025, ANZ, ASB, BNZ, and Westpac use regulated open banking APIs under the Consumer Data Right (CDR) legislation. Akahu is an accredited intermediary — your app continues to use the same Akahu API endpoints with no changes to auth or transaction data structures.
+
+**One breaking change to be aware of:** The `meta.loan_details` field on loan accounts (interest rate, repayment structure, term, expiry) is **not available** for these four banks under the regulated standard. This field was only available on classic (reverse-engineered) connections. Mortgage details remain user-maintained in the app — do not plan to auto-populate the Mortgage page from Akahu.
+
 ---
 
 ## Architecture
@@ -77,13 +83,25 @@ Store as environment variables, never in the database.
 # .env (never committed)
 AKAHU_USER_TOKEN=user_token_xxxxxx
 AKAHU_APP_TOKEN=app_xxxxxxxxxxxxxxxxxx
+CRON_SECRET=a_long_random_string_for_internal_cron_calls
 ```
 
 The Settings page "Open banking" section validates these exist and tests them against `GET /v1/me` — it does not store them.
 
+`CRON_SECRET` is used to authenticate calls from the Docker cron container to `GET /api/akahu/cron/sync`.
+
 ---
 
 ## Schema changes
+
+### AppSettings addition
+
+```prisma
+model AppSettings {
+  // ... existing fields ...
+  akahuHistoricalDays  Int  @default(90)  // initial sync lookback; user-configurable in Settings UI
+}
+```
 
 ### New model: `BankAccount`
 
@@ -157,7 +175,8 @@ akahuMerchant   String?      // merchant.name from enriched data
 |`src/app/api/akahu/accounts/route.ts`|GET — fetch + cache accounts|
 |`src/app/api/akahu/sync/route.ts`|POST — trigger full sync|
 |`src/app/api/akahu/sync/[accountId]/route.ts`|POST — sync single account|
-|`src/app/api/akahu/pending/route.ts`|GET — live pending txns, not persisted|
+|`src/app/api/akahu/cron/sync/route.ts`|GET — internal cron endpoint, validated via `CRON_SECRET`|
+|`src/app/api/akahu/pending/route.ts`|GET — live pending txns _(deferred to Phase 3)_|
 |`src/app/api/akahu/status/route.ts`|GET — last sync log per account|
 
 ---
@@ -226,17 +245,29 @@ export const akahu = {
 ### `src/lib/akahu/sync.ts`
 
 ```typescript
-export async function syncAccount(bankAccount: BankAccount, prisma: PrismaClient) {
+interface SyncOptions {
+  historicalDays?: number  // overrides AppSettings.akahuHistoricalDays for this run
+}
+
+export async function syncAccount(
+  bankAccount: BankAccount,
+  prisma: PrismaClient,
+  options: SyncOptions = {}
+) {
+  // Resolve historical days: explicit param → AppSettings → hardcoded default
+  const settings = await prisma.appSettings.findUnique({ where: { id: 1 } })
+  const historicalDays = options.historicalDays ?? settings?.akahuHistoricalDays ?? 90
+
+  const syncedFrom = bankAccount.lastRefreshed
+    ? subtractDays(bankAccount.lastRefreshed, 2)
+    : subtractDays(new Date(), historicalDays)
 
   // 1. Create sync log — track progress and allow resume
   const log = await prisma.akahuSyncLog.create({
     data: {
       bankAccountId: bankAccount.id,
       status: 'running',
-      // 2-day overlap catches bank mutations to recently-posted transactions
-      syncedFrom: bankAccount.lastRefreshed
-        ? subtractDays(bankAccount.lastRefreshed, 2)
-        : subtractDays(new Date(), 90),  // first run: 90 days back
+      syncedFrom,
     }
   })
 
@@ -315,7 +346,10 @@ async function upsertTransaction(
 
   if (!changed) return 'skipped'
 
-  await prisma.transaction.update({ where: { id: existing.id }, data })
+  await prisma.transaction.update({
+    where: { id: existing.id },
+    data: { ...data, envelopeId: existing.envelopeId },
+  })
   return 'updated'
 }
 
@@ -341,6 +375,62 @@ async function tryMatchToScheduled(txn, prisma) {
   if (candidate) {
     // ... link + advance logic
   }
+}
+```
+
+### `src/app/api/akahu/sync/route.ts` (POST — manual trigger)
+
+```typescript
+export async function POST(request: Request) {
+  const body = await request.json().catch(() => ({}))
+  const historicalDays = typeof body.historicalDays === 'number'
+    ? body.historicalDays
+    : undefined
+
+  const accounts = await prisma.bankAccount.findMany({ where: { isActive: true } })
+  const results = []
+
+  for (const account of accounts) {
+    try {
+      const result = await syncAccount(account, prisma, { historicalDays })
+      results.push({ accountId: account.id, name: account.name, status: 'success', ...result })
+    } catch (error) {
+      results.push({ accountId: account.id, name: account.name, status: 'error', error: String(error) })
+    }
+  }
+
+  const totals = results.reduce(
+    (acc, r) => ({
+      newCount:     acc.newCount     + (r.newCount ?? 0),
+      updatedCount: acc.updatedCount + (r.updatedCount ?? 0),
+      skippedCount: acc.skippedCount + (r.skippedCount ?? 0),
+      errorCount:   acc.errorCount   + (r.status === 'error' ? 1 : 0),
+    }),
+    { newCount: 0, updatedCount: 0, skippedCount: 0, errorCount: 0 }
+  )
+
+  return Response.json({ accounts: results, totals })
+}
+```
+
+### `src/app/api/akahu/cron/sync/route.ts` (GET — scheduled trigger)
+
+```typescript
+// Protected by CRON_SECRET header. Returns 401 if missing or wrong.
+// Delegates to the same syncAccount() logic as the manual trigger.
+
+export async function GET(request: Request) {
+  const secret = request.headers.get('x-cron-secret')
+  if (!secret || secret !== process.env.CRON_SECRET) {
+    return Response.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  const accounts = await prisma.bankAccount.findMany({ where: { isActive: true } })
+  for (const account of accounts) {
+    await syncAccount(account, prisma).catch(console.error)
+  }
+
+  return Response.json({ ok: true, timestamp: new Date().toISOString() })
 }
 ```
 
@@ -381,7 +471,13 @@ Akahu returns all dates in UTC. A transaction dated `2026-04-01` in NZ time (NZD
 
 ### Pending transactions — never persist them
 
+_(Display deferred to Phase 3)_
+
 Pending transactions have no stable `_id`. Completely rebuild the pending view on every fetch — never write to the `Transaction` table. When a pending transaction settles, it appears in the next settled sync with a real `_id` via the normal upsert flow.
+
+### `meta.loan_details` not available for big 4 banks (CDR)
+
+For ANZ, ASB, BNZ, and Westpac loan accounts connected via official open banking APIs, the `meta.loan_details` field is not available. This provided: repayment structure, interest rate, expiry, and term. Do not attempt to auto-populate the Mortgage page from Akahu for these banks. Current balance on the Mortgage model remains user-maintained.
 
 ### Don't auto-trigger refresh
 
@@ -393,6 +489,33 @@ Add a partial unique index on `Transaction.openBankingRef` (where not null). Wit
 
 ---
 
+## Scheduled sync — Docker Compose cron service
+
+```yaml
+cron:
+  image: alpine:3.19
+  restart: unless-stopped
+  depends_on:
+    app:
+      condition: service_healthy
+  environment:
+    CRON_SECRET: ${CRON_SECRET}
+  command: >
+    sh -c "
+      echo 'Cron service started';
+      while true; do
+        echo \"[$(date -u)] Running Akahu sync...\";
+        wget -qO- \
+          --header=\"X-Cron-Secret: $$CRON_SECRET\" \
+          http://app:3000/api/akahu/cron/sync \
+          || echo 'Sync failed';
+        sleep 3600;
+      done
+    "
+```
+
+Uses Alpine `wget` — no curl required. Runs hourly (`sleep 3600`). Requires the app healthcheck to be configured in `docker-compose.yml` so `depends_on: condition: service_healthy` works.
+
 ## Settings UI additions
 
 Add an "Open banking" section to the Settings page:
@@ -401,6 +524,7 @@ Add an "Open banking" section to the Settings page:
 - **Bank accounts list** — list from `/api/akahu/accounts` with name, bank, balance, last synced; envelope mapping dropdown per row
 - **Sync button** — POST to `/api/akahu/sync`; shows progress then "X new, Y updated" summary from sync log
 - **Pending toggle** — show/hide pending transactions on the transactions page
+- **Historical import window** — number input (days); reads from and writes to `AppSettings.akahuHistoricalDays`
 
 ## Transactions page additions
 
@@ -418,7 +542,8 @@ Add an "Open banking" section to the Settings page:
 3. Manual sync script (`ts-node`) — raw data exploration before adding upsert logic
 4. `upsertTransaction()` as a pure function with unit tests — most critical piece, easy to test with fixture data
 5. Full sync route + Settings UI connection status + bank accounts list
-6. Pending transactions display — read-only, no DB, add last
+6. Cron endpoint + Docker cron service
+7. Pending transactions display — **Phase 3, not Phase 2**
 
 ---
 
@@ -431,3 +556,4 @@ Add an "Open banking" section to the Settings page:
 - [Data refreshes](https://developers.akahu.nz/docs/data-refreshes)
 - [Rate limits](https://developers.akahu.nz/docs/reference-rate-limits)
 - [Demo bank](https://developers.akahu.nz/docs/demo-bank)
+- [Transitioning to official open banking](https://developers.akahu.nz/docs/official-open-banking)

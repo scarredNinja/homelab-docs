@@ -2,6 +2,9 @@
  project_id: "Homelab-2025"
  phase: "Phase 3: Network Config"
 ---
+> [!warning] Superseded
+> This approach (pfSense policy routing + `VPN_Clients` alias) was replaced by **Gluetun** running as Docker Compose on `worker-mediamanagement-01`. Gluetun handles the NordVPN OpenVPN tunnel at the container level — no pfSense policy routing required. Tailscale handles admin VPN access (Phase 9). This doc is retained for reference only.
+
 # pfSense VPN Policy Routing & Kill Switch (NordVPN)
 
 ## 1. Create an Alias (The "Clean" Way)

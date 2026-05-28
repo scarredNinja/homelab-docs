@@ -69,6 +69,8 @@ All routes live under `src/app/api/`. They are Next.js App Router Route Handlers
 
 **Split validation:** sum of `splits[].amount` must equal the original transaction `amount`. Returns 422 if not. Each split inherits the original's `date`, `source`, and `categoryId` unless overridden.
 
+> **`unreviewed` filter:** returns transactions where `envelopeId === null && source === 'akahu'`. Transactions with `source === 'seed'` or `source === 'manual'` are excluded.
+
 ---
 
 ## Scheduled Transactions
@@ -161,10 +163,30 @@ All routes live under `src/app/api/`. They are Next.js App Router Route Handlers
 |---|---|---|---|
 |`GET`|`/api/akahu/test`|—|Calls `/v1/me` — returns `{ connected: true, email }` or error|
 |`GET`|`/api/akahu/accounts`|—|Fetch accounts from Akahu, upsert `BankAccount` records, return list|
-|`POST`|`/api/akahu/sync`|—|Sync all active bank accounts sequentially|
+|`POST`|`/api/akahu/sync`|`{ historicalDays?: number }`|Sync all active bank accounts sequentially; returns aggregate result|
+|`GET`|`/api/akahu/cron/sync`|Header: `X-Cron-Secret`|Internal endpoint for Docker cron container; 401 if secret missing/wrong|
 |`POST`|`/api/akahu/sync/[accountId]`|—|Sync single bank account|
-|`GET`|`/api/akahu/pending`|—|Fetch live pending transactions from Akahu — **not persisted, display only**|
 |`GET`|`/api/akahu/status`|—|Return last `AkahuSyncLog` per bank account|
+|`GET`|`/api/akahu/pending`|—|_(Deferred to Phase 3)_ Fetch live pending transactions — not persisted, display only|
+
+### POST /api/akahu/sync — request and response
+
+**Request body (all optional):**
+{ "historicalDays": 365 }
+
+`historicalDays` overrides `AppSettings.akahuHistoricalDays` for this run only. Omit to use the stored setting (default 90). Only applies to accounts where `lastRefreshed` is null (first sync).
+
+**Response:**
+{
+  "accounts": [
+    { "accountId": 1, "name": "ANZ Everyday", "status": "success", "newCount": 12, "updatedCount": 1, "skippedCount": 47 }
+  ],
+  "totals": { "newCount": 12, "updatedCount": 1, "skippedCount": 47, "errorCount": 0 }
+}
+
+### GET /api/akahu/cron/sync — security
+
+Protected by `X-Cron-Secret` header matched against `process.env.CRON_SECRET`. Returns 401 if absent or wrong. Uses AppSettings defaults (no body). Returns `{ ok: true, timestamp }`.
 
 ---
 
@@ -209,6 +231,8 @@ Confidence scoring:
 
 **Seed creates:**
 
+> ⚠️ Seeded transactions use `source: 'seed'` to distinguish them from Akahu-imported records. The "Unreviewed" filter (`envelopeId === null && source === 'akahu'`) will not match seed data.
+
 - 1 `AppSettings` row
 - 6 `Category` records (system + user)
 - 10 `BudgetEnvelope` records
@@ -219,6 +243,23 @@ Confidence scoring:
 - 1 `Property` with 4 `PropertyValuation` records
 - 4 `ScheduledTransaction` records
 
+**Purge order (`DELETE /api/seed`):**
+
+```
+SavingsContribution → SavingsGoal
+AkahuSyncLog        → BankAccount
+Transaction
+ScheduledTransaction
+BankAccount
+BudgetEnvelope      → Category
+PropertyValuation   → Property
+Mortgage
+SavingsGoal
+SolarConfig
+Property
+AppSettings
+```
+
 ---
 
 ## Error responses
@@ -226,6 +267,7 @@ Confidence scoring:
 |Status|When|
 |---|---|
 |`400`|Missing required fields or invalid body|
+|`401`|Unauthorized — cron secret missing or incorrect|
 |`404`|Record not found|
 |`409`|Conflict — e.g. deleting a Category that has envelopes|
 |`403`|Forbidden — e.g. deleting a system category|

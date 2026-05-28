@@ -7,18 +7,18 @@ tags:
   - Service
   - Monitoring
 service_name: Grafana
-vm: manager-01
-swarm_constraint: node.role == monitoring
+vm: worker-monitoring-01
+swarm_constraint: node.labels.zone == monitoring
 vlan: 60
-service_status: deployed
+service_status: running
 stack_file: /mnt/docker-swarm/stacks/monitoring/stack.yml
 port: 3000
 external_access: false
-traefik_entrypoint: internal
+traefik_entrypoint: websecure
 url_internal: https://grafana.home.purvishome.com
 zfs_dataset: rpool/docker-data/grafana
 mount_path: /mnt/docker-data/grafana
-last_updated: 2026-04-02
+last_updated: 2026-04-24
 ---
 
 # Grafana

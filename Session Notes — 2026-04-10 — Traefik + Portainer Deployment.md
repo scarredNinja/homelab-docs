@@ -1,12 +1,15 @@
 ---
 date: 2026-04-10
-session: Docker Swarm — Traefik + Portainer Deployment
+project_id: Homelab-2025
+phase: "Phase 5: Docker Swarm"
+session_type: Debugging + Deploy
+status: Complete
 tags:
+  - SessionNotes
   - DockerSwarm
   - Traefik
   - Portainer
   - Proxmox
-  - Homelab
 ---
 
 # Session Notes — 2026-04-10 — Traefik + Portainer Deployment

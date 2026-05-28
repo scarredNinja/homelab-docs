@@ -25,6 +25,7 @@ Reference for all environment variables used by the app. Variables are loaded by
 |`NODE_ENV`|✅ Yes|1|Docker Compose (auto in dev)|
 |`AKAHU_USER_TOKEN`|Phase 2|2|`.env` / Docker Compose|
 |`AKAHU_APP_TOKEN`|Phase 2|2|`.env` / Docker Compose|
+|`CRON_SECRET`|Phase 2|2|`.env` / Docker Compose (app + cron services)|
 
 ---
 
@@ -89,6 +90,29 @@ AKAHU_USER_TOKEN=user_token_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ---
 
+### `CRON_SECRET` _(Phase 2)_
+
+A shared secret used to authenticate calls from the Docker cron container to `GET /api/akahu/cron/sync`.
+
+```bash
+CRON_SECRET=a_long_random_string_at_least_32_characters
+```
+
+**How to generate:**
+```bash
+# Mac/Linux
+openssl rand -hex 32
+```
+
+**How it works:**
+1. The cron container sends `X-Cron-Secret: <CRON_SECRET>` on every request.
+2. `GET /api/akahu/cron/sync` compares it to `process.env.CRON_SECRET`.
+3. If missing or mismatched, returns `401 Unauthorized`.
+
+**Must be set in both `app` and `cron` service environment blocks in `docker-compose.yml`.** If exposed, generate a new value and redeploy.
+
+---
+
 ### `AKAHU_APP_TOKEN` _(Phase 2)_
 
 Your Akahu App ID Token. Sent as the `X-Akahu-Id` header on every API request to identify your app.
@@ -138,6 +162,10 @@ DATABASE_URL=postgresql://USER:PASSWORD@localhost:5432/financedb
 # Get tokens from my.akahu.nz/apps → Developers
 AKAHU_USER_TOKEN=
 AKAHU_APP_TOKEN=
+
+# Cron shared secret — required for Phase 2 scheduled sync
+# Generate with: openssl rand -hex 32
+CRON_SECRET=
 ```
 
 ### `docker-compose.yml` (Docker deployment)
@@ -152,6 +180,11 @@ app:
     # Phase 2 — uncomment and fill in when ready
     # AKAHU_USER_TOKEN: your_user_token_here
     # AKAHU_APP_TOKEN: your_app_token_here
+    # CRON_SECRET: your_long_random_secret_here
+
+# cron:
+#   environment:
+#     CRON_SECRET: your_long_random_secret_here   # must match app.environment.CRON_SECRET
 ```
 
 ---
@@ -162,6 +195,7 @@ app:
 - **Never log environment variables** — avoid `console.log(process.env)` in any server route or lib file.
 - **Never commit `.env`** — confirm `.gitignore` includes `.env` and `.env.local`. The `.env.example` file with empty values is safe to commit.
 - **Akahu tokens** — if either token is accidentally exposed, regenerate it immediately from the Akahu dashboard (`my.akahu.nz/apps`). The old token is invalidated as soon as you regenerate.
+- **`CRON_SECRET`** — if exposed, generate a new value with `openssl rand -hex 32` and redeploy. Old value is immediately invalid.
 
 ---
 
@@ -170,8 +204,9 @@ app:
 1. Add it to `.env` locally with the real value.
 2. Add a placeholder entry to `.env.example` with an empty value and a comment explaining where to get it.
 3. Add it to the `app.environment` block in `docker-compose.yml`.
-4. Access it in server-side code only via `process.env.YOUR_VARIABLE`.
-5. Document it in this note.
+4. If the variable is also needed by the cron service, add it to `cron.environment` in `docker-compose.yml`.
+5. Access it in server-side code only via `process.env.YOUR_VARIABLE`.
+6. Document it in this note.
 
 ---
 

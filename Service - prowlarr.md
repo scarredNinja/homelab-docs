@@ -6,23 +6,19 @@ tags:
   - DockerSwarm
   - Service
   - Media
-
 service_name: Prowlarr
-vm: worker-media-01
-swarm_constraint: "node.labels.type == media"
+vm: worker-mediamanagement-01
+swarm_constraint: node.labels.zone == mediamanagement
 vlan: 50
-
-service_status: pending
-stack_file: /mnt/docker-swarm/stacks/media/stack.yml
+service_status: running
+stack_file: /mnt/docker-swarm/stacks/arr/stack-arr.yml
 port: 9696
 external_access: false
-traefik_entrypoint: internal
+traefik_entrypoint: websecure
 url_internal: https://prowlarr.home.purvishome.com
-
 zfs_dataset: rpool/docker-data/prowlarr
 mount_path: /mnt/docker-data/prowlarr
-
-last_updated: 2026-04-02
+last_updated: 2026-04-24
 ---
 
 # Prowlarr

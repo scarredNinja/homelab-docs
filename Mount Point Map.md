@@ -17,10 +17,11 @@ tags:
 | Plex                    | Local               | Local                | rpool/docker-data/plex                                                                   |                                      |
 | Sonarr / Radarr         | NFS                 | Local                | rpool/docker-data/sonarr<br>rpool/docker-data/radarr                                     |                                      |
 | Transmission / Prowlarr | NFS                 | Local                | rpool/docker-data/transmission<br>rpool/docker-data/prowlarr                             |                                      |
-| Home Assistant          | NFS                 | Local                | rpool/docker-data/homeassistant                                                          |                                      |
-| UniFi Controller        | NFS                 | Local                | rpool/docker-data/uniFi                                                                  |                                      |
+| Home Assistant          | docker-data         | Local                | rpool/docker-data/homeassistant                                                          | /mnt/docker-data/homeassistant:/config |
+| UniFi Controller        | docker-db           | Local                | rpool/docker-db/unifi                                                                    | /mnt/docker-db/unifi:/config         |
+| Uptime Kuma             | docker-data         | Local                | rpool/docker-data/uptime-kuma                                                            | /mnt/docker-data/uptime-kuma:/app/data |
 | Grafana                 | NFS                 | Local                | rpool/docker-data/grafana                                                                | /mnt/docker-data/grafana             |
-| Prometheus              | Local               | Local                | rpool/docker-tsdb/prometheus                                                             | /mnt/docker-tsdb/promethus           |
+| Prometheus              | docker-tsdb         | Local                | rpool/docker-tsdb/prometheus                                                             | /mnt/docker-tsdb/prometheus:/prometheus |
 | InfluxDB                | Local               | Local                | rpool/docker-tsdb/influxDB                                                               | /mnt/docker-tsdb/influxdb            |
 | Tautulli                | NFS                 | Local                | rpool/docker-data/tautulli                                                               |                                      |
 | Misc Dev/Test Apps      | Local / NFS         | Local                | tbc                                                                                      |                                      |

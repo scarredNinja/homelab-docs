@@ -114,7 +114,10 @@ Add scrape job to `prometheus.yml`:
 - [x] Test remote deploy: `bash /mnt/docker-swarm/scripts/deploy-worker-scripts.sh --remote worker-media-01 --no-run` [priority:: 1] ✅ 2026-05-22 — working from pve; dual IdentityFile fallback added; both workers deployed successfully
 
 #### Homepage Dashboard
-- [ ] Homepage dashboard — verify Traefik routing to dashboard.home.purvishome.com; container starts healthy (Next.js Ready in ~4s) but URL not resolving — check DNS entry and Traefik router logs
+- [ ] Homepage dashboard — verify Traefik routing to dashboard.home.purvishome.com; healthcheck IPv6 issue fixed 2026-05-25 (commit `aa7c4b2`, `127.0.0.1` forced); URL still unresolved — check Pi-hole DNS entry and Traefik router label (`traefik.http.routers.homepage.rule`)
+
+#### Arr Stack Secrets
+- [ ] Verify arr stack `_v2` Docker secrets are deployed to Swarm and `stack-arr.yml` has been redeployed with new API key secrets — memory file `project_arr_exportarr_state.md` notes redeploy still pending [priority:: 1]
 
 ---
 
@@ -130,6 +133,7 @@ Add scrape job to `prometheus.yml`:
 
 - [x] `exportarr` deployed for Sonarr and Radarr [priority:: 3] ✅ 2026-05-20 — PR #39 & PR #49; sonarr-exporter port 9707, radarr-exporter port 9708; API keys migrated to prefix-free `API_KEY_FILE` secrets (newline-free `_v2` secrets created via `printf`), scrape target IPs corrected from `.50.30` to `10.0.50.51`, and verified as fully active/UP.
 - [ ] Home Assistant Prometheus integration enabled [priority:: 3]
+- [ ] Deploy node_exporter on pihole1 (10.0.60.20) and pihole2 (10.0.60.21); add scrape targets to `prometheus.yml` [priority:: 3] #Later
 - [x] `unifi-poller` deployed ✅ 2026-04-29 — PR #14; scrape target at `tasks.controller_unpoller:9130`
 
 ---
@@ -147,6 +151,8 @@ Add scrape job to `prometheus.yml`:
 - [x] Add arr service monitors (Sonarr, Radarr, Prowlarr) ✅ 2026-05-08
 - [x] Investigate Tautulli — service appears down independently of Uptime Kuma [priority:: 2] ✅ 2026-05-16
 - [x] Add remaining monitors: pfSense (`https://10.0.60.1`), Home Assistant (`http://10.0.60.42:8123`) ✅ 2026-05-08
+- [x] Create Uptime Kuma public status page and note the slug [priority:: 2] ✅ 2026-05-26 — slug `homelab`; live at `uptime-kuma.home.purvishome.com/status/homelab`
+- [x] Update Homepage `widgets.yaml` kuma slug from `default` to the actual status page slug [priority:: 2] ✅ 2026-05-26 — PR #59 merged; slug set to `homelab`
 
 ---
 

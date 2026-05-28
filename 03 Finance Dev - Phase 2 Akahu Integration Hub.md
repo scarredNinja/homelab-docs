@@ -1,7 +1,7 @@
 ---
 
 status: Planned 
-priority: Medium 
+priority: Low 
 due_date: 2026-06-01 
 project_id: FinanceDev-2026 
 phase: "Phase 2: Akahu Integration" 
@@ -19,16 +19,21 @@ tags:
 
 # 🏦 Phase 2: Akahu Open Banking Integration
 
-This phase integrates Akahu as the open banking data source for the app. Since this is a personal app, there is no OAuth flow — authentication uses static tokens from `my.akahu.nz/apps`. The integration covers account syncing, transaction import with upsert/dedup logic, pending transaction display, scheduled transaction matching, and the Settings UI for managing the connection.
+This phase integrates Akahu as the open banking data source for the app. Since this is a personal app, there is no OAuth flow — authentication uses static tokens from `my.akahu.nz/apps`. The integration covers account syncing, transaction import with upsert/dedup logic, scheduled transaction matching, and the Settings UI for managing the connection.
+
+Sync can be triggered manually from the Settings page or automatically via a scheduled cron service in Docker Compose. Pending transaction display is deferred to Phase 3.
 
 > **Dependency:** Phase 1 must be complete before starting this phase. Specifically: the `openBankingRef` unique constraint on `Transaction`, the `ScheduledTransaction` model, and the Settings page scaffold are all required.
+
+> **CDR note:** As of December 2025, ANZ, ASB, BNZ, and Westpac use regulated open banking APIs via Akahu. The `meta.loan_details` field (interest rate, repayment structure, term) is **not available** for loan accounts on these banks under the new standard. Mortgage details remain user-maintained in the app.
 
 ## 🎯 Goals
 
 - Store Akahu credentials securely as environment variables (never in DB).
 - Sync bank accounts from Akahu and let the user map each to a budget envelope.
 - Import settled transactions with full upsert/dedup logic using Akahu's stable `_id`.
-- Display pending transactions live (no DB persistence — rebuild on every fetch).
+- Support both manual sync (Settings UI button) and scheduled sync (Docker cron service).
+- Allow configurable historical import window (days) per sync run.
 - Auto-match imported transactions to scheduled transactions within a ±5-day window.
 - Surface sync status and controls in the Settings page.
 
@@ -77,6 +82,7 @@ if (!thisPhase) {
 
 ### Schema & Migration
 
+- [ ] Add `akahuHistoricalDays Int @default(90)` to `AppSettings` model [priority:: 1] #Schema #Prisma
 - [ ] Add `BankAccount` model (akahuId, name, bankName, type, balance, envelopeId FK, lastRefreshed) [priority:: 1] #Schema #Prisma
 - [ ] Add `AkahuSyncLog` model (bankAccountId, status, newCount, updatedCount, skippedCount, syncedFrom, syncedTo) [priority:: 1] #Schema #Prisma
 - [ ] Add `bankAccountId` FK to `Transaction` (nullable) [priority:: 1] #Schema #Prisma
@@ -95,7 +101,7 @@ if (!thisPhase) {
 - [ ] Implement `getMe()` — validate credentials [priority:: 1] #Akahu #Client
 - [ ] Implement `getAccounts()` — fetch all connected accounts [priority:: 1] #Akahu #Client
 - [ ] Implement `getTransactions()` — paginated loop until `cursor.next === null` [priority:: 1] #Akahu #Client
-- [ ] Implement `getPendingTransactions()` — single fetch, no pagination [priority:: 1] #Akahu #Client
+- [ ] Implement `getPendingTransactions()` — single fetch, no pagination [priority:: 2] #Akahu #Client #Later
 - [ ] Implement `requestRefresh()` — POST /refresh, only called from explicit UI button [priority:: 2] #Akahu #Client
 
 ### Sync Logic
@@ -103,6 +109,7 @@ if (!thisPhase) {
 - [ ] Create `src/lib/akahu/sync.ts` — `syncAccount()` with SyncLog creation and error handling [priority:: 1] #Akahu #Sync
 - [ ] Implement `upsertTransaction()` — create/update/skip logic keyed on `openBankingRef` [priority:: 1] #Akahu #Sync
 - [ ] Apply 2-day overlap on `syncedFrom` to catch bank mutations to recent transactions [priority:: 1] #Akahu #Sync
+- [ ] Resolve `historicalDays` from: explicit param → AppSettings → 90-day default [priority:: 1] #Akahu #Sync
 - [ ] Implement `tryMatchToScheduled()` — match on envelope + amount ±1% + date ±5 days [priority:: 2] #Akahu #Sync
 - [ ] Write unit tests for `upsertTransaction()` with fixture data (new, update, skip cases) [priority:: 2] #Akahu #Testing
 
@@ -110,10 +117,18 @@ if (!thisPhase) {
 
 - [ ] Create `GET /api/akahu/test` — call `/me`, return connection status [priority:: 1] #API #Akahu
 - [ ] Create `GET /api/akahu/accounts` — fetch from Akahu, upsert BankAccount records, return list [priority:: 1] #API #Akahu
-- [ ] Create `POST /api/akahu/sync` — iterate active BankAccounts sequentially, call syncAccount() [priority:: 1] #API #Akahu
+- [ ] Create `POST /api/akahu/sync` — body `{ historicalDays? }`, iterate active BankAccounts, return aggregate result [priority:: 1] #API #Akahu
+- [ ] Create `GET /api/akahu/cron/sync` — same as POST sync but for internal cron calls; validate via shared secret header [priority:: 1] #API #Akahu #Cron
 - [ ] Create `POST /api/akahu/sync/[accountId]` — single account sync [priority:: 2] #API #Akahu
-- [ ] Create `GET /api/akahu/pending` — fetch live from Akahu, return without persisting [priority:: 2] #API #Akahu
+- [ ] Create `GET /api/akahu/pending` — fetch live from Akahu, return without persisting [priority:: 3] #API #Akahu #Later
 - [ ] Create `GET /api/akahu/status` — return last AkahuSyncLog per BankAccount [priority:: 2] #API #Akahu
+
+### Scheduled Sync (Docker Cron)
+
+- [ ] Add `CRON_SECRET` env var to `.env.example` and `docker-compose.yml` [priority:: 1] #Config #Cron
+- [ ] Add `cron` service to `docker-compose.yml` — Alpine container calling `/api/akahu/cron/sync` hourly [priority:: 1] #Docker #Cron
+- [ ] Document cron service in [[Finance App - Docker Compose Setup]] [priority:: 2] #Documentation #Cron
+- [ ] Add `CRON_SECRET` to [[Finance App - Environment Variables]] [priority:: 2] #Documentation #Config
 
 ### Settings UI — Open Banking Section
 
@@ -122,7 +137,8 @@ if (!thisPhase) {
 - [ ] Bank accounts list — name, bank, balance, last synced, envelope mapping dropdown per row [priority:: 2] #UI #Settings
 - [ ] Sync button — POST `/api/akahu/sync`, show progress, display "X new, Y updated" result [priority:: 2] #UI #Settings
 - [ ] Force refresh button — POST `/api/akahu/accounts` to re-pull from Akahu (respects 1hr rest period) [priority:: 3] #UI #Settings
-- [ ] Pending transactions toggle — show/hide pending on the main transactions page [priority:: 3] #UI #Settings
+- [ ] Pending transactions toggle — show/hide pending on the main transactions page [priority:: 3] #UI #Settings #Later
+- [ ] Historical import window — number input (days) in Open Banking section, writes to AppSettings [priority:: 2] #UI #Settings
 
 ### Transactions Page — Akahu Additions
 
@@ -130,13 +146,19 @@ if (!thisPhase) {
 - [ ] Add "Unreviewed" filter — `envelopeId === null && source === 'akahu'` [priority:: 3] #UI #Transactions
 - [ ] Add bulk-assign — select multiple unreviewed transactions → assign envelope [priority:: 3] #UI #Transactions
 - [ ] Add "Auto-matched" badge on transactions linked via `tryMatchToScheduled()` [priority:: 3] #UI #Transactions
-- [ ] Add pending transactions section (live fetch, separate from settled list) [priority:: 3] #UI #Transactions
+- [ ] Add pending transactions section (live fetch, separate from settled list) [priority:: 3] #UI #Transactions #Later
 
 ### Environment & Config
 
 - [ ] Add `AKAHU_USER_TOKEN` and `AKAHU_APP_TOKEN` to `.env.example` with placeholder values [priority:: 1] #Config
+- [ ] Add `CRON_SECRET` to `.env.example` with placeholder value [priority:: 1] #Config
 - [ ] Confirm env vars are excluded from Docker image build args (runtime only) [priority:: 1] #Config #Docker
 - [ ] Add Akahu env vars to deployment notes [priority:: 2] #Config #Documentation
+
+### Seed Data
+
+- [ ] Confirm `POST /api/seed` transactions use `source: 'seed'` (not `'akahu'`) to avoid filter collision [priority:: 2] #Seed
+- [ ] Update `DELETE /api/seed` purge order — add `AkahuSyncLog` before `BankAccount` [priority:: 2] #Seed
 
 ### Verification
 
@@ -146,9 +168,12 @@ if (!thisPhase) {
 - [ ] POST `/api/akahu/sync` — confirm transactions import, check for duplicates on re-run
 - [ ] Re-run sync — confirm existing transactions show `skipped`, no duplicates
 - [ ] Modify a synced transaction description manually in DB — re-run sync, confirm `updated`
-- [ ] Check pending transactions display and confirm nothing written to Transaction table
+- [ ] POST `/api/akahu/sync` with no body — confirm default historicalDays from AppSettings used
+- [ ] POST `/api/akahu/sync` with `{ historicalDays: 30 }` — confirm correct window applied
+- [ ] GET `/api/akahu/cron/sync` without secret header — confirm 401
+- [ ] GET `/api/akahu/cron/sync` with correct `X-Cron-Secret` header — confirm sync runs
 - [ ] Confirm auto-match fires for a transaction within ±5 days of a scheduled item
-- [ ] `docker compose up --build` passes after Phase 2 migration
+- [ ] `docker compose up --build` passes after Phase 2 migration; cron container starts and logs sync attempts
 
 ## 📝 Spoke Notes & Documentation
 
@@ -156,9 +181,10 @@ if (!thisPhase) {
 - [[Finance App - Database Schema]]
 - [[Finance App - Environment Variables]]
 - [[Finance App - API Route Reference]]
+- [[Finance App - Docker Compose Setup]]
 
 ---
 
 ## ➡️ Next Phase
 
-- [[03 Finance Dev - Phase 3 Hub]]
+- [[03 Finance Dev - Phase 3]]

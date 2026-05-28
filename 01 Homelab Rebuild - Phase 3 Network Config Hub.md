@@ -78,11 +78,17 @@ if (!thisPhase) {
 - [x] Add in the Traeflik work - internal/external [priority:: 2] #pfSense #DNS ✅ 2026-02-14
 - [x] Review and setup [[Network Phased Configuration#Phase 2 The Manager VM "Virtual Hardware"]] [priority:: 1] ✅ 2026-02-14
 
+### Pi-hole DNS & Traefik Routing
+
+- [x] Add Pi-hole wildcard DNS: `address=/.home.purvishome.com/10.0.60.40` in `/etc/dnsmasq.d/02-homelab-wildcard.conf` on both pihole1 and pihole2 — resolves all `.home.purvishome.com` subdomains internally without individual A records [priority:: 1] ✅ 2026-05-26 — added via Pi-hole UI local DNS record (`*.home.purvishome.com → 10.0.60.40`)
+- [ ] Add Traefik routing for pihole1 (`pihole1.home.purvishome.com` → `10.0.60.20`) and pihole2 (`pihole2.home.purvishome.com` → `10.0.60.21`) [priority:: 2] #Later
+- [ ] Add pfSense firewall rule: VLAN 10 → VLAN 60 TCP/22 to allow inter-VLAN SSH admin access to management infrastructure [priority:: 2]
+
 ### VLAN Migration & Cleanup
 
 - [x]  Migrate IoT devices to new VLAN ✅ 2025-08-04 #Migration #IoT 
 - [x]  Migrate Infrastructure (NAS) to new VLAN ✅ 2025-08-04 #Migration #Infrastructure 
-- [ ] Migrate OldNetwork - AP to new VLAN #Migration #Network #AccessPoint 🆔 kekb8h ⛔ qt6du4 🔽
+- [x] Migrate OldNetwork - AP to new VLAN #Migration #Network #AccessPoint 🆔 kekb8h ⛔ qt6du4 🔽 [priority:: 1]
 - [x] Remove unused Alisis [priority::1] #pfSense #Cleanup ✅ 2026-01-15
 - [x] Clean up and check off other tasks #Cleanup #Verification ⛔ kekb8h ✅ 2025-12-24
 - [x] Clean up existing firewall rules [priority:: 1] #pfSense #Firewall #Cleanup ✅ 2025-12-24
@@ -91,7 +97,7 @@ if (!thisPhase) {
 
 - [x] Review and update firewall rules [[pfSense Firewall Rules]]  [priority:: 1]#Firewall ✅ 2025-12-24
 	- [x] Update VLAN 85 rules with provising script #pfSense #Firewall  ✅ 2025-11-03
-- [ ] Remove OldNetwork Vlan and rules once migrated #pfSense #Cleanup 
+- [x] Remove OldNetwork Vlan and rules once migrated #pfSense #Cleanup  [priority:: 1]
 
 ### Switch Configuration
 

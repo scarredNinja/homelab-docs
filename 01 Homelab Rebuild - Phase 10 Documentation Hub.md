@@ -66,6 +66,13 @@ if (!thisPhase) {
 - [ ]  **Performance Testing:** Conduct performance testing after major changes #Testing #Performance #MuchLater 
 	- Storage performance
 
+### Current State — Dev Services & Documentation Tooling
+
+| Item | Status | Notes |
+|---|---|---|
+| Gitea wiki structure | 🔲 Planned | Depends on `dev-services-01` provisioning |
+| obsidian-mcp-server | ✅ Built, compiled clean | Awaiting security hardening and deployment |
+
 ### Final Documentation
 
 - [ ]  **Documentation:** Finalize all documentation including network diagrams, IP schemes, Docker stacks, firewall rules, VPN configs, and recovery procedures #Documentation #Finalization #MuchLater 
@@ -73,6 +80,12 @@ if (!thisPhase) {
 - [ ] Review all 9 previous Phase Hubs and mark any lingering tasks as complete or deferred. #MuchLater 
 - [ ] Compile the [[Homelab Final As-Built Documentation]]. #MuchLater 
 - [ ] Archive all old design drafts and obsolete notes. #MuchLater 
+
+### Automation & Tooling
+
+- [ ] **Automate Note-Taking:** Set up Git post-commit hooks and triggers to automatically execute `session-note-writer` for hands-free session notes. [priority:: 2] #Automation #Documentation
+- [ ] **Automated Vault Syncing:** Configure webhook-based triggers to automatically invoke `vault-sync` on swarm stack changes. [priority:: 3] #Automation #Documentation
+
 
 ## 📝 Spoke Notes & Documentation
 * [[Homelab Final As-Built Documentation]]

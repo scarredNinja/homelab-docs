@@ -14,91 +14,136 @@ tags:
 	 - [x] p2 ✅ 2026-02-18
 - [x] Pi 1 - Set ip to VLAN 60 ✅ 2026-02-24
 	- Update the ports VLAN 
+- [x] Configure Gravity Sync between pihole1 and pihole2 ✅ 2026-05-22
+- [ ] Traefik — add routing for pihole1 (10.0.60.20) and pihole2 (10.0.60.21)
+- [ ] Investigate node_exporter deployment on pihole1 and pihole2 for Prometheus scraping
 
 **Core Components:**
 
-- 2x Raspberry Pis (`pihole1` and `pihole2`)
-    
+- 2x Raspberry Pis (`pihole1` at `10.0.60.20`, `pihole2` at `10.0.60.21`) — both on VLAN 60
 - Pi-hole on each node
-    
-- Nebula overlay network (for secure connectivity and sync)
-    
-- Gravity Sync (for automatic Pi-hole database synchronization)
-    
-- (Optional but recommended) Keepalived or DNS load-balancing via pfSense / DHCP round-robin
-    
+- Gravity Sync (automatic Pi-hole database synchronization over SSH)
+- DNS load-balancing via pfSense DHCP (both IPs listed as DNS servers per VLAN)
 
 ---
 
-## 🪜 Step-by-Step Setup
+## Step-by-Step Setup
 
-### **1️⃣ Prepare the Pis**
+### 1 — Prepare the Pis
 
 On both Raspberry Pis:
 
-`sudo apt update && sudo apt upgrade -y sudo apt install curl git unzip -y hostnamectl set-hostname pihole1  # and pihole2 on the other`
+```bash
+sudo apt update && sudo apt upgrade -y
+sudo apt install curl git unzip -y
+hostnamectl set-hostname pihole1  # pihole2 on the other
+```
 
 ---
 
-### **2️⃣ Install Pi-hole on Each**
+### 2 — Install Pi-hole on Each
 
-Use the automated installer:
-
-`curl -sSL https://install.pi-hole.net | bash`
+```bash
+curl -sSL https://install.pi-hole.net | bash
+```
 
 When prompted:
 
 - Interface: `eth0`
-    
-- Static IPs (make sure both are fixed)
-    
-    - Pi 1 → `10.0.50.10`
-        
-    - Pi 2 → `10.0.50.11`
-        
-- Upstream DNS: `1.1.1.1` or whatever you want (we’ll sync this later)
-    
+- Static IPs:
+  - pihole1 → `10.0.60.20`
+  - pihole2 → `10.0.60.21`
+- Upstream DNS: `1.1.1.1`
 
-After install, confirm:
+Confirm after install:
 
-`pihole -v`
+```bash
+pihole -v
+```
 
-and web interfaces work:  
-`http://10.0.50.10/admin` and `http://10.0.50.11/admin`
+Web interfaces: `http://10.0.60.20/admin` and `http://10.0.60.21/admin`
 
 ---
 
-### **3️⃣ Install and Configure Nebula**
+## Gravity Sync Setup
 
-This gives you a private mesh network so both Pi-holes talk securely even across VLANs or WANs.
+Gravity Sync 4.x replicates the Pi-hole SQLite databases (blocklists, allow/deny lists, custom DNS records, client groups) from pihole1 (primary) to pihole2 (secondary) over SSH.
 
-#### On your management system (like your PC or pfSense box):
+### Step 1 — SSH Key Setup (run on pihole2)
 
-1. Install Nebula tools:
-    
-    `curl -LO https://github.com/slackhq/nebula/releases/latest/download/nebula-linux-amd64.tar.gz tar xvf nebula-linux-amd64.tar.gz`
-    
-2. Generate CA and certificates:
-    
-    `./nebula-cert ca -name "pihole-net" ./nebula-cert sign -name "pihole1" -ip "10.255.0.1/24" ./nebula-cert sign -name "pihole2" -ip "10.255.0.2/24"`
-    
-3. Copy each node’s `.crt`, `.key`, and `ca.crt` to `/etc/nebula/` on the Pis.
-    
+```bash
+ssh-keygen -t ed25519 -C "gravity-sync" -f ~/.ssh/gravity_sync -N ""
+ssh-copy-id -i ~/.ssh/gravity_sync.pub admin@10.0.60.20
+# Verify:
+ssh -i ~/.ssh/gravity_sync admin@10.0.60.20 "echo SSH OK"
+```
 
-#### On each Pi:
+### Step 2 — Install Gravity Sync (run on BOTH pihole1 and pihole2)
 
-1. Install Nebula:
-    
-    `sudo mkdir -p /etc/nebula cd /etc/nebula wget https://github.com/slackhq/nebula/releases/latest/download/nebula-arm64.tar.gz tar xvf nebula-arm64.tar.gz sudo mv nebula /usr/local/bin/`
-    
-2. Place certs and config in `/etc/nebula/config.yml`, for example:
-    
-    `pki:   ca: /etc/nebula/ca.crt   cert: /etc/nebula/pihole1.crt   key: /etc/nebula/pihole1.key  static_host_map:   "10.255.0.2": ["10.0.50.11:4242"]  # pihole2  lighthouse:   am_lighthouse: true   interval: 60  listen:   host: 0.0.0.0   port: 4242  punchy:   punch: true  tun:   dev: nebula1   drop_local_broadcast: false   drop_multicast: false`
+Clone the repo and copy the actual binary (`gravity-sync.sh` in the repo root is the v3→v4 migration utility — do not use it):
 
-Enable on boot:
+```bash
+git clone https://github.com/vmstan/gravity-sync
+sudo cp ~/gravity-sync/gravity-sync /usr/local/bin/gravity-sync
+sudo chmod +x /usr/local/bin/gravity-sync
+sudo mkdir -p /etc/gravity-sync/.gs/templates
+sudo cp ~/gravity-sync/templates/* /etc/gravity-sync/.gs/templates/
+```
 
-`sudo nano /etc/systemd/system/nebula.service`
+### Step 3 — Configure Gravity Sync (run on pihole2 only)
 
-`[Unit] Description=Nebula Network After=network-online.target  [Service] ExecStart=/usr/local/bin/nebula -config /etc/nebula/config.yml Restart=always  [Install] WantedBy=multi-user.target`
+```bash
+gravity-sync config
+```
 
-`sudo systemctl enable nebula --now`
+This runs an interactive setup wizard that:
+- Registers the SSH key to pihole1 (10.0.60.20)
+- Detects the local and remote Pi-hole installations automatically
+- Writes `/etc/gravity-sync/gravity-sync.conf`
+
+No config step needed on pihole1 — it is the primary.
+
+### Step 4 — Run Initial Push and Verify (run on pihole2)
+
+```bash
+gravity-sync push   # pushes pihole1's full config down to pihole2
+gravity-sync logs   # confirm success
+```
+
+Then verify pihole2 web UI (`http://10.0.60.21/admin`) matches pihole1.
+
+### Step 5 — Enable Auto-Sync (run on pihole2)
+
+```bash
+gravity-sync auto   # sets up systemd timer for ongoing sync
+```
+
+---
+
+## Verification
+
+1. Make a change on pihole1 (add a blocklist or custom DNS entry)
+2. Wait for the cron interval, or run `gravity-sync pull` manually on pihole2
+3. Confirm the change appears in pihole2's web UI (`http://10.0.60.21/admin`)
+4. Run `gravity-sync logs` — look for `Sync completed successfully`
+5. Confirm pfSense DHCP for each VLAN lists both `10.0.60.20` and `10.0.60.21` as DNS servers
+
+---
+
+## Notes
+
+- No Nebula needed — both Pis are on VLAN 60 (`10.0.60.x`) and have direct L2 reachability
+- pihole1 is always primary; do not make config changes on pihole2 directly — they will be overwritten on next sync
+- Gravity Sync is one-way (pihole1 → pihole2); use `gravity-sync push` from pihole2 to force an immediate sync
+- `gravity-sync.sh` in the repo root is the v3→v4 migration utility — do not copy it; the actual v4 binary is the `gravity-sync` file (no extension)
+- Templates must be copied to `/etc/gravity-sync/.gs/templates/` before running `gravity-sync config`
+- Auto-sync uses systemd timers, not crontab
+
+## Local DNS Records
+
+| Record | Value | Purpose |
+|--------|-------|---------|
+| `*.home.purvishome.com` | `10.0.60.40` | Traefik LAN IP — routes all homelab subdomains through Traefik |
+
+- Added via Pi-hole UI → Local DNS → DNS Records on 2026-05-26
+- If Pi-hole is rebuilt or Gravity Sync resets, this record must be re-added manually on pihole1 (Gravity Sync will then replicate it to pihole2)

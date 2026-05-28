@@ -284,4 +284,4 @@ docker compose exec -T db psql -U finance financedb < backup_20260401.sql
 - [[Finance App - Environment Variables]]
 - [[Finance App - Architecture Overview]]
 - [[Finance App - Database Schema]]
-- [[Change Log - Finance Dev]]
+- [[Finance Dev Change Log]]

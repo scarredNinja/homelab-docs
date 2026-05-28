@@ -68,6 +68,8 @@ if (!thisPhase) {
 - [ ] Look at second cable from router to waredrobe. What could I repurpose it for.   [priority:: 3] #Hardeare
 - [x] Label all cables and patch panel ports  [priority:: 2]#Hardware
 - [x] Repatch cables [priority:: 2]#Hardware
+- [x] bring through cable to the lounge ✅ 2026-05-09
+- [x] setup switch in lounge #hardware [priority:: 2]
 - [ ] organize power cables #hardware [priority:: 2]
 - [ ] create cable for pdu #Network #Hardware [priority:: 3] 
 - [ ] Create cable for Pi 1 and patch [priority:: 3] #Hardware

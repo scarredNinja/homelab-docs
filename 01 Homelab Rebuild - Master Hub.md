@@ -86,6 +86,22 @@ Use this section for essential, high-level documentation links that span across 
 - [[High-Level Security Strategy]]
 - [[Master Component Inventory List]]
 
+## 🗂️ Swarm Inventory (Bases)
+
+Live tables auto-populated from `Service - *.md` and `VM - *.md` frontmatter. Edit the underlying notes — these views update instantly.
+
+### Swarm VMs
+
+![[Swarm VM Board]]
+
+### Swarm Services
+
+![[Swarm Service Table]]
+
+### Externally Accessible Services
+
+![[Swarm External Services]]
+
 ## 📝 General Notes & Summaries
 
 - Any notes about the project as a whole.

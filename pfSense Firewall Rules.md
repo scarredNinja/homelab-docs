@@ -242,6 +242,7 @@ tags:
 | ------ | --------- | -------- | ---------- | ----------- | ------------ | --------------------------- |
 | Pass   | VLAN60    | TCP/UDP  | VLAN70 net | VLAN60 net  | 53           | DNS from all internal VLANs |
 | Pass   | VLAN60    | TCP/UDP  | VLAN70 net | VLAN60 net  | Admin_Access | Admin management            |
+| Pass   | VLAN60    | TCP      | VLAN60 net | VLAN50 net  | 22           | SSH from Infrastructure to Media VMs (deploy automation) ✅ 2026-05-20 |
 
 
 ### Inbound Rules (Deny)

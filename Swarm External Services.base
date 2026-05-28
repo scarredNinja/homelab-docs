@@ -1,27 +1,21 @@
-filter:
+filters:
   and:
-    - field: type
-      operator: eq
-      value: swarm-service
-    - field: external_access
-      operator: eq
-      value: true
+    - note.type == "swarm-service"
+    - note.external_access == true
 views:
   - type: table
     name: External Services
-    id: table-external
-    fields:
-      - field: file
-        visible: true
-      - field: service_name
-        visible: true
-      - field: service_status
-        visible: true
-      - field: vm
-        visible: true
-      - field: port
-        visible: true
-      - field: traefik_entrypoint
-        visible: true
-      - field: url_internal
-        visible: true
+    order:
+      - file.name
+      - service_name
+      - service_status
+      - vm
+      - port
+      - traefik_entrypoint
+      - url_external
+      - url_internal
+      - zfs_dataset
+      - last_updated
+    sort:
+      - property: service_name
+        direction: ASC

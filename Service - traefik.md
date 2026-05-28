@@ -10,21 +10,26 @@ service_name: Traefik
 vm: traefik-dmz-01
 swarm_constraint: node.labels.zone == public
 vlan: 80
-service_status: deployed
+service_status: running
 stack_file: /mnt/docker-swarm/stacks/traefik/stack.yml
 port: 443
 external_access: true
-traefik_entrypoint: websecure
+traefik_entrypoint: none
+note: "Traefik is the proxy itself — traefik.enable=false means it does not register as a Traefik backend and has no router/entrypoints label. external_access=true because it publishes ports 80/443 in mode:host on the DMZ VLAN and terminates public HTTPS traffic from Cloudflare. traefik_entrypoint=none reflects the absence of label-based routing for this service record."
 url_internal: https://traefik.home.purvishome.com
 zfs_dataset: rpool/docker-data/traefik
 mount_path: /mnt/docker-data/traefik
-last_updated: 2026-04-08
+last_updated: 2026-05-26
 ---
 
 # Traefik
 
-Reverse proxy. Single instance on traefik-dmz-01, two entrypoints on separate NICs.
-`websecure` (:443) on VLAN 80 — Plex only. `internal` (:8443) on VLAN 60 — all other services.
+Reverse proxy. Single instance on traefik-dmz-01.
+- Single `websecure` entrypoint on `:443` handles all services
+- `web` entrypoint on `:80` redirects to `websecure`
+- `metrics` entrypoint on `:8080` for Prometheus scrape only (not published)
+- Internal vs public separation is enforced by the internal-only IP allowlist middleware, not by a separate entrypoint
+
 
 ## Pre-deploy checklist
 
@@ -32,11 +37,26 @@ Reverse proxy. Single instance on traefik-dmz-01, two entrypoints on separate NI
 - [x] `install -m 600 /dev/null /mnt/docker-data/traefik/data/acme.json` ✅ 2026-04-08
 - [x] CF API token written to `/mnt/docker-data/traefik/cf_api_token.txt` chmod 600 ✅ 2026-04-08
 - [x] `docker node update --label-add zone=public traefik-dmz-01` ✅ 2026-04-08
+- [x] HTTPS confirmed working end-to-end ✅ 2026-04-21
 
+## Session 2026-04-21 — HTTPS Fix
 
-### 08/04/26
+> [!bug] Bug #21 — Asymmetric routing (resolved temporarily)
+> Dual default routes at metric 100 caused ECMP splitting of SYN-ACK replies.
+> Temp fix applied (route deleted). Permanent netplan fix outstanding on `enp6s19`.
+> See [[Docker Swarm Infrastructure Runbook]] Gotcha #31.
 
-Currently have a dns issue and need to test further
+> [!important] Overlay subnets pinned — 10.200.x.0/24
+> All stacks redeployed after subnet collision with physical VLANs.
+> `traefik-public` → `10.200.2.0/24` · `traefik_traefik-backend` → `10.200.3.0/24`
+> See [[Docker Swarm Infrastructure Runbook]] Gotcha #32.
+
+- [ ] Permanent asymmetric routing fix — netplan `use-routes: false` on `enp6s19` [priority:: 1]
+
+## History
+
+- `acme.json` permissions corrected (755→600) on Proxmox host; SSL restored site-wide ✅ 2026-05-26 — See [[Docker Swarm Infrastructure Runbook]] Gotcha #50
+
 ## Related
 
 - [[Traefik Routing Architecture]]

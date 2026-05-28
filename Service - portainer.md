@@ -9,11 +9,11 @@ service_name: Portainer
 vm: manager-01
 swarm_constraint: node.role == manager
 vlan: 60
-service_status: deployed
+service_status: running
 stack_file: /mnt/docker-swarm/stacks/portainer/stack.yml
 port: 9443
 external_access: false
-traefik_entrypoint: internal
+traefik_entrypoint: websecure
 url_internal: https://portainer.home.purvishome.com
 zfs_dataset: rpool/docker-data/portainer
 mount_path: /mnt/docker-data/portainer

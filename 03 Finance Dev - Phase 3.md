@@ -1,7 +1,7 @@
 ---
 
 status: Planned 
-priority: Medium 
+priority: Low 
 due_date: 
 project_id: FinanceDev-2026
 phase: "Phase 3: TBD"

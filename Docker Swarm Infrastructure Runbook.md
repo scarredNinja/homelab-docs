@@ -287,7 +287,7 @@ The final deployed stack lives at `proxmox-swarm/stacks/traefik/stack-traefik.ym
 
 **Key design decisions:**
 
-- `traefik:latest` — Docker 29.4 rejects API 1.24 used by pinned older images
+- `traefik:latest` — Docker 29.4 rejects API 1.24 used by pinned older images. **As of PR #61 (2026-05-26) all stack images are pinned to specific stable versions**; the original rationale for keeping Traefik unpinned no longer applies.
 - `mode: host` ports — preserves real Cloudflare source IPs; `mode: ingress` rewrites them through the Swarm mesh, breaking `trustedIPs`
 - `tecnativa/docker-socket-proxy` sidecar on manager — `traefik-dmz-01` is a worker node and cannot list Swarm services from its local socket; proxy runs on manager and exposes a read-only API over the `traefik-backend` overlay network
 - `traefik-backend` internal overlay — connects socket proxy on manager to Traefik on DMZ worker
@@ -701,38 +701,38 @@ docker node ls
 
 #### Prerequisites
 
-- [ ] pfSense rule: VLAN 40 ↔ VLAN 60 UDP 4789 (Swarm VXLAN overlay)
-- [ ] pfSense rule: VLAN 40 ↔ VLAN 60 TCP 2377 (Swarm control plane)
-- [ ] pfSense rule: VLAN 40 ↔ VLAN 60 TCP/UDP 7946 (Swarm gossip)
-- [ ] pfSense rule: VLAN 10 → VLAN 40:22000 TCP/UDP (Syncthing sync)
-- [ ] pfSense rule: VLAN 10 → VLAN 40:22 TCP (SSH dev access)
+- [x] pfSense rule: VLAN 40 ↔ VLAN 60 UDP 4789 (Swarm VXLAN overlay)
+- [x] pfSense rule: VLAN 40 ↔ VLAN 60 TCP 2377 (Swarm control plane)
+- [x] pfSense rule: VLAN 40 ↔ VLAN 60 TCP/UDP 7946 (Swarm gossip)
+- [x] pfSense rule: VLAN 10 → VLAN 40:22000 TCP/UDP (Syncthing sync)
+- [x] pfSense rule: VLAN 10 → VLAN 40:22 TCP (SSH dev access)
 
 #### Provisioning
 
-- [ ] Provision `dev-node-01` — VLAN 40, 2 vCPU, 4GB RAM, 40GB disk
-- [ ] Run `03-post-boot.sh` — verify actual IP with `ip addr` before running
-- [ ] Confirm node appears in Portainer with `zone=dev` label
+- [x] Provision `dev-node-01` — VLAN 40, 2 vCPU, 4GB RAM, 40GB disk
+- [x] Run `03-post-boot.sh` — verify actual IP with `ip addr` before running
+- [x] Confirm node appears in Portainer with `zone=dev` label ✅ 2026-05-25
 
 #### MCP server hardening (Claude Code session)
 
 - [x] Add API key middleware to Express `/mcp` route ✅ 2026-05-24 — implemented secure header, query param, and Bearer token parsing
 - [x] Add `VAULT_ALLOWED_FOLDERS` env var and enforcement in vault service ✅ 2026-05-24 — structured allowlist matching, filters lists, searches, and tree browsing dynamically
 - [x] Add request logging to stdout (Loki picks up via Promtail) ✅ 2026-05-24 — structured JSON stdout logs with timestamp, status, path, and duration
-- [ ] Push to `scarredNinja/obsidian-mcp-server`, open PR
+- [x] Push to `scarredNinja/obsidian-mcp-server`, open PR ✅ 2026-05-25
 
 #### Stack deployment
 
-- [ ] Write `stack-syncthing.yml` — zone=dev, volume /mnt/docker-data/vault
-- [ ] Configure Syncthing — pair with Windows PC, set `.stignore`
-- [ ] Write `stack-obsidian-mcp.yml` — zone=dev, vault mount :ro, Traefik labels
-- [ ] Deploy both stacks via Portainer
-- [ ] Confirm `obsidian-mcp.home.purvishome.com` resolves and returns 200
+- [x] Write `stack-syncthing.yml` — zone=dev, volume /mnt/docker-data/vault ✅ 2026-05-25
+- [x] Configure Syncthing — pair with Windows PC, set `.stignore` ✅ 2026-05-25
+- [x] Write `stack-obsidian-mcp.yml` — zone=dev, vault mount :ro, Traefik labels ✅ 2026-05-25
+- [x] Deploy both stacks via Portainer ✅ 2026-05-25
+- [x] Confirm `obsidian-mcp.home.purvishome.com` resolves and returns 200 ✅ 2026-05-25
 
 #### Validation
 
-- [ ] Test Claude Desktop stdio transport locally
-- [ ] Test HTTP endpoint via Traefik from VLAN 10
-- [ ] Test Antigravity CLI connection to HTTP endpoint
+- [x] Test Claude Desktop stdio transport locally ✅ 2026-05-25
+- [x] Test HTTP endpoint via Traefik from VLAN 10 ✅ 2026-05-25
+- [x] Test Antigravity CLI connection to HTTP endpoint ✅ 2026-05-25
 - [ ] Confirm credential files absent from synced vault on dev-node-01
 
 ---
@@ -1044,10 +1044,10 @@ cloudflared speaks plain HTTP to the backend service internally.
 
 **cloudflared deployment:**
 - Stack: `stack-plex.yml`, service name `cloudflared`
-- Image: `cloudflare/cloudflared:latest`
+- Image: `cloudflare/cloudflared:2025.1.0` (pinned — was `:latest`, changed PR #61 2026-05-26)
 - Placement: `type=media` (worker-media-01)
 - Networks: `media` + `traefik-public`
-- Token: `CLOUDFLARE_TUNNEL_TOKEN` env var — **must be set in Portainer stack env vars** (Stacks → plex → Environment variables), not the operator shell. See Gotcha #59. Compose interpolates from the deploying shell, so an unset shell variable silently produces `--token ""` and cloudflared exits 255.
+- Token: stored as Docker secret `cloudflare_tunnel_token` (was Portainer env var `CLOUDFLARE_TUNNEL_TOKEN` — changed PR #61 2026-05-26). Passed to the container via `TUNNEL_TOKEN` env var set from the secret at container start.
 - Image is **distroless** — no `/bin/sh`, no debug tools. Entrypoint shims (`sh -c '...'`) are not possible; only `cloudflared` itself can be invoked. See Gotcha #59.
 
 > [!warning] Cloudflare ToS
@@ -1276,7 +1276,7 @@ docker node update --label-add zone=pi-worker \
 | Off-site | `restic-backup.sh` → restic-rest-server | All of `MainStorage/backups/` → Synology NFS | Daily 05:00 |
 | Point-in-time | ZFS snapshot (manual) | Before any major change | On demand |
 
-**restic-rest-server:** Deployed as Swarm stack (`stacks/stack-restic.yml`), pinned to `zone=monitoring`, NFS mount from Synology (`10.0.100.20:/volume1/docker-backups`, nfsvers=3), port 8000 via routing mesh. Proxmox host requires pfSense rule: `10.0.90.50 → 10.0.60.0/24:8000`.
+**restic-rest-server:** Deployed as Swarm stack (`stacks/stack-restic.yml`), pinned to `zone=monitoring`, NFS mount from Synology (`10.0.100.20:/volume1/docker-backups`, nfsvers=3), port 8000 via routing mesh. Proxmox host requires pfSense rule: `10.0.90.50 → 10.0.60.0/24:8000`. As of PR #61 (2026-05-26): `--no-auth` replaced with `--htpasswd-file /run/secrets/restic_htpasswd`; credentials stored as Docker secret `restic_htpasswd` (bcrypt htpasswd file). The `RESTIC_REPO` on the Proxmox host now includes `restic:<password>@` credentials in the URL.
 
 - [x] Build Grafana backup dashboard ✅ 2026-05-07 — PR #18. `write_prom_metrics` added to all 4 scripts, node_exporter textfile collector configured via `deploy-backup-scripts.sh`, Prometheus scrape job at `10.0.90.50:9100`, dashboard at `proxmox-swarm/stacks/monitoring/dashboards/backup-status.json`. Import into Grafana manually. `proxmox_config_backup` confirmed; remaining 3 jobs confirm after overnight cron run.
 - [x] Add pfSense rule: VLAN 60 → `10.0.90.50:9100` TCP — Prometheus scrape of Proxmox host node_exporter [priority:: 2] ✅ 2026-05-08
@@ -1328,7 +1328,7 @@ bash /root/copy-traefik-config.sh
 | 13  | Proxmox API             | `qm agent` JSON parsing fails                                               | API returns plain array, not `{"result":[]}`                                                                                                                               | Parse raw array directly                                                                                                                                                                                                      |
 | 14  | DHCP                    | VM gets no IP after provisioning                                            | VLAN tag not set on NIC                                                                                                                                                    | Set VLAN tag explicitly in `02-provision-vm.sh`                                                                                                                                                                               |
 | 15  | pfSense DynDNS          | `Could not route to /client/v4/zones/token/dns_records`                     | pfSense CE 2.8.0 substitutes Username field literally into Cloudflare API URL                                                                                              | Use Zone ID as Username field. Get from Cloudflare Dashboard → domain → Overview → right sidebar.                                                                                                                             |
-| 16  | Traefik v3 + Docker 29  | Traefik rejects API 1.24                                                    | Docker 29.4 dropped support for old API versions                                                                                                                           | Use `traefik:latest` not a pinned older tag                                                                                                                                                                                   |
+| 16  | Traefik v3 + Docker 29  | Traefik rejects API 1.24                                                    | Docker 29.4 dropped support for old API versions                                                                                                                           | Originally used `traefik:latest` to avoid older pinned tags. As of PR #61 (2026-05-26) all images are pinned to specific stable versions — use the pinned tag from the stack file.                                            |
 | 17  | Traefik on Swarm worker | Traefik can't list Swarm services                                           | Worker nodes can't query Swarm API from local Docker socket                                                                                                                | Deploy `tecnativa/docker-socket-proxy` on manager, connect via `traefik-backend` overlay. Set endpoint to `tcp://docker-proxy:2375`.                                                                                          |
 | 18  | Traefik entrypoint name | `EntryPoint doesn't exist: https` in dynamic config                         | Entrypoint renamed from `https` to `websecure` in updated config                                                                                                           | Update all dynamic config files: `entrypoints: [websecure]` not `[https]`                                                                                                                                                     |
 | 19  | virtiofs + Docker       | Swarm manager demotes itself to worker on reboot                            | Docker creates data subdirs with `700` on host-side ZFS mountpoint. virtiofs exposes host permissions directly — no remapping. Docker can't read Raft state DB on restart. | `chmod -R 755 /mnt/docker-data/` on Proxmox host after first Docker start. Must be host-level — VM-side fixes don't survive Docker restart. Automated in `03-post-boot.sh`.                                                   |
@@ -1357,6 +1357,7 @@ bash /root/copy-traefik-config.sh
 | 47  | Prometheus / HA          | HA Prometheus bearer token committed to git or visible in `docker inspect` | `bearer_token:` inline in `prometheus.yml` exposes the token in config files and container metadata | Store token as Docker secret; reference via `bearer_token_file: /run/secrets/ha_prometheus_token`. See detailed entry below. |
 | 48  | Backup / cron | `vm-backup.sh` had no cron entry — never ran in production | Script deployed but `deploy-backup-scripts.sh` not re-run after cron section was added | Re-run `deploy-backup-scripts.sh` to atomically write all cron entries |
 | 49  | NFS / Go runtime | NFS `hard` mount blocks all Go goroutines under backup load | Go runtime parks goroutines indefinitely on `hard` NFS stall — no timeout = no recovery path | Use `soft,timeo=50,retrans=3`: 5s per attempt × 3 retries before returning error to caller. Note: this partially reverts the Gotcha #68 fix (`hard` mount) — documents the correct tradeoff between EIO risk and goroutine starvation. |
+| 50  | Traefik / ACME | `acme.json` has permissions `755` — Traefik logs `"ACME resolve is skipped... permissions 755 are too open"` and issues NO new certs silently | virtiofs exposes host-side file permissions directly into containers. If `acme.json` was created or copied with `755`, Traefik refuses to load the ACME resolver on startup. Existing certs continue to work but no new certs are issued. | `sudo chmod 600 /mnt/docker-data/traefik/data/acme.json` on traefik-dmz-01 (or Proxmox host), then `docker service update --force traefik_traefik`. This is the VM-side fix — virtiofs reflects chmod back to the host dataset. |
 
 ---
 
@@ -1952,6 +1953,12 @@ Container failed to start with: `exec: "/bin/sh": stat /bin/sh: no such file or 
 3. Redeploy.
 
 Portainer stores stack env vars in its encrypted DB and always interpolates at deploy time, regardless of which shell or workflow triggered the deploy. Survives manager reboots, fresh ssh sessions, and redeploys from Git webhook / UI / API equally.
+
+> [!note] PR #61 update (2026-05-26) — token now stored as Docker secret
+> The Portainer env-var approach above has been superseded. In PR #61 the tunnel token was moved to a Docker secret `cloudflare_tunnel_token`. The container receives it via the `TUNNEL_TOKEN` environment variable set from the secret at startup. Create the secret with:
+> ```bash
+> printf '%s' '<token>' | docker secret create cloudflare_tunnel_token -
+> ```
 
 **If a wrapper around `cloudflared` is ever required** (e.g. to read a secret from `/run/secrets/...`), the only path is to build a thin custom image based on `alpine` or `busybox` that copies the cloudflared binary in. The official image cannot be shimmed.
 

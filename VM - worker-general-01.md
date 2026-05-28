@@ -25,14 +25,12 @@ node_labels:
 vm_status: not-created
 post_boot_run: false
 swarm_joined: false
-last_updated: 2026-04-02
+last_updated: 2026-04-25
 ---
 
-- [ ] Needs to be updated  [priority:: 2]
 # worker-general-01
 
-Homelab/dev worker. Dev, test, and general workloads on VLAN 40.
-Future home for public-facing services (website etc.) if needed.
+> [!warning] Superseded — this VM was never provisioned. The role was split: media management workloads went to [[VM - worker-mediamanagement-01]] (VLAN 50). This note is retained for historical reference only.
 
 ## Related
 

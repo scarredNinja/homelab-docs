@@ -6,27 +6,25 @@ tags:
   - DockerSwarm
 ---
 
-## To Do
-
-- [ ] Add in details of traefik setup and point to files in git [priority:: 4]
-## Details
-
-- Network: proxy
-
+> [!note] Superseded
+> The canonical Traefik reference is [[Traefik Routing Architecture]]. The service record (with pre-deploy checklist and deploy status) is [[Service - traefik]].
 
 ## Directory Structure
 
+```
+/mnt/docker-data/traefik/
+├── data/
+│   ├── acme.json          (chmod 600 — must be set on Proxmox host)
+│   ├── dynamic.yml        (file provider — non-Docker service routes)
+│   └── traefik.yml        (static config)
+└── cf_api_token.txt       (chmod 600)
+```
 
-./traefik
-├── data
-│   ├── acme.json
-│   ├── dynamic.yml
-│   ├── dynamic.yml
-│   └── traefik.yml
-└── cf_api_token.txt
-└── portainer-stack.yml
+**Stack file:** `/mnt/docker-swarm/stacks/traefik/stack.yml`
+**Git repo:** [docker-swarm-home](https://github.com/scarredNinja/docker-swarm-home)
 
-**Files**: [link to git](https://github.com/scarredNinja/docker-swarm-home)
-## Commands
+## Network
 
-docker network create --driver overlay proxy
+```bash
+docker network create --driver overlay --attachable traefik-public
+```

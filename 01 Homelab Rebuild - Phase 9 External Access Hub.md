@@ -1,31 +1,37 @@
 ---
-status: Planned
-priority: Low
+status: In Progress
+priority: High
 due_date: 2026-05-30
 project_id: Homelab-2025
 phase: "Phase 9: External Access"
 ---
-# ⏸️ Phase 9: External Access
+# 🔐 Phase 9: External Access & Admin VPN
 
-The final step for connectivity: setting up secure remote access and necessary port forwarding (VPN or Reverse Proxy).
+Secure remote admin access without exposing services publicly. This homelab is behind ISP CGNAT — inbound port forwarding is impossible. Solution: **Tailscale** on pfSense as a subnet router for `10.0.60.0/25` (VLAN 60 / Infrastructure), with DERP relay for CGNAT traversal.
+
+> [!note] WireGuard/OpenVPN plans from original phase spec are superseded by Tailscale. Cloudflare Tunnel handles the one public-facing service (Plex).
 
 ## 🎯 Goals
-## Verification & Testing
-- [ ] Test IoT device connectivity with HA + Unifi after VLAN migration.  
-- [ ] Test guest VLAN isolation (ensure VLAN 30 can only access allowed resources).  
-- [ ] Test DMZ isolation (reverse proxy can’t directly access VLAN 60/65 without rules).  
-- [ ] Confirm management VLAN 90 is reachable only from Admin VLAN 70 + VPN.  
-- [ ] Run a connectivity matrix test (ping/traceroute across VLANs per rules).  
 
-## Documentation
-- [ ] Update Obsidian VLAN documentation with new firewall rules.  
-- [ ] Document which services/containers live on which VLANs.  
-- [ ] Link VLAN docs to service diagrams for quick lookup.
+- Off-site admin access to VLAN 60 services (Traefik, Portainer, Grafana, etc.)
+- No inbound ports, no public exposure of admin services
+- Split-tunnel: only `10.0.60.0/25` routes via VPN, not all device traffic
 
+## 📝 Related Notes
 
-* Establish a secure VPN solution for remote access (e.g., WireGuard, OpenVPN).
-* Configure dynamic DNS and necessary port forwarding on the edge firewall.
-* **CRITICAL:** Ensure only necessary ports are exposed, and security policies are enforced.
+- [[Session Notes — 2026-05-07 — Tailscale Admin VPN]] — session record, blocked diagnostic steps
+- [[Docker Swarm Infrastructure Runbook]] — Phase 9 section
+- `docs/admin-vpn.md` in [scarredNinja/docker-swarm-home](https://github.com/scarredNinja/docker-swarm-home) — architecture, checklist, security notes
+
+## Current Status (2026-05-07)
+
+| Item | Status |
+|---|---|
+| Tailscale installed on pfSense | ✅ |
+| Subnet route `10.0.60.0/25` advertised + approved | ✅ |
+| pfSense firewall rule: Tailscale → VLAN 60 | ✅ |
+| Traefik `internal-only` + `100.64.0.0/10` | ✅ Deployed |
+| Phone → VLAN 60 routing | ✅ Resolved 2026-05-08 |
 
 ## 🔗 Action Items
 
@@ -72,13 +78,18 @@ if (!thisPhase) {
 }
 ```
 
-- [ ] Deploy and configure the WireGuard VPN server.
-- [ ] Set up dynamic DNS updates.
-- [ ] Audit the firewall rules to block all unnecessary external access.
+- [x] Install Tailscale on pfSense, advertise `10.0.60.0/25` subnet route ✅ 2026-05-07
+- [x] Approve subnet route in Tailscale admin console ✅ 2026-05-07
+- [x] pfSense firewall rule: Tailscale interface → VLAN 60 ✅ 2026-05-07
+- [x] Traefik `internal-only` middleware: add `100.64.0.0/10` (Tailscale IP range) ✅ 2026-05-07
+- [x] Diagnose phone routing ✅ 2026-05-08
+- [x] End-to-end test confirmed — Tailscale deployed and routing to VLAN 60 ✅ 2026-05-08
+- [ ] Configure Tailscale ACL: restrict to `10.0.60.0/25` only, no other VLANs [priority:: 2]
+- [ ] Enrol remaining admin devices (laptop) [priority:: 2]
 
 ## 📝 Spoke Notes & Documentation
-* [[WireGuard Configuration Log]]
-* [[External Access Security Audit]]
+* [[Session Notes — 2026-05-07 — Tailscale Admin VPN]]
+* `docs/admin-vpn.md` — in repo
 
 ---
 ## ➡️ Next Phase

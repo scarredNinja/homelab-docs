@@ -206,4 +206,9 @@ if (rows.length === 0) {
 - App deployed and running at `http://localhost:3000` via Docker
 - Existing features: budget envelopes, transactions, savings goals, mortgage calculator, solar, property valuation
 
+## 2026-05-22
+
+- Added Deployment Architecture task to task checklist for production homelab and development lab deployments.
+- Updated Phase 1 hub status to Completed.
+
 ---

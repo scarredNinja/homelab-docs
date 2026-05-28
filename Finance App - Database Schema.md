@@ -49,9 +49,12 @@ model AppSettings {
   defaultEnvelopeView  String   @default("grid")   // "grid" | "list"
   mortgageAlertDays    Int      @default(90)
   lowEnvelopeThreshold Float    @default(0.1)       // 10% remaining triggers warning
+  akahuHistoricalDays  Int      @default(90)        // Phase 2 — initial sync lookback window (days)
   updatedAt            DateTime @updatedAt
 }
 ```
+
+> **`akahuHistoricalDays`**: Controls how many days back to fetch on the first sync run for each bank account (when `BankAccount.lastRefreshed` is null). Subsequent syncs always use `lastRefreshed - 2 days` regardless of this setting. Default 90 days; raise to 365 for a deep historical import.
 
 ---
 
@@ -130,6 +133,7 @@ model Transaction {
 
 - `openBankingRef` is `@unique` — prevents duplicates on re-sync. Null values are excluded from uniqueness check by Postgres partial index behaviour.
 - Splits: when a transaction is split, the original is deleted and N replacement records are inserted with the same `date` and `source`.
+- `source: 'seed'` is used for test data records to distinguish them from real `'akahu'` imports — important for the "Unreviewed" filter (`envelopeId === null && source === 'akahu'`).
 
 ---
 
@@ -199,6 +203,8 @@ model Mortgage {
 ```
 
 **Fortnightly note:** `repaymentAmount` for fortnightly should be `(monthlyRepayment × 12) / 26` — 26 payments per year, not 24. See `src/lib/calculations/mortgage.ts`.
+
+> **CDR note:** For ANZ, ASB, BNZ, and Westpac loan accounts, `meta.loan_details` (interest rate, term, repayment structure) is not available via official open banking APIs. Mortgage details are user-maintained.
 
 ---
 
@@ -364,17 +370,21 @@ model AkahuSyncLog {
 When running `DELETE /api/seed` or similar full purges, delete in this dependency order to avoid FK violations:
 
 ```
-SavingsContribution → SavingsGoal
-AkahuSyncLog → BankAccount
-Transaction → (BudgetEnvelope, Category, ScheduledTransaction, BankAccount)
-ScheduledTransaction → (BudgetEnvelope, Category, Mortgage)
-BudgetEnvelope → Category
-PropertyValuation → Property
+SavingsContribution   → SavingsGoal
+AkahuSyncLog          → BankAccount
+Transaction           → (BudgetEnvelope, Category, ScheduledTransaction, BankAccount)
+ScheduledTransaction  → (BudgetEnvelope, Category, Mortgage)
+BankAccount           (no remaining dependants after Transaction and AkahuSyncLog)
+BudgetEnvelope        → Category
+PropertyValuation     → Property
 Mortgage
+SavingsGoal
 SolarConfig
 Property
 AppSettings
 ```
+
+> ⚠️ `AkahuSyncLog` must be deleted **before** `BankAccount`. `Transaction` must be deleted before both. The order above is FK-safe.
 
 ---
 
