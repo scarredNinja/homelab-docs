@@ -2,6 +2,9 @@
 tags:
   - ChangeLog
   - HomeLabRebuild
+status: Active
+phase: Master Hub
+project_id: Homelab-2025
 ---
 # 🖥️ Homelab Change Log
 
@@ -207,10 +210,10 @@ const rows = [...phaseMap.entries()]
             remaining,
             row: [
                 hub.file.link,
-                `\`${bar}\` ${pct}%`,
+                `\${bar}\` \${pct}%`,
                 done,
                 remaining,
-                recent > 0 ? `+${recent} this month` : "—",
+                recent > 0 ? `+\${recent} this month` : "—",
             ]
         };
     })
@@ -231,9 +234,29 @@ if (rows.length === 0) {
 
 > _Add dated entries below. Format: `## YYYY-MM-DD` then free text. The auto-timeline above will pick them up automatically._
 
+## 12/06/2026
+
+- **InfluxDB and Pi-hole Exporter Stack Fixes** — Updated `stack-monitoring.yml` to resolve InfluxDB migration conflicts by pinning version `2.9.0`. Configured `pihole-exporter` to run inside `alpine:3.18` with a shell wrapper entrypoint that reads `/run/secrets/pihole_password` dynamically at runtime, mounting the Go binary as a read-only volume.
+
+## 02/06/2026
+
+- **Permanent Netplan Routing Fix on `traefik-dmz-01` (`enp6s19`)** — Confirmed and synchronized the permanent asymmetric routing fix for the public-facing Traefik VM `traefik-dmz-01`. The fix adds `dhcp4-overrides: use-routes: false` to the `enp6s19` network interface configuration (VLAN 80) in the Netplan configuration. This prevents duplicate default routes, forces outbound traffic to consistently traverse the management network interface (`eth0`, VLAN 60), resolves asymmetry issues, survives system reboots, and aligns notes across the entire Obsidian knowledge vault.
+
+## 01/06/2026
+
+- **Homepage Dashboard Active Widget Integration** — Synchronized active status widgets for local homelab monitoring dashboard on `worker-monitoring-01`. Corrected Portainer environment ID to `env: 5` to resolve Portainer widget API 404 connections. Resolved self-signed TLS errors globally across Next.js API requests by adding environment variable `NODE_TLS_REJECT_UNAUTHORIZED: "0"` in `stack-homepage.yml`. Integrated Uptime Kuma native status widget directly via internal Docker network (`http://uptime-kuma_uptime-kuma:3001`). Configured active Grafana widget with admin secrets dynamically mapped via new external Docker secrets `grafana_admin_user` and `grafana_admin_password` and custom environment variables, replacing static setups.
+
+## 28/05/2026
+
+- **Pi-hole Widget Docker Secret Integration** — Migrated the Homepage dashboard Pi-hole widget credentials to Docker Secrets (`pihole_app_password`). Updated `stack-homepage.yml` to declare and mount the secret. Replaced the hardcoded API key placeholder in `services.yaml` with `/run/secrets/pihole_app_password`. Redeployed the Homepage stack and verified container health (running Next.js 15.4.5 cleanly). Documented the widget's path-resolution limitation and planned the transition to environment variable substitution (`{{HOMEPAGE_VAR_PIHOLE_KEY}}`) for the next session.
+- **Pi-hole Monitoring Integration (PR #66)** — Deployed `pihole-exporter` as a Docker Swarm service in `stack-monitoring.yml` using `ekofr/pihole-exporter:v0.4.0` pinned to `zone=monitoring`. Configured external `pihole_password` Docker secret. Configured Prometheus scrape job `pihole-exporter` and added native `prometheus-node-exporter` targets (`10.0.60.20:9100`, `10.0.60.21:9100`) on VLAN 60 for system-level metrics.
+- **Prometheus TSDB Max-Bytes Flag Bug Fix** — Resolved Prometheus service crash loops by replacing the deprecated `--storage.tsdb.max-bytes=8GB` command-line flag with the supported `--storage.tsdb.retention.size=8GB` in `stack-monitoring.yml`.
+- **Finance App Container Compilation Complete** — Deployed full-stack Finance app `dev-finance` Swarm stack in Portainer, successfully compiling the Next.js/Prisma container, pushing to GHCR (`ghcr.io/scarredninja/webdev:latest`), aligning lockfiles to Prisma 6.4.0, and verifying the live service at `dev-finance.home.purvishome.com`.
+- **Homelab Vault Backup & Pi-hole v6 API Migration** — Migrated the homelab Obsidian vault repository remote to HTTPS and backed up the vault along with local automation scripts to GitHub. Documented the Pi-hole v6 REST API migration paths and prepared placeholder configurations.
+
 ## 22/05/2026
 
-- **Modular Prometheus Alerting Rules & Sync Script Automation** — Successfully modularized Prometheus alerting rules into dedicated, domain-specific files (`hardware.yml`, `zfs.yml`, and `swarm.yml`) under `config/monitoring/alerts/`. Deleted monolithic `alert-rules.yml`. Updated `prometheus.yml` to glob-match rule files (`/etc/prometheus/alerts/*.yml`) and updated the monitoring stack `stack-monitoring.yml` to mount the entire rules directory to `/etc/prometheus/alerts:ro`. Modified the config sync script `copy-swarm-config.sh` to create the target folder and glob-copy the rules dynamically. Created and pushed feature branch `feature/modular-alerting-rules`, followed by successful deployment to the Swarm cluster.
+- **Modular Prometheus Alerting Rules & Sync Script Automation** — Successfully modularized Prometheus alerting rules into dedicated, domain-specific files (`hardware.yml`, `zfs.yml`, and `swarm.yml`) under `config/monitoring/alerts/`. Deleted monolithic `alert-rules.yml`. Updated `prometheus.yml` to glob-match rule files (`/etc/prometheus/alerts/*.yml`) and updated the monitoring stack `stack-monitoring-yml` to mount the entire rules directory to `/etc/prometheus/alerts:ro`. Modified the config sync script `copy-swarm-config.sh` to create the target folder and glob-copy the rules dynamically. Created and pushed feature branch `feature/modular-alerting-rules`, followed by successful deployment to the Swarm cluster.
 - **Inter-VM SSH Setup & Script Deployment Automation** — Established secure, automated inter-VM SSH access from the Swarm Manager VM (`manager-01`, VLAN 60) to the Swarm Worker VMs (`worker-media-01` and `worker-mediamanagement-01`, VLAN 50) using the administrative `docker` SSH user. Modified `deploy-worker-scripts.sh` to dynamically configure and update `~/.ssh/config` on `manager-01` when run with the `--remote` option. Included secure `StrictHostKeyChecking accept-new` configuration for frictionless, non-interactive host key validation and verification. Created and pushed feature branch `feature/intervm-ssh-setup`.
 
 ## 21/05/2026
