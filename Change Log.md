@@ -236,7 +236,7 @@ if (rows.length === 0) {
 
 ## 12/06/2026
 
-- **InfluxDB and Pi-hole Exporter Stack Fixes** — Updated `stack-monitoring.yml` to resolve InfluxDB migration conflicts by pinning version `2.9.0`. Configured `pihole-exporter` to run inside `alpine:3.18` with a shell wrapper entrypoint that reads `/run/secrets/pihole_password` dynamically at runtime, mounting the Go binary as a read-only volume.
+- **InfluxDB and Pi-hole Exporter Stack Fixes** — Updated `stack-monitoring.yml` to resolve InfluxDB migration conflicts by pinning version `2.9.0`. Configured `pihole-exporter` to run inside `debian:stable-slim` (resolving dynamic binary libc issues) with a shell wrapper entrypoint that strips trailing newlines (`tr -d '\r\n'`) from `/run/secrets/pihole_password` to prevent invalid API authentication, mounting the Go binary as a read-only volume.
 
 ## 02/06/2026
 

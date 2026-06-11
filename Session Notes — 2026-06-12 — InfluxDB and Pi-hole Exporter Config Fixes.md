@@ -16,8 +16,8 @@ Resolve the InfluxDB migration conflict and configure Pi-hole Exporter to run in
 
 ## Completed
 - **Updated InfluxDB Image Tag**: Pinned the InfluxDB container image version to `2.9.0` (from `2.7`) in `stack-monitoring.yml` to resolve database migration conflicts.
-- **Switched Pi-hole Exporter to Alpine**: Migrated the container base image from `ekofr/pihole-exporter:v0.4.0` to `alpine:3.18` in `stack-monitoring.yml`.
-- **Configured Secrets Wrapper for Exporter**: Mounted the `pihole-exporter` binary from `/mnt/docker-data/pihole-exporter` to `/app:ro` and added a shell wrapper entrypoint to read the Docker secret (`pihole_password`) and execute the binary.
+- **Switched Pi-hole Exporter to Debian**: Migrated the container base image from `ekofr/pihole-exporter:v0.4.0` to `debian:stable-slim` in `stack-monitoring.yml` to resolve libc/glibc compatibility issues with the dynamically linked Go binary (fixing the `/app/pihole-exporter: not found` error seen on Alpine).
+- **Configured Secrets Wrapper for Exporter**: Mounted the `pihole-exporter` binary from `/mnt/docker-data/pihole-exporter` to `/app:ro` and added a shell wrapper entrypoint to read the Docker secret (`pihole_password`) and execute the binary, dynamically stripping trailing newlines and carriage returns (`tr -d '\r\n'`) to prevent invalid API authentication.
 
 ## Related Notes
 [[01 Homelab Rebuild - Phase 8 Basic Monitoring Hub]]
