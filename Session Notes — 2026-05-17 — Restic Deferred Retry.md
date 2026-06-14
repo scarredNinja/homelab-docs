@@ -1,10 +1,15 @@
 ---
-date: 2026-05-17
+date: '2026-05-17T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 7: Backup Verification"
+phase: 'Phase 7: Backup Verification'
 session_type: bugfix
-status: pending-verification
-tags: [backup, restic, cron, vm-backup, sentinel]
+status: Completed
+tags:
+  - backup
+  - restic
+  - cron
+  - vm-backup
+  - sentinel
 ---
 
 # Session Notes — 2026-05-17 — Restic Deferred Retry

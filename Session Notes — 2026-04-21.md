@@ -1,9 +1,9 @@
 ---
-date: 2026-04-21
+date: '2026-04-21'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — HTTPS Fix & Plex External Access"
+phase: 'Phase 5: Docker Swarm — HTTPS Fix & Plex External Access'
 session_type: Diagnose + Fix
-status: Partial — Plex external access browser test pending
+status: Completed
 tags:
   - SessionNotes
   - DockerSwarm
@@ -12,7 +12,6 @@ tags:
   - Plex
   - HTTPS
 ---
-
 # Session Notes — 2026-04-21
 
 ## 🎯 Session Goal
@@ -107,9 +106,9 @@ Changes committed as `eafa48b` on branch `claude/happy-cartwright-f38701`, merge
 
 ---
 
-## ➡️ Next Session Priorities
+## Next Session Priorities
 
-- [ ] **Permanent netplan fix on `traefik-dmz-01`** — add `dhcp4-overrides: use-routes: false` to `enp6s19` stanza to survive reboot [priority:: 1]
+- [x] **Asymmetric routing netplan fix consolidated** — tracked on master VM page [[VM - traefik-dmz-01]] ✅ 2026-06-01
 - [x] **Verify pfSense port forward** — external 443 → `traefik-dmz-01` — confirm rule is active and NAT is correct ✅ 2026-05-01
 - [x] **Flush PiHole cache** — or verify TTL has expired, then test `plex.purvishome.com` locally ✅ 2026-04-30
 - [x] **Plex browser test end-to-end** — `https://plex.purvishome.com` through Cloudflare → pfSense → Traefik → Plex ✅ 2026-04-30

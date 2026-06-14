@@ -1,9 +1,9 @@
 ---
-date: 2026-05-07
+date: '2026-05-07T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 9: External Access"
+phase: 'Phase 9: External Access'
 session_type: Code + Implementation
-status: Complete
+status: Completed
 tags:
   - Tailscale
   - VPN
@@ -11,6 +11,7 @@ tags:
   - pfSense
   - Traefik
   - CGNAT
+service_status: deployed
 ---
 
 # Session Notes — 2026-05-07 — Tailscale Admin VPN

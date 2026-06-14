@@ -1,5 +1,11 @@
-
-
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 https://discord.com/api/webhooks/1382645972399554634/c0Eebaq-qDrKoKIViKzZUbnNNy64O5gFXU6M-D9Y1cJCc8pY8WmY54bx0HT611qlg1fA
 
 [[Storage & Backups]]
@@ -12,4 +18,4 @@ https://discord.com/api/webhooks/1382645972399554634/c0Eebaq-qDrKoKIViKzZUbnNNy6
 ![[LXC Container Backup Script.txt]]
 
 **To Do:**
-- [x] - Log the cron jobs created and verify they are being backed up 
+- [x] - Log the cron jobs created and verify they are being backed up

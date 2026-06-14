@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 global:
   scrape_interval: 15s
   evaluation_interval: 15s

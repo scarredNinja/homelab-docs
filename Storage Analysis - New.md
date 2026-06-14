@@ -1,10 +1,11 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Storage Config"
+phase: 'Phase 4: Storage Config'
 tags:
   - Storage
   - Network
   - Docker
+status: Reference
 ---
 [[01 Homelab Rebuild - Phase 4 Proxmox Network & Storage Configuration Hub]]
 ## 🏗️ Homelab Storage & Performance Architecture

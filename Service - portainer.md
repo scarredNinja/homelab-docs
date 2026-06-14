@@ -1,7 +1,7 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
@@ -14,10 +14,11 @@ stack_file: /mnt/docker-swarm/stacks/portainer/stack.yml
 port: 9443
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://portainer.home.purvishome.com
+url_internal: 'https://portainer.home.purvishome.com'
 zfs_dataset: rpool/docker-data/portainer
 mount_path: /mnt/docker-data/portainer
-last_updated: 2026-04-02
+last_updated: '2026-04-02T00:00:00.000Z'
+status: Completed
 ---
 
 # Portainer

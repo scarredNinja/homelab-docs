@@ -1,19 +1,18 @@
 ---
-date: 2026-05-19
+date: '2026-05-19'
+phase: 'Phase 5: Docker Swarm & Virtualisation'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm & Virtualisation"
 session_type: Code
-status: Partial — pfSense VLAN60→VLAN50 firewall rule outstanding; post-deploy stack redeployments not yet done
+status: Completed
 tags:
-  - SessionNotes
-  - Monitoring
-  - Networking
-  - WireGuard
   - Exportarr
+  - Monitoring
   - NFS
+  - Networking
   - Prometheus
+  - SessionNotes
+  - WireGuard
 ---
-
 # Session Notes — 2026-05-19 — Monitoring Network Decouple & NFS Deploy
 
 ## 🎯 Session Goal
@@ -100,37 +99,37 @@ Four fix commits followed initial implementation:
 
 ---
 
-## 📊 Current State (End of Session)
+## 📋 Current State (End of Session)
 
 | Component | Status |
 |---|---|
-| `monitoring` overlay — standalone external network | 🔲 Pending `create-monitoring-network.sh` + stack redeploy |
-| `stack-arr.yml` — monitoring network name fix | 🔲 Pending arr stack redeploy |
-| `stack-controller.yml` — alias rename | 🔲 Pending controller stack redeploy |
-| Exportarr sonarr-exporter (9707) | 🔲 Deployed — `SONARR_API_KEY` not yet set |
-| Exportarr radarr-exporter (9708) | 🔲 Deployed — `RADARR_API_KEY` not yet set |
-| Gluetun WireGuard migration | 🔲 `WIREGUARD_PRIVATE_KEY` not yet set in `compose-vpn.yml` |
-| Prometheus VLAN 50 scrape targets | 🔲 Pending monitoring stack redeploy |
-| nfs-bench.sh on worker-media-01 | 🔲 Pending `deploy-worker-scripts.sh` run |
-| Grafana NFS Performance panels | 🔲 Pending Prometheus scrape + `.prom` seed |
-| pfSense VLAN60→VLAN50 TCP/9100 rule | 🔲 Outstanding — required for VLAN 50 node-exporter scrape |
-| restic deferred sentinel | 🔲 Pending `deploy-backup-scripts.sh` re-run |
+| `monitoring` overlay — standalone external network | ✅ Deployed |
+| `stack-arr.yml` — monitoring network name fix | ✅ Deployed |
+| `stack-controller.yml` — alias rename | ✅ Deployed |
+| Exportarr sonarr-exporter (9707) | ✅ Deployed & verified UP |
+| Exportarr radarr-exporter (9708) | ✅ Deployed & verified UP |
+| Gluetun WireGuard migration | ✅ Deployed & verified UP |
+| Prometheus VLAN 50 scrape targets | ✅ Deployed |
+| nfs-bench.sh on worker-media-01 | ✅ Deployed |
+| Grafana NFS Performance panels | ✅ Deployed |
+| pfSense VLAN60→VLAN50 TCP/9100 rule | ✅ Deployed |
+| restic deferred sentinel | ✅ Deployed |
 | PR #39 | ✅ Merged 2026-05-19 |
 | PR #40 | ✅ Merged 2026-05-19 |
 | PR #41 | ✅ Merged 2026-05-19 |
 
 ---
 
-## ➡️ Next Session Priorities
+## 🎯 Next Session Priorities
 
-- [ ] Add pfSense firewall rule: VLAN 60 → VLAN 50, TCP port 9100 (node-exporter) [priority::1]
-- [ ] Run `create-monitoring-network.sh` on Proxmox host / manager-01, then redeploy monitoring stack [priority::1]
-- [ ] Redeploy arr stack — set `SONARR_API_KEY` + `RADARR_API_KEY` in Portainer env, set `WIREGUARD_PRIVATE_KEY` in `compose-vpn.yml` first [priority::1]
-- [ ] Redeploy controller stack after monitoring network migration [priority::2]
-- [ ] Run `deploy-worker-scripts.sh` on worker-media-01 to deploy nfs-bench and seed `.prom` file [priority::2]
-- [ ] Import updated `backup-status.json` Grafana dashboard (NFS bench row) [priority::2]
-- [ ] Re-run `deploy-backup-scripts.sh` to install restic deferred sentinel [priority::2]
-- [ ] Run nfs-bench.sh on worker-mediamanagement-01 for second data point [priority::3]
+- [x] Add pfSense firewall rule: VLAN 60 → VLAN 50, TCP port 9100 (node-exporter) [priority::1]
+- [x] Run `create-monitoring-network.sh` on Proxmox host / manager-01, then redeploy monitoring stack [priority::1]
+- [x] Redeploy arr stack — set `SONARR_API_KEY` + `RADARR_API_KEY` in Portainer env, set `WIREGUARD_PRIVATE_KEY` in `compose-vpn.yml` first [priority::1]
+- [x] Redeploy controller stack after monitoring network migration [priority::2]
+- [x] Run `deploy-worker-scripts.sh` on worker-media-01 to deploy nfs-bench and seed `.prom` file [priority::2]
+- [x] Import updated `backup-status.json` Grafana dashboard (NFS bench row) [priority::2]
+- [x] Re-run `deploy-backup-scripts.sh` to install restic deferred sentinel [priority::2]
+- [x] Run nfs-bench.sh on worker-mediamanagement-01 for second data point [priority::3]
 
 ---
 

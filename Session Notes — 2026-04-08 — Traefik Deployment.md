@@ -1,9 +1,9 @@
 ---
-date: 2026-04-08
+date: '2026-04-08T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 session_type: Deploy
-status: Complete
+status: Completed
 branch: main
 tags:
   - SessionNotes

@@ -1,8 +1,11 @@
 ---
-
-## project_type: Personal Finance App 
 project_id: FinanceDev-2026
-
+status: Active
+phase: Master Hub
+tags:
+  - project
+  - finance-app
+  - homelab
 ---
 
 # 💰 Finance Dev - Master Project Hub

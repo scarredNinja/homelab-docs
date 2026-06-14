@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 # Proxmox VM Template Prep for Docker Swarm Workers 
 
 - **1. Create Base VM**
@@ -126,4 +133,3 @@
     - Verify VLAN tagging and DHCP 
     - Verify Docker starts 
     - Optional: test NFS mount manually
-

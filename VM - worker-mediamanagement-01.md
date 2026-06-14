@@ -1,7 +1,7 @@
 ---
 type: swarm-vm
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - VM
@@ -22,12 +22,13 @@ node_labels:
 vm_status: running
 post_boot_run: true
 swarm_joined: true
-last_updated: 2026-05-21
+last_updated: '2026-05-21T00:00:00.000Z'
+status: updated
 ---
 
 # worker-mediamanagement-01
 
-Swarm worker node. Media management stack — Sonarr, Radarr, Prowlarr, Transmission + Gluetun VPN sidecar.
+Swarm worker node. Media management stack — Seerr, Sonarr, Radarr, Prowlarr, Transmission + Gluetun VPN sidecar.
 
 ## Notes
 
@@ -51,6 +52,7 @@ Swarm worker node. Media management stack — Sonarr, Radarr, Prowlarr, Transmis
 ## Related
 
 - [[Docker Swarm Infrastructure Runbook]]
+- [[Service - seerr]]
 - [[Service - sonarr]]
 - [[Service - radarr]]
 - [[Service - prowlarr]]

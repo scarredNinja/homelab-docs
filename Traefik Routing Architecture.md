@@ -1,13 +1,14 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - Traefik
   - DockerSwarm
   - Networking
   - DMZ
   - Security
-date: 2026-04-02
+date: '2026-04-02T00:00:00.000Z'
+status: Reference
 ---
 
 # Traefik Routing Architecture

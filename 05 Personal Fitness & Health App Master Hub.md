@@ -1,6 +1,12 @@
 ---
 project_type: Personal Fitness & Health App
 project_id: FitnessDev-2026
+status: Active
+phase: Master Hub
+tags:
+  - project
+  - fitness-app
+  - homelab
 ---
 
 # 🏋️‍♂️ Personal Fitness & Health - Master Project Hub

@@ -1,11 +1,10 @@
 ---
-status: Archived
 project_id: Homelab-2025
-phase: "Phase 6: Service Deployment"
-archived_date: 2026-04-25
-archive_reason: Merged into Phase 5 — all service deployment tracked there
+status: Archived
+phase: Archive
+tags:
+  - archive
 ---
-
 > [!warning] Archived 2026-04-25
 > Phase 6 goals were completed as part of [[01 Homelab Rebuild - Phase 5 Docker Swarm & Virtualisation Hub]].
 > All service status, deployment tasks, and configuration are tracked in Phase 5 notes and individual `Service - *.md` files.

@@ -1,7 +1,7 @@
 ---
 type: swarm-vm
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - VM
@@ -11,16 +11,17 @@ vcpu: 2
 ram_gb: 4
 disk_gb: 20
 vlan_primary: 60
-vlan_secondary:
+vlan_secondary: null
 ip_primary: 10.0.60.30
-ip_secondary:
+ip_secondary: null
 swarm_role: manager
 node_labels:
   - node.role=manager
 vm_status: running
 post_boot_run: true
 swarm_joined: true
-last_updated: 2026-05-21
+last_updated: '2026-05-21T00:00:00.000Z'
+status: Active
 ---
 
 # manager-01

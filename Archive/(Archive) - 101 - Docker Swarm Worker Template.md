@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 #HomeLabRebuild/Docker #HomeLabRebuild/Proxmox 
 
 # Proxmox VM Template Prep for Docker Swarm Workers 
@@ -103,9 +110,8 @@
     - [x] Note the template ID (e.g., 103) #todoist ✅ 2025-08-22
 
 - [x] **8. Test Template** #todoist ✅ 2025-08-22
-    - [ ] Clone a test VM manually #todoist
-    - [ ] Check SSH key injection #todoist
-    - [ ] Verify VLAN tagging and DHCP #todoist
-    - [ ] Verify Docker starts #todoist
-    - [ ] Optional: test NFS mount manually #todoist
-
+    - Clone a test VM manually #todoist
+    - heck SSH key injection #todoist
+    - erify VLAN tagging and DHCP #todoist
+    - Verify Docker starts #todoist
+    - Optional: test NFS mount manually #todoist

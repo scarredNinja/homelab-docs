@@ -1,14 +1,11 @@
 ---
-
-status: Planned 
-priority: Low 
-due_date: 
+status: Reference
+priority: Low
+due_date: null
 project_id: FinanceDev-2026
-phase: "Phase 3: TBD"
+phase: 'Phase 3: TBD'
 tags:
-
-- finance-app
-
+  - finance-app
 ---
 
 # 🔮 Phase 3: TBD

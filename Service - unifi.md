@@ -1,30 +1,26 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
   - Networking
-
 service_name: UniFi Controller
 vm: worker-controller-01
-swarm_constraint: "node.labels.zone == controller"
+swarm_constraint: node.labels.zone == controller
 vlan: 60
-
 service_status: running
 stack_file: /mnt/docker-swarm/stacks/controller/stack-controller.yml
 port: 8443
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://unifi.home.purvishome.com
-
+url_internal: 'https://unifi.home.purvishome.com'
 zfs_dataset: rpool/docker-db/unifi
 mount_path: /mnt/docker-db/unifi
-
-last_updated: 2026-04-28
+last_updated: '2026-04-28'
+status: Completed
 ---
-
 # UniFi Controller
 
 WiFi and AP management. Uses bundled MongoDB (`unifi-controller` image) — local virtiofs docker-db, never NFS.
@@ -43,3 +39,4 @@ Pinned to controller worker — device adoption state is local.
 
 - [ ] Re-adopt AP to new controller — set inform URL to `http://10.0.60.42:8080/inform` (SSH or device reset)
 - [ ] Verify Prometheus metrics — confirm scrape job active and data visible in Grafana
+- [ ] unpoller plaintext password — up.conf is bind-mounted with plaintext UniFi password; migrate to a Docker secret

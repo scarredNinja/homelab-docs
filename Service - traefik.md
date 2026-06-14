@@ -1,27 +1,32 @@
 ---
-type: swarm-service
+external_access: true
+last_updated: '2026-06-02'
+mount_path: /mnt/docker-data/traefik
+note: >-
+  Traefik is the proxy itself — traefik.enable=false means it does not register
+  as a Traefik backend and has no router/entrypoints label. external_access=true
+  because it publishes ports 80/443 in mode:host on the DMZ VLAN and terminates
+  public HTTPS traffic from Cloudflare. traefik_entrypoint=none reflects the
+  absence of label-based routing for this service record.
+phase: 'Phase 5: Docker Swarm'
+port: 443
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+service_name: Traefik
+service_status: running
+stack_file: /mnt/docker-swarm/stacks/traefik/stack.yml
+swarm_constraint: node.labels.zone == public
 tags:
   - DockerSwarm
   - Service
   - Networking
-service_name: Traefik
-vm: traefik-dmz-01
-swarm_constraint: node.labels.zone == public
-vlan: 80
-service_status: running
-stack_file: /mnt/docker-swarm/stacks/traefik/stack.yml
-port: 443
-external_access: true
 traefik_entrypoint: none
-note: "Traefik is the proxy itself — traefik.enable=false means it does not register as a Traefik backend and has no router/entrypoints label. external_access=true because it publishes ports 80/443 in mode:host on the DMZ VLAN and terminates public HTTPS traffic from Cloudflare. traefik_entrypoint=none reflects the absence of label-based routing for this service record."
-url_internal: https://traefik.home.purvishome.com
+type: swarm-service
+url_internal: 'https://traefik.home.purvishome.com'
+vlan: 80
+vm: traefik-dmz-01
 zfs_dataset: rpool/docker-data/traefik
-mount_path: /mnt/docker-data/traefik
-last_updated: 2026-05-26
+status: Completed
 ---
-
 # Traefik
 
 Reverse proxy. Single instance on traefik-dmz-01.
@@ -41,17 +46,16 @@ Reverse proxy. Single instance on traefik-dmz-01.
 
 ## Session 2026-04-21 — HTTPS Fix
 
-> [!bug] Bug #21 — Asymmetric routing (resolved temporarily)
+> [!success] Bug #21 — Asymmetric routing (permanently resolved)
 > Dual default routes at metric 100 caused ECMP splitting of SYN-ACK replies.
-> Temp fix applied (route deleted). Permanent netplan fix outstanding on `enp6s19`.
-> See [[Docker Swarm Infrastructure Runbook]] Gotcha #31.
+> Permanent netplan fix implemented by adding `dhcp4-overrides: use-routes: false` to the `enp6s19` interface stanza. Outbound traffic now routes consistently via the primary management interface (`eth0`, VLAN 60).
 
 > [!important] Overlay subnets pinned — 10.200.x.0/24
 > All stacks redeployed after subnet collision with physical VLANs.
 > `traefik-public` → `10.200.2.0/24` · `traefik_traefik-backend` → `10.200.3.0/24`
 > See [[Docker Swarm Infrastructure Runbook]] Gotcha #32.
 
-- [ ] Permanent asymmetric routing fix — netplan `use-routes: false` on `enp6s19` [priority:: 1]
+- [x] Asymmetric routing netplan fix consolidated — tracked on master VM page [[VM - traefik-dmz-01]] ✅ 2026-06-01
 
 ## History
 

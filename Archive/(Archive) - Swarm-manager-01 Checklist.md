@@ -1,5 +1,9 @@
 ---
-feature: 10 - Projects/Pasted image 20250928183720.png
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
 ---
 #HomeLabRebuild/Docker #HomeLabRebuild/Proxmox  #HomeLabRebuild/Phase5 #HomeLabRebuild/Virtualisation
 

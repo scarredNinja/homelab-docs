@@ -1,9 +1,9 @@
 ---
-date: 2026-05-27
+date: '2026-05-27T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Dev Sandboxes & Ingestion Setup"
-session_type: "Planning + Deploy"
-status: "Partial — Finance Build Blocked"
+phase: 'Phase 5: Docker Swarm — Dev Sandboxes & Ingestion Setup'
+session_type: Planning + Deploy
+status: Completed
 tags:
   - SessionNotes
   - NewtonFit

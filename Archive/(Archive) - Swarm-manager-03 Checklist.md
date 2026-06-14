@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 #HomeLabRebuild/Docker #HomeLabRebuild/Proxmox  #HomeLabRebuild/Phase5 #HomeLabRebuild/Virtualisation
 
 # Swarm Worker VM Provisioning Checklist ✅
@@ -42,11 +49,11 @@
 ## 5. Verify NFS
 - [x] **NFS shares mounted under `/mnt/<share>`** ✅ 2025-10-01
 	  - **VM-side:**  
-	    - [ ] Run `mount | grep nfs` → NFS mounts should appear.  
+	    - Run `mount | grep nfs` → NFS mounts should appear.  
 		    - Not working
-	    - [ ] Run `ls /mnt` → should show share directories (e.g., `/mnt/media`).  
+	    - Run `ls /mnt` → should show share directories (e.g., `/mnt/media`).  
 		    - Not working
-	    - [ ] If missing, check `/etc/fstab` for correct entries.  
+	    - If missing, check `/etc/fstab` for correct entries.  
 		    - No Entries
 
 ## 6. Start VM

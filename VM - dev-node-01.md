@@ -5,12 +5,18 @@ vmid: 206
 hostname: dev-node-01
 ip_primary: 10.0.40.50
 vlan_primary: 40
-vlan_secondary: ""
+vlan_secondary: ''
 post_boot_run: true
 swarm_joined: true
 project_id: Homelab-2025
-last_updated: 2026-05-25
-tags: [swarm-vm, dev, devnode]
+last_updated: '2026-05-25T00:00:00.000Z'
+tags:
+  - DockerSwarm
+  - VM
+  - dev
+  - devnode
+status: Active
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # VM — dev-node-01

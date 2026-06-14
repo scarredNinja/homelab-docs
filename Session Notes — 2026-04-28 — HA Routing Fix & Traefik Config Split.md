@@ -1,9 +1,9 @@
 ---
-date: 2026-04-28
+date: '2026-04-28T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
-session_type: debugging, infrastructure
-status: complete
+phase: 'Phase 5: Docker Swarm'
+session_type: 'debugging, infrastructure'
+status: Completed
 tags:
   - DockerSwarm
   - Traefik

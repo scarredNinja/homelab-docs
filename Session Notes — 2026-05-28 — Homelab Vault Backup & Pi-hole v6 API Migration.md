@@ -1,9 +1,9 @@
 ---
-date: 2026-05-28
+date: '2026-05-28T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Dev Sandboxes & Ingestion Setup"
-session_type: "Backup & Config"
-status: "Complete"
+phase: 'Phase 5: Docker Swarm — Dev Sandboxes & Ingestion Setup'
+session_type: Backup & Config
+status: Completed
 tags:
   - SessionNotes
   - Backup
@@ -31,13 +31,13 @@ Perform a full session backup of all local documentation and automation scripts 
 ---
 
 ## ➡️ Next Steps
-- [ ] **Generate Pi-hole App Passwords**:
+- [x] **Generate Pi-hole App Passwords**: ✅ 2026-06-09
   1. Log into your Pi-holes at `http://10.0.60.20/admin` and `http://10.0.60.21/admin`.
   2. Navigate to **System > Settings > Web interface/API**.
   3. Toggle the view mode from **Basic** to **Expert**.
   4. Generate a new **App Password** for the Homepage dashboard under the **Configure app password** section.
-- [ ] **Update key in `services.yaml`**: Replace `<api_token_or_app_password>` in `proxmox-swarm/stacks/homepage/services.yaml` with the generated app passwords.
-- [ ] **Sync Swarm Config**:
+- [x] **Update key in `services.yaml`**: Replace `<api_token_or_app_password>` in `proxmox-swarm/stacks/homepage/services.yaml` with the generated app passwords. ✅ 2026-06-09
+- [x] **Sync Swarm Config**: ✅ 2026-06-09
   Run the copy script on the Proxmox host to apply the configuration:
   ```bash
   git pull && sudo bash proxmox-swarm/scripts/copy-swarm-config.sh

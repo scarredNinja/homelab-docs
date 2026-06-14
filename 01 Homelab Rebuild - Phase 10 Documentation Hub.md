@@ -1,9 +1,9 @@
 ---
-status: Planned
+due_date: '2026-06-30'
+phase: 'Phase 10: Documentation'
 priority: Medium
-due_date: 2026-06-30
 project_id: Homelab-2025
-phase: "Phase 10: Documentation"
+status: Planned
 ---
 # 📅 Phase 10: Documentation
 
@@ -83,8 +83,8 @@ if (!thisPhase) {
 
 ### Automation & Tooling
 
-- [ ] **Automate Note-Taking:** Set up Git post-commit hooks and triggers to automatically execute `session-note-writer` for hands-free session notes. [priority:: 2] #Automation #Documentation
-- [ ] **Automated Vault Syncing:** Configure webhook-based triggers to automatically invoke `vault-sync` on swarm stack changes. [priority:: 3] #Automation #Documentation
+- [x] **Automate Note-Taking:** Set up Git post-commit hooks and triggers to automatically execute `session-note-writer` for hands-free session notes. [priority:: 2] #Automation #Documentation
+- [x] **Automated Vault Syncing:** Configure webhook-based triggers to automatically invoke `vault-sync` on swarm stack changes. [priority:: 3] #Automation #Documentation
 
 
 ## 📝 Spoke Notes & Documentation

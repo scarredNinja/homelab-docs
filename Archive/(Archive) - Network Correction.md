@@ -1,8 +1,15 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 # Proxmox Network Recovery & Security Setup
 
 ## Phase 1: Restore Proxmox GUI Access
 
-		- [ ] 🔺 Go over network arcitecture again and consider the points made in: [[Homelab Rebuild 2025/Infrastructure/Networking/Notes|Notes]] #HomeLabRebuild/Network #HomeLabRebuild/Checklist  #todoist
+		- 🔺 Go over network arcitecture again and consider the points made in: [[Homelab Rebuild 2025/Infrastructure/Networking/Notes|Notes]] #HomeLabRebuild/Network #HomeLabRebuild/Checklist  #todoist
 ### Step 1: Backup Current Configuration
 
 ```bash
@@ -248,12 +255,12 @@ tcpdump -i any -nn | grep -E "(10\.0\.90|10\.0\.75)"
 
 ### Before Proceeding to VMs:
 
-- [ ] Proxmox GUI accessible via https://10.0.90.10:8006 #todoist
-- [ ] Can ping all VLAN gateways from Proxmox host
-- [ ] VPN VLAN (75) properly isolated #todoist
-- [ ] No unexpected cross-VLAN traffic #todoist
-- [ ] pfSense firewall rules implemented #todoist
-- [ ] Network monitoring active #todoist
+- Proxmox GUI accessible via https://10.0.90.10:8006 #todoist
+- Can ping all VLAN gateways from Proxmox host
+- VPN VLAN (75) properly isolated #todoist
+- No unexpected cross-VLAN traffic #todoist
+- pfSense firewall rules implemented #todoist
+- Network monitoring active #todoist
 
 ### Troubleshooting Commands
 

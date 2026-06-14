@@ -1,10 +1,15 @@
 ---
-date: 2026-05-18
+date: '2026-05-18T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 7: Backup Verification"
+phase: 'Phase 7: Backup Verification'
 session_type: bugfix
-status: pending-verification
-tags: [backup, restic, nfs, cron, vm-backup]
+status: Completed
+tags:
+  - backup
+  - restic
+  - nfs
+  - cron
+  - vm-backup
 ---
 
 # Session Notes — 2026-05-18 — Restic NFS Hard Mount Fix

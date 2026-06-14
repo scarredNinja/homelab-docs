@@ -2,10 +2,11 @@
 type: reference
 project_id: Homelab-2025
 tags:
-  - Meta
-  - Conventions
-  - SessionNotes
-last_updated: 2026-04-21
+  - session-note
+  - homelab
+last_updated: '2026-04-21T00:00:00.000Z'
+status: Completed
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Session Notes — Template & Conventions

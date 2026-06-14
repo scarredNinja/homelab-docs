@@ -1,9 +1,9 @@
 ---
-date: 2026-05-13
+date: '2026-05-13T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 7: Backup Verification"
+phase: 'Phase 7: Backup Verification'
 session_type: Bugfix + Implementation
-status: Complete — first fully automated cron run pending overnight
+status: Completed
 tags:
   - Backup
   - Restic

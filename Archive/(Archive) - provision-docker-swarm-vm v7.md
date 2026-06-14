@@ -1,4 +1,10 @@
-
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 #HomeLabRebuild/Virtualisation #HomeLabRebuild/SwarmManager #HomeLabRebuild/SwarmWorker #HomeLabRebuild/Tem
 
 #!/bin/bash
@@ -145,4 +151,3 @@ if $FIRST_MANAGER; then
 fi
 
 echo ">>> Provisioning complete for $VM_NAME ($VMID)"
-

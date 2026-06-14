@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 #Storage #server 
 
 ## Storage Architecture for Docker Swarm
@@ -117,4 +125,3 @@ Since your controller supports SAS/SATA, pick enterprise SAS SSDs for endurance:
 
 - HPE, Samsung PM863/PM883, or Micron 5300 MAX/PRO (960GB or 1.92TB).
 - Endurance: Prefer 3 DWPD+ (Drive Writes Per Day) for server use.
-  

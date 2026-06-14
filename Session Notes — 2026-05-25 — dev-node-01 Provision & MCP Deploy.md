@@ -1,7 +1,11 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-25
-tags: [session-note, homelab, docker-swarm, mcp, syncthing, obsidian]
+date: '2026-05-25T00:00:00.000Z'
+tags:
+  - session-note
+  - homelab
+status: Completed
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Session Notes — 2026-05-25 — dev-node-01 Provision & MCP Deploy
@@ -134,12 +138,12 @@ Fix obsidian-mcp-server write tools — `VAULT_WRITE_FOLDERS` was set to a non-e
 
 ## Open / Next Session
 
-- [ ] Confirm `obsidian_search` and other MCP tools returning results consistently (initial verification done — monitor over time)
+- [x] Confirm `obsidian_search` and other MCP tools returning results consistently (initial verification done — monitor over time) ✅ 2026-06-09
 - [x] Push `obsidian-mcp-server` source to `scarredNinja/obsidian-mcp-server` GitHub repo (public, standalone) — already done; CI/CD publishing to `ghcr.io`
 - [x] Set up GitHub Actions CI for `ghcr.io` image builds — already live (`ci: add GitHub Actions workflow`)
-- [ ] Fix Pi-hole wildcard DNS: add `address=/.home.purvishome.com/10.0.60.40` to `/etc/dnsmasq.d/02-homelab-wildcard.conf`
-- [ ] Fix inter-VLAN SSH: pfSense TCP/22 rule (VLAN 10→VLAN 60) still pending from Alertmanager session
-- [ ] Arr stack Docker secrets creation + redeploy (Docker secrets `_v2` not yet live)
+- [x] Fix Pi-hole wildcard DNS: add `address=/.home.purvishome.com/10.0.60.40` to `/etc/dnsmasq.d/02-homelab-wildcard.conf` ✅ 2026-06-09
+- [x] Fix inter-VLAN SSH: pfSense TCP/22 rule (VLAN 10→VLAN 60) still pending from Alertmanager session ✅ 2026-06-09
+- [x] Arr stack Docker secrets creation + redeploy (Docker secrets `_v2` not yet live) ✅ 2026-06-09
 - [ ] Implement Git post-commit hooks and automated triggers to invoke `session-note-writer` and `vault-sync` subagents for hands-free note-taking and documentation automation.
 
 

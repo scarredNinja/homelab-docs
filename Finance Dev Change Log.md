@@ -1,3 +1,12 @@
+---
+project_id: FinanceDev-2026
+status: Reference
+phase: 'Phase 1: Foundation'
+tags:
+  - finance-dev
+  - reference
+  - changelog
+---
 # 💰 Finance Dev Change Log
 
 > This file serves two purposes: a **manual log** for significant changes (add entries below under the correct date heading), and an **auto-timeline** at the top that pulls recent activity from phase hub files automatically.

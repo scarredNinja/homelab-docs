@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Storage Config"
+phase: 'Phase 4: Storage Config'
 tags:
   - ZFS
   - Storage
+status: Reference
 ---
 
 # ZFS Configuration and Setup

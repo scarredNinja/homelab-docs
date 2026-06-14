@@ -5,8 +5,11 @@ tags:
   - aot
   - containerization
   - caching
-created: 2026-05-21
-up: "[[MOC - .NET Cloud & AI]]"
+created: '2026-05-21T00:00:00.000Z'
+up: '[[MOC - .NET Cloud & AI]]'
+status: Reference
+phase: Sandbox
+project_id: Dotnet-2026
 ---
 
 # 🧪 .NET 9 Modernization Sandbox

@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 2: Physical Setup Hub"
+phase: 'Phase 2: Physical Setup Hub'
 tags:
   - Ethernet
   - Wiring
+status: Reference
 ---
 
 # Physical Wiring Work

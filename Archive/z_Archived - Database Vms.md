@@ -1,12 +1,10 @@
-
 ---
-
-# 🖥️ Homelab VM Architecture
-
-This note outlines the VM setups for the homelab, separating **application databases** and **Swarm monitoring/observability services**, with persistence strategy and future scaling considerations.
-
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
 ---
-
 ## **1️⃣ App Database VM**
 
 **Purpose:** Hosts all application databases and acts as the central DB server for app services.

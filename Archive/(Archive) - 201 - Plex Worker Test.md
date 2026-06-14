@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 #HomeLabRebuild/Docker #HomeLabRebuild/Proxmox  #HomeLabRebuild/Phase5
 
 # Swarm Worker VM Provisioning Checklist ✅
@@ -16,31 +23,31 @@
 
 ## 3. Run Provisioning Script
 - [x] Make script executable: `chmod +x provision_worker.sh` ✅ 2025-08-22
-    - [ ] Run example command: 
+    - [x] Run example command: ✅ 2026-06-03
       ```bash
       ./provision-swarm-worker.sh --autojoin \
   --nfs 0.0.60.80:/volume1/movies,10.0.60.80:/volume1/tvshows, 10.0.60.80:/volume1/animation \
   --volume configs,100G,zfs \
   plex-01
-    - [ ] Confirm VM is cloned successfully 
-    - [ ] Confirm MAC address and VMID output
+    -  Confirm VM is cloned successfully 
+    -  Confirm MAC address and VMID output
 
 ## 4. Verify Cloud-init
 - [x] **Swarm join command added (if `--autojoin`)** ✅ 2025-08-22
 	  - **Proxmox-side:**  
 	    - [x] Run `qm cloudinit dump <VMID> user` and confirm the `runcmd:` section contains the Docker Swarm join command. ✅ 2025-08-22
 	  - **VM-side:**  
-	    - [ ] ❌  Run `docker info | grep "Swarm:"` → should show `Swarm: active`. 
+	    -  ❌  Run `docker info | grep "Swarm:"` → should show `Swarm: active`. 
 		    - Note: Confimed not working
 
 ## 5. Verify NFS
 - [x] **NFS shares mounted under `/mnt/<share>`** ✅ 2025-08-22
 	  - **VM-side:**  
-	    - [ ] ❌ Run `mount | grep nfs` → NFS mounts should appear.  
+	    -  ❌ Run `mount | grep nfs` → NFS mounts should appear.  
 		    
-	    - [ ] ❌ Run `ls /mnt` → should show share directories (e.g., `/mnt/media`).  
+	    -  ❌ Run `ls /mnt` → should show share directories (e.g., `/mnt/media`).  
 		    
-	    - [ ] ❌ If missing, check `/etc/fstab` for correct entries.  
+	    -  ❌ If missing, check `/etc/fstab` for correct entries.  
 
 ## 6. Start VM
 - [x] Boot the VM #HomeLabRebuild/Phase5 ✅ 2025-08-22
@@ -98,6 +105,6 @@
 
 
 ## 8. Optional Post-Provision Steps
-- [ ] Install additional packages needed by the worker 
-- [ ] Configure monitoring or backups 
-- [ ] Document VM and attached volumes in cluster map 
+- [x] Install additional packages needed by the worker ✅ 2026-06-03
+- [x] Configure monitoring or backups ✅ 2026-06-03
+- [x] Document VM and attached volumes in cluster map ✅ 2026-06-03

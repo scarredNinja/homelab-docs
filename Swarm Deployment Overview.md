@@ -1,13 +1,14 @@
 ---
 type: reference
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Proxmox
   - Tracking
   - Overview
-last_updated: 2026-04-26
+last_updated: '2026-04-26T00:00:00.000Z'
+status: Reference
 ---
 
 # 🖥️ Swarm Deployment Overview

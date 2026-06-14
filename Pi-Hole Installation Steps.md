@@ -1,8 +1,9 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 3: Network Config"
+phase: 'Phase 3: Network Config'
 tags:
   - pihole
+status: Reference
 ---
 
 ## Tasks
@@ -16,7 +17,8 @@ tags:
 	- Update the ports VLAN 
 - [x] Configure Gravity Sync between pihole1 and pihole2 ✅ 2026-05-22
 - [ ] Traefik — add routing for pihole1 (10.0.60.20) and pihole2 (10.0.60.21)
-- [ ] Investigate node_exporter deployment on pihole1 and pihole2 for Prometheus scraping
+- [x] Deploy node_exporter on pihole1 and pihole2 for Prometheus scraping ✅ 2026-05-28
+- [x] Deploy pihole-exporter (eko/pihole-exporter) in monitoring stack for DNS/ad-block metrics ✅ 2026-05-28
 
 **Core Components:**
 
@@ -147,3 +149,72 @@ gravity-sync auto   # sets up systemd timer for ongoing sync
 
 - Added via Pi-hole UI → Local DNS → DNS Records on 2026-05-26
 - If Pi-hole is rebuilt or Gravity Sync resets, this record must be re-added manually on pihole1 (Gravity Sync will then replicate it to pihole2)
+
+---
+
+## Monitoring Setup
+
+Two layers of monitoring are in place:
+
+### 1 — System-Level Metrics: `node_exporter`
+
+Installed natively on both Pis via `apt` so Prometheus can scrape CPU, memory, disk, and network stats.
+
+```bash
+# Run on BOTH pihole1 and pihole2:
+sudo apt update && sudo apt install -y prometheus-node-exporter
+sudo systemctl enable --now prometheus-node-exporter
+
+# Verify:
+sudo systemctl status prometheus-node-exporter
+curl -s http://localhost:9100/metrics | head -20
+```
+
+Default port: `9100`. Both hosts are on VLAN 60, same as the Swarm monitoring VM — no pfSense inter-VLAN rule needed.
+
+Prometheus scrape targets (in `config/monitoring/prometheus.yml`):
+
+```yaml
+- job_name: node_exporter_external
+  static_configs:
+    - targets:
+        - '10.0.60.20:9100'   # pihole1
+        - '10.0.60.21:9100'   # pihole2
+      labels:
+        vlan: 'vlan60'
+```
+
+### 2 — Pi-hole DNS Metrics: `pihole-exporter`
+
+Deployed as a Swarm service in `stack-monitoring.yml` using `ekofr/pihole-exporter:v0.4.0`.
+Exposes Pi-hole-specific metrics (blocked queries, top clients, query types) on port `9617`.
+
+**Pre-requisite — create Docker Secret (run once on a Swarm manager):**
+
+```bash
+# Use your Pi-hole web admin password
+printf 'your-pihole-password' | docker secret create pihole_password -
+```
+
+The service is pinned to `zone=monitoring` and monitors both instances using comma-separated hostnames:
+
+```yaml
+PIHOLE_HOSTNAME: "10.0.60.20,10.0.60.21"
+```
+
+Prometheus scrape job:
+
+```yaml
+- job_name: pihole-exporter
+  static_configs:
+    - targets: ['tasks.monitoring_pihole-exporter:9617']
+```
+
+**Verification:**
+
+```bash
+# From a Swarm node
+curl -s http://<monitoring-vm-ip>:9617/metrics | grep pihole_
+```
+
+Grafana dashboard: import ID **10176** (Pi-hole Exporter dashboard from Grafana Labs).

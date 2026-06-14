@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 Swarm Manager 1 Join Token: SWMTKN-1-06b4vjctnxxh2tpz66shtbh90pnegi276c6vcp7hemcrwn1dh0-1ovi0r7vsv6w80wehindwlimn
 
 # Manager Creation

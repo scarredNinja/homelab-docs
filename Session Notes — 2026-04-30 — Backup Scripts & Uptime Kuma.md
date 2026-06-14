@@ -1,9 +1,9 @@
 ---
-date: 2026-04-30
+date: '2026-04-30T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 7: Backup Verification"
+phase: 'Phase 7: Backup Verification'
 session_type: Implementation
-status: Partial — pending Synology SSH fix and restic init
+status: Completed
 tags:
   - Backup
   - ZFS

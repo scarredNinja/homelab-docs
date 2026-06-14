@@ -1,10 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+status: Archived
+phase: Archive
 tags:
-  - Archived
+  - archive
 ---
-
 # 🐳 Docker Swarm Control & Monitoring Plan
 
 ## 1. Control Plane

@@ -1,8 +1,9 @@
 ---
-project_id: "Homelab-2025"
-phase: "Phase 1: Preparation"
+project_id: Homelab-2025
+phase: 'Phase 1: Preparation'
 tags:
   - Storage
+status: Reference
 ---
 ## Rack Server:
 

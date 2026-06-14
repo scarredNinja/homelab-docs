@@ -1,19 +1,17 @@
 ---
-
-project_id: FinanceDev-2026 
-phase: 2 
+project_id: FinanceDev-2026
+phase: 2
 tags:
-
-- open-banking
-- akahu
-- integration
-- finance-app
-- next-js
-- prisma
-- nz 
-- created: 2026-04-01 
-- status: planning
-
+  - open-banking
+  - akahu
+  - integration
+  - finance-app
+  - next-js
+  - prisma
+  - nz
+  - created: '2026-04-01T00:00:00.000Z'
+  - status: planning
+status: Reference
 ---
 
 # Akahu Open Banking Integration

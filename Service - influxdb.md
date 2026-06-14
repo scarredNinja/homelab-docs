@@ -1,7 +1,7 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
@@ -15,10 +15,11 @@ stack_file: /mnt/docker-swarm/stacks/monitoring/stack.yml
 port: 8086
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://influxdb.home.purvishome.com
+url_internal: 'https://influxdb.home.purvishome.com'
 zfs_dataset: rpool/docker-tsdb/influxdb
 mount_path: /mnt/docker-tsdb/influxdb
-last_updated: 2026-04-24
+last_updated: '2026-04-24T00:00:00.000Z'
+status: Completed
 ---
 
 # InfluxDB

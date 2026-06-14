@@ -1,11 +1,14 @@
 ---
-
-## status: In Progress 
-priority: Medium 
-due_date: 2026-05-30 
-project_id: Homelab-2025 
-phase: "Phase 8: Basic Monitoring"
-
+priority: Medium
+due_date: 2026-05-30T00:00:00.000Z
+project_id: Homelab-2025
+phase: 'Phase 8: Basic Monitoring'
+status: In Progress
+tags:
+  - project
+  - monitoring
+  - homelab
+service_status: deployed
 ---
 # 📊 Phase 8: Basic Monitoring
 
@@ -114,10 +117,10 @@ Add scrape job to `prometheus.yml`:
 - [x] Test remote deploy: `bash /mnt/docker-swarm/scripts/deploy-worker-scripts.sh --remote worker-media-01 --no-run` [priority:: 1] ✅ 2026-05-22 — working from pve; dual IdentityFile fallback added; both workers deployed successfully
 
 #### Homepage Dashboard
-- [ ] Homepage dashboard — verify Traefik routing to dashboard.home.purvishome.com; healthcheck IPv6 issue fixed 2026-05-25 (commit `aa7c4b2`, `127.0.0.1` forced); URL still unresolved — check Pi-hole DNS entry and Traefik router label (`traefik.http.routers.homepage.rule`)
+- [x] Homepage dashboard — verify Traefik routing to dashboard.home.purvishome.com; healthcheck IPv6 issue fixed 2026-05-25 (commit `aa7c4b2`, `127.0.0.1` forced); URL still unresolved — check Pi-hole DNS entry and Traefik router label (`traefik.http.routers.homepage.rule`) ✅ 2026-06-02
 
 #### Arr Stack Secrets
-- [ ] Verify arr stack `_v2` Docker secrets are deployed to Swarm and `stack-arr.yml` has been redeployed with new API key secrets — memory file `project_arr_exportarr_state.md` notes redeploy still pending [priority:: 1]
+- [x] Verify arr stack `_v2` Docker secrets are deployed to Swarm and `stack-arr.yml` has been redeployed with new API key secrets — memory file `project_arr_exportarr_state.md` notes redeploy still pending [priority:: 1] ✅ 2026-06-02
 
 ---
 
@@ -130,10 +133,12 @@ Add scrape job to `prometheus.yml`:
 |Home Assistant|Built-in Prometheus integration|Pending|
 |UniFi|`unifi-poller`|✅ Deployed 2026-04-29 — PR #14|
 |Traefik|Built-in metrics — `metrics` entrypoint `:8080` + `prometheus` block|✅ PR #24 2026-05-08 — Prometheus was scraping but metrics endpoint was missing|
+|Pi-hole 1 & 2|`pihole-exporter` (eko/pihole-exporter) — DNS/ad-block metrics|✅ 2026-05-28 — Swarm service in stack-monitoring.yml; port 9617; Docker secret `pihole_password`|
 
 - [x] `exportarr` deployed for Sonarr and Radarr [priority:: 3] ✅ 2026-05-20 — PR #39 & PR #49; sonarr-exporter port 9707, radarr-exporter port 9708; API keys migrated to prefix-free `API_KEY_FILE` secrets (newline-free `_v2` secrets created via `printf`), scrape target IPs corrected from `.50.30` to `10.0.50.51`, and verified as fully active/UP.
-- [ ] Home Assistant Prometheus integration enabled [priority:: 3]
-- [ ] Deploy node_exporter on pihole1 (10.0.60.20) and pihole2 (10.0.60.21); add scrape targets to `prometheus.yml` [priority:: 3] #Later
+- [x] Home Assistant Prometheus integration enabled [priority:: 3] ✅ 2026-06-02
+- [x] Deploy node_exporter on pihole1 (10.0.60.20) and pihole2 (10.0.60.21); add scrape targets to `prometheus.yml` [priority:: 3] ✅ 2026-05-28 — `apt install prometheus-node-exporter` on both Pis; targets added to `node_exporter_external` job under `vlan60` label
+- [x] Deploy pihole-exporter (eko/pihole-exporter) for DNS/ad-block metrics [priority:: 3] ✅ 2026-05-28 — `pihole-exporter` service added to `stack-monitoring.yml`; Docker Secret `pihole_password` required; scrape job `pihole-exporter` targets `tasks.monitoring_pihole-exporter:9617`
 - [x] `unifi-poller` deployed ✅ 2026-04-29 — PR #14; scrape target at `tasks.controller_unpoller:9130`
 
 ---

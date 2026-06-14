@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 #HomeLabRebuild/Docker #HomeLabRebuild/Proxmox  #HomeLabRebuild/Phase5
 
 # Swarm Worker VM Provisioning Checklist ✅
@@ -36,19 +43,19 @@
 ## 4. Verify Cloud-init
 - [x] ❌ **Swarm join command added (if `--autojoin`)** ✅ 2025-10-10
 	  - **Proxmox-side:**  
-	    - [ ] Run `qm cloudinit dump <VMID> user` and confirm the `runcmd:` section contains the Docker Swarm join command. 
+	    -  Run `qm cloudinit dump <VMID> user` and confirm the `runcmd:` section contains the Docker Swarm join command. 
 	  - **VM-side:**  
-	    - [ ] Run `docker info | grep "Swarm:"` → should show `Swarm: active`. 
+	    -  Run `docker info | grep "Swarm:"` → should show `Swarm: active`. 
 		    - Note: Confimed not working
 
 ## 5. Verify NFS
 - [x] ❌ **NFS shares mounted under `/mnt/<share>`** ✅ 2025-10-10
 	  - **VM-side:**  
-	    - [ ] Run `mount | grep nfs` → NFS mounts should appear.  
+	    -  Run `mount | grep nfs` → NFS mounts should appear.  
 		    - Not working
-	    - [ ] Run `ls /mnt` → should show share directories (e.g., `/mnt/media`).  
+	    -  Run `ls /mnt` → should show share directories (e.g., `/mnt/media`).  
 		    - Not working
-	    - [ ] If missing, check `/etc/fstab` for correct entries.  
+	    - If missing, check `/etc/fstab` for correct entries.  
 		    - No Entries
 
 ## 6. Start VM

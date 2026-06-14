@@ -1,30 +1,27 @@
 ---
 type: swarm-service
 project_id: FitnessDev-2026
-phase: "Phase 1: Ingestion & Target Sync"
+phase: 'Phase 1: Ingestion & Target Sync'
 tags:
   - DockerSwarm
   - Service
   - Fitness
   - Nutrition
-
 service_name: NewtonFit
 vm: dev-node-01
-swarm_constraint: "node.labels.zone == dev"
+swarm_constraint: node.labels.zone == dev
 vlan: 40
-
 service_status: running
 stack_file: proxmox-swarm/stacks/stack-dev-newtonfit.yml
-comment: "stack_file is repo-relative (Portainer Git deployment)"
+comment: stack_file is repo-relative (Portainer Git deployment)
 port: 8080
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://dev-newtonfit.home.purvishome.com
-
+url_internal: 'https://dev-newtonfit.home.purvishome.com'
 zfs_dataset: rpool/docker-data/newtonfit-dev
 mount_path: /mnt/docker-data/newtonfit-dev
-
-last_updated: 2026-05-27
+last_updated: '2026-05-27T00:00:00.000Z'
+status: Completed
 ---
 
 # NewtonFit

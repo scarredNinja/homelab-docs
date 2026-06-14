@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 3: Network Config"
+phase: 'Phase 3: Network Config'
 tags:
-  - Extreme
-  - Networking
+  - network
+  - reference
+status: Reference
 ---
 
 ## **1. Save your current config before testing**

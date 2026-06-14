@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 ./provision-swarm-worker-vlan85.sh plex-worker --autojoin --volumes plex-config,plex-data --nfs-shares 10.0.60.80:/volume1/movies,10.0.60.80:/volume1/tvshows, 10.0.60.80:/volume1/animation
 
 #!/bin/bash

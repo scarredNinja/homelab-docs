@@ -1,11 +1,13 @@
 ---
-project_id: "Homelab-2025"
-type: "performance-analysis"
+project_id: Homelab-2025
+type: performance-analysis
 tags:
   - storage
   - nfs
   - benchmark
   - restic
+status: Reference
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # NFS Mount Performance Analysis

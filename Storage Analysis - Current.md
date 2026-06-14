@@ -1,8 +1,9 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Storage Config"
+phase: 'Phase 4: Storage Config'
 tags:
   - Storage
+status: Reference
 ---
 # Current Storage Setup - Information Needed
 

@@ -1,9 +1,9 @@
 ---
-date: 2026-04-23
+date: '2026-04-23T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Media Stack"
+phase: 'Phase 5: Docker Swarm — Media Stack'
 session_type: Diagnostic + Fix
-status: Complete
+status: Completed
 tags:
   - SessionNotes
   - DockerSwarm

@@ -1,7 +1,7 @@
 ---
 status: Active
-priority: High
-due_date: 2026-06-15
+priority: Medium
+due_date: 2026-06-30
 project_id: FitnessDev-2026
 phase: "Phase 1: Ingestion & Target Sync"
 tags:
@@ -84,8 +84,8 @@ if (!thisPhase) {
 
 ### 🔄 Syncthing & CSV Watching
 
-- [ ] Migrate testing sandbox for NewtonFit to dev-node-01 (`stack-dev-newtonfit.yml`) and verify health and sync [priority:: 1] #Swarm
-- [ ] Remove/clear existing production `newtonfit` stack from `worker-monitoring-01` until sandbox testing completes [priority:: 2] #Swarm
+- [x] Migrate testing sandbox for NewtonFit to dev-node-01 (`stack-dev-newtonfit.yml`) and verify health and sync [priority:: 1] #Swarm
+- [x] Remove/clear existing production `newtonfit` stack from `worker-monitoring-01` until sandbox testing completes [priority:: 2] #Swarm
 - [ ] Setup Syncthing on Android device and configure it to mirror FitNotes export path to `worker-monitoring-01` [priority:: 1] #Syncthing
 - [x] Mapped imported files folder to ZFS persistence volume `/mnt/docker-data/newtonfit/imports` [priority:: 1] #Swarm
 - [x] Install `chokidar` in Node.js server container to watch imports folder [priority:: 2] #Backend

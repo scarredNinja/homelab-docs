@@ -78,7 +78,7 @@ if (!thisPhase) {
 - [x]  All pfSense VLAN Rules outlined and documented ✅ 2025-08-04 #Network #pfSense #Documentation #todoist
 - [x] Update current networking config for pfSense and switch #Network #Documentation
 - [x]  Update IP address scheme as configured ✅ 2025-08-04 #Network #Documentation 
-- [/] Document pfSense rules #pfSense #Documentation  ⏫ 🛫 2025-07-01 ⏳ 2025-08-15 📅 2025-10-01
+- [/] Document pfSense rules #pfSense #Documentation ⏫ 🛫 2025-07-01 ⏳ 2025-08-15 📅 2026-06-19
 
 ### Infrastructure Preparation
 

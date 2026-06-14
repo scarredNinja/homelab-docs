@@ -1,9 +1,11 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-22
+date: '2026-05-22T00:00:00.000Z'
 tags:
   - session-note
-status: Complete
+  - homelab
+status: Completed
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Session Notes — 2026-05-22 — Restic NFS Fix & Homepage Dashboard

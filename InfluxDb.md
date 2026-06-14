@@ -1,10 +1,11 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - VLAN
   - DockerSwarm
   - Monitoring
+status: Reference
 ---
 
 

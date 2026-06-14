@@ -1,12 +1,11 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-21
+date: 2026-05-21T00:00:00.000Z
 tags:
   - session-note
   - homelab
-  - uptime-kuma
-phase: "Phase 8: Basic Monitoring"
-status: Complete
+phase: 'Phase 8: Basic Monitoring'
+status: Completed
 ---
 
 # Session Notes — 2026-05-21 — Uptime Kuma Deployment

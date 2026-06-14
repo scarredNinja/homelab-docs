@@ -1,5 +1,7 @@
-﻿---
-status: Planned
+
+
+---
+status: Active
 priority: Low
 due_date: 2026-05-30
 project_id: Homelab-2025

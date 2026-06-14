@@ -1,7 +1,7 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
@@ -15,10 +15,11 @@ stack_file: /mnt/docker-swarm/stacks/arr/stack-arr.yml
 port: 8989
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://sonarr.home.purvishome.com
+url_internal: 'https://sonarr.home.purvishome.com'
 zfs_dataset: rpool/docker-data/sonarr
 mount_path: /mnt/docker-data/sonarr
-last_updated: 2026-05-20
+last_updated: '2026-05-20T00:00:00.000Z'
+status: Completed
 ---
 
 # Sonarr

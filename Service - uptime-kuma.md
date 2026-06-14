@@ -1,29 +1,26 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
   - Monitoring
-
 service_name: Uptime Kuma
 vm: worker-monitoring-01
-swarm_constraint: "node.labels.zone == monitoring"
+swarm_constraint: node.labels.zone == monitoring
 vlan: 60
-
 service_status: running
 stack_file: proxmox-swarm/stacks/stack-uptime-kuma.yml
-comment: "stack_file is repo-relative (Portainer Git deployment)"
+comment: stack_file is repo-relative (Portainer Git deployment)
 port: 3001
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://uptime-kuma.home.purvishome.com
-
+url_internal: 'https://uptime-kuma.home.purvishome.com'
 zfs_dataset: rpool/docker-data/uptime-kuma
 mount_path: /mnt/docker-data/uptime-kuma
-
-last_updated: 2026-05-26
+last_updated: '2026-05-26T00:00:00.000Z'
+status: Completed
 ---
 
 # Uptime Kuma

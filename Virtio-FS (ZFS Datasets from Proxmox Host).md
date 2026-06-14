@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Proxmox Network & Storage Configuration Hub"
+phase: 'Phase 4: Proxmox Network & Storage Configuration Hub'
 tags:
   - Virtio-FS
   - Storage
+status: Reference
 ---
 
 # Virtio-FS (ZFS Datasets from Proxmox Host)

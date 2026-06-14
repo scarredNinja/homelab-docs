@@ -1,38 +1,35 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
   - Media
-
 service_name: Plex
 vm: worker-media-01
-swarm_constraint: "node.labels.type == media"
+swarm_constraint: node.labels.type == media
 vlan: 50
-
 service_status: running
 stack_file: /mnt/docker-swarm/stacks/media/stack.yml
 port: 32400
 external_access: true
 traefik_entrypoint: websecure
-url_internal: https://plex.home.purvishome.com
-url_external: https://plex.purvishome.com
-
+url_internal: 'https://plex.home.purvishome.com'
+url_external: 'https://plex.purvishome.com'
 zfs_dataset: rpool/docker-data/plex
 mount_path: /mnt/docker-data/plex
-
-last_updated: 2026-05-11
+last_updated: '2026-06-14'
+status: In Progress
 ---
-
 # Plex
 
 Media server. Only service that requires `websecure` entrypoint — remote access needs inbound internet.
 
 ## Notes
 
-- DNS fixed to bypass Traefik, transcode settings optimised, cpu=host pending reboot — 2026-05-11
+- DNS pointed to Traefik (`10.0.60.40`) to restore standard HTTPS domain access; direct LAN streaming preserved by adding `http://10.0.50.50:32400` to Custom Server Access URLs in Plex settings (bypassing Traefik/pfSense hops for local clients) — 2026-06-01
+- Transitioned external access from Cloudflare Tunnel to direct WAN port forwarding to Traefik DMZ IP (`10.0.80.20:443`) via a purchased static IP to bypass CGNAT — 2026-06-14
 - Config/metadata on virtiofs docker-data — SQLite must not go on NFS
 - Transcode cache on local ZFS zvol for IOPS
 - Media files on NAS via NFS mount
@@ -44,15 +41,16 @@ Media server. Only service that requires `websecure` entrypoint — remote acces
   - /mnt/media/TVShows:/media/TVShows:ro
   - /mnt/media/Animation:/media/Animation:ro
   ```
-- **`cloudflared` sidecar token (`CLOUDFLARE_TUNNEL_TOKEN`)** is persisted in **Portainer stack env vars** (Stacks → plex → Environment variables), NOT operator shell. Compose interpolation reads from the deploying shell — unset = silent empty token = container exit 255. See Gotcha #59. ✅ 2026-05-08
-- **`cloudflare/cloudflared:latest` is distroless** — no `/bin/sh`, no debug tools. Entrypoint shims (`sh -c '...'`) won't work; only `cloudflared` itself runnable with flags/env vars. Docker-secret + shim approach attempted in PRs [#26](https://github.com/scarredNinja/docker-swarm-home/pull/26)/[#27](https://github.com/scarredNinja/docker-swarm-home/pull/27), reverted in [#28](https://github.com/scarredNinja/docker-swarm-home/pull/28).
+- **`cloudflared` sidecar tunnel removed** to bypass bandwidth throttling and enable direct-stream capability. ✅ 2026-06-14
 
 ## External Access Status
 
-> [!note] External access in progress — 2026-04-21
-> - ACME cert valid (15 certs confirmed in acme.json) ✅
-> - Cloudflare DNS: `plex CNAME → ddns.purvishome.com` (DNS only mode) ✅
-> - `Resolve-DnsName plex.purvishome.com -Server 1.1.1.1` resolving ✅
-> - pfSense port forward: external 443 → traefik-dmz-01 — **needs verification**
-> - PiHole cached negative — flush or wait for TTL expiry
-> - **Browser test end-to-end: next session**
+> [!warning] Transitioning to Direct WAN Access (Static IP) — 2026-06-14
+> - Cloudflare Tunnel removed to avoid free-tier media throttling.
+> - Cloudflare DNS for `plex.purvishome.com` set to **DNS-Only** (grey-clouded) CNAME to `ddns.purvishome.com`.
+> - pfSense WAN NAT port forward configured to map port 443 TCP to Traefik's DMZ interface (`10.0.80.20:443`).
+> - Currently waiting for ISP static IP activation to bypass CGNAT (`100.71.224.X`) and verify end-to-end connectivity.
+
+## Open Items
+
+- [ ] Plex Traefik Security — currently has no Traefik authentication middleware; add auth rules so internal VLAN devices cannot bypass proxy layer security

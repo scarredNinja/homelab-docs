@@ -1,5 +1,5 @@
 ---
-status: Planning
+status: Reference
 project_id: Laundry-2026
 phase: TBC
 tags:

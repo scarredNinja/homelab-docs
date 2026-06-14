@@ -3,6 +3,8 @@ project_type: Home Lab
 project_id: Homelab-2025
 tags:
   - HomeLabRebuild
+status: Active
+phase: Master Hub
 ---
 
 # 💻 Homelab Rebuild - Master Project Hub
@@ -46,7 +48,8 @@ const pages = dv.pages('"10 - Projects"')
     .where(p =>
         p.project_id &&
         String(p.project_id).includes("Homelab-2025") &&
-        !p.file.folder.includes("_Archive")
+        !p.file.folder.includes("_Archive") &&
+        !p.file.folder.includes("Reference")
     );
 
 // Collect incomplete tasks, filtering out #Later and #MuchLater tagged tasks.
@@ -56,7 +59,8 @@ const tasks = pages
         .where(t =>
             !t.completed &&
             !t.tags.includes("#Later") &&
-            !t.tags.includes("#MuchLater")
+            !t.tags.includes("#MuchLater") &&
+            !t.tags.includes("#archive") 
         )
         .map(t => ({ task: t, file: p.file }))
     )

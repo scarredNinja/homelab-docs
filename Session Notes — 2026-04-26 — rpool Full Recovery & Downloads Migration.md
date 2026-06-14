@@ -1,9 +1,9 @@
 ---
-date: 2026-04-26
+date: '2026-04-26T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
-session_type: debugging, infrastructure, migration
-status: in-progress
+phase: 'Phase 5: Docker Swarm'
+session_type: 'debugging, infrastructure, migration'
+status: Completed
 tags:
   - DockerSwarm
   - ZFS

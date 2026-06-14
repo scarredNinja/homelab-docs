@@ -1,10 +1,11 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Storage Config"
+phase: 'Phase 4: Storage Config'
 tags:
   - Storage
   - proxmox
   - migration
+status: Reference
 ---
 # 🔄 Same-Disk Migration: Default to ZFS
 

@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - Netbox
   - DockerSwarm
+status: Reference
 ---
 
 Link to stack: https://github.com/scarredNinja/docker-swarm-home

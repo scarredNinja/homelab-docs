@@ -1,12 +1,18 @@
 ---
 service_name: obsidian-mcp-server
 service_status: running
-last_updated: 2026-05-25
+last_updated: '2026-05-25T00:00:00.000Z'
 vault_sync: complete
 mcp_verified: true
 mcp_write_verified: true
 project_id: Homelab-2025
-tags: [mcp, obsidian, dev, service]
+tags:
+  - mcp
+  - obsidian
+  - dev
+  - service
+status: Completed
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Service — obsidian-mcp-server

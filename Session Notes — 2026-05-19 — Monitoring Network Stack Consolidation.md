@@ -1,9 +1,11 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-19
+date: '2026-05-19T00:00:00.000Z'
 tags:
   - session-note
-status: Complete
+  - homelab
+status: Completed
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Session Notes — 2026-05-19 — Monitoring Network Stack Consolidation

@@ -1,37 +1,38 @@
 ---
-project_id: Homelab-2025
-phase: "Phase 3: Network Config"
 feature: Pasted image 20251224094453.png
-thumbnail: thumbnails/resized/d1b412569af74ee47dc710f2d2968d8d_86cf658e.webp
+phase: 'Phase 3: Network Config'
+project_id: Homelab-2025
+status: Reference
 tags:
   - pfSense
   - VLAN
+thumbnail: thumbnails/resized/d1b412569af74ee47dc710f2d2968d8d_86cf658e.webp
 ---
-## 📋 Table of Contents
+##  Table of Contents
 
-- [[#VLAN 10 - Home Network - ✅]]
-- [[#VLAN 20 - IoT - ✅]]
-- [[#VLAN 30 - Guest - ✅]]
-- [[#VLAN 40 - Homelab - ✅]]
-- [[#VLAN 50 - Media - ✅]]
-- [[#VLAN 60 - Infrastructure - ✅]]
-- [[#VLAN 70 - Admin - ✅]]
-- [[#VLAN 80 - DMZ - ✅]]
-- [[#VLAN 90 - Management - ✅]]
+- [[#VLAN 10 - Home Network - ]]
+- [[#VLAN 20 - IoT - ]]
+- [[#VLAN 30 - Guest - ]]
+- [[#VLAN 40 - Homelab - ]]
+- [[#VLAN 50 - Media - ]]
+- [[#VLAN 60 - Infrastructure - ]]
+- [[#VLAN 70 - Admin - ]]
+- [[#VLAN 80 - DMZ - ]]
+- [[#VLAN 90 - Management - ]]
 
 
 
 ---
-# 🔥 pfSense Firewall Rules - Complete Network Configuration
+#  pfSense Firewall Rules - Complete Network Configuration
 
 (https://claude.ai/chat/f294cc03-c585-4bdb-b581-2e767652ee21#vlan-90---management)
 
 ---
 
-## VLAN 10 - Home Network - ✅
+## VLAN 10 - Home Network - 
 
-- [x] Review HomeNetwork VLAN Rules [priority:: 1] ✅ 2025-12-23
-- [x] Update HomeNetwork VLAN Rules [priority:: 3] ✅ 2025-12-23
+- [x] Review HomeNetwork VLAN Rules [priority:: 1]  2025-12-23
+- [x] Update HomeNetwork VLAN Rules [priority:: 3]  2025-12-23
 
 **Subnet:** 10.0.10.0/25  
 **Interface:** VLAN10_HOME  
@@ -45,6 +46,7 @@ tags:
 | Pass   | VLAN10    | UDP      | VLAN10 net | 224.0.0.251     | 5353    | mDNS (Bonjour)                    | Y    |
 | Pass   | VLAN10    | UDP      | VLAN10 net | 239.255.255.250 | 5353    | SSDP (Discovery)                  | Y    |
 | Pass   | VLAN10    | Any      | VLAN10 Net | VLAN20          | *       | Inter-VLAN: Home -> IoT (VLAN 60) | Y    |
+| Pass   | VLAN10    | TCP      | VLAN10 net | VLAN60 net      | 22      | SSH admin access to management infra | Y    |
 | Pass   | VLAN10    | Any      | VLAN10 Net | *               | *       | Allow Internet Access             | Y    |
 
 ### Inbound Rules (Deny)
@@ -52,16 +54,16 @@ tags:
 | Action | Interface                     | Protocol | Source     | Destination | Port(s) | Description              | Done |
 | ------ | ----------------------------- | -------- | ---------- | ----------- | ------- | ------------------------ | ---- |
 | Block  | VLAN10                        | Any      | VLAN10 net | RFC1918     | Any     | Isolate from other VLANs | Y    |
-| Block  | [[#VLAN 90 - Management - ✅]] | Any      | VLAN10 net | VLAN90 net  | Any     | Block Home VLAN          | Y    |
+| Block  | [[#VLAN 90 - Management - ]] | Any      | VLAN10 net | VLAN90 net  | Any     | Block Home VLAN          | Y    |
 
 ![[Pasted image 20251224094453.png]]
 
 ---
 
-## VLAN 20 - IoT - ✅
+## VLAN 20 - IoT - 
 
-- [x] Review IoT VLAN Rules [priority:: 1] ✅ 2025-12-16
-- [x] Update IoT VLAN Rules [priority:: 3] ✅ 2025-12-16
+- [x] Review IoT VLAN Rules [priority:: 1]  2025-12-16
+- [x] Update IoT VLAN Rules [priority:: 3]  2025-12-16
 
 **Subnet:** 10.0.20.0/25  
 **Interface:** VLAN20_IOT  
@@ -104,7 +106,7 @@ tags:
 | Action | Interface              | Protocol | Source     | Destination | Port(s) | Description      | Done |
 | ------ | ---------------------- | -------- | ---------- | ----------- | ------- | ---------------- | ---- |
 | Block  | VLAN20                 | Any      | Any        | VLAN20 net  | Any     | Block all others | Y    |
-| Block  | [[#VLAN 20 - IoT - ✅]] | Any      | VLAN20 net | VLAN90 net  | Any     | Block IoT VLAN   | Y    |
+| Block  | [[#VLAN 20 - IoT - ]] | Any      | VLAN20 net | VLAN90 net  | Any     | Block IoT VLAN   | Y    |
 
 ![[Pasted image 20251224105716.png]]
 
@@ -112,10 +114,10 @@ tags:
 
 ---
 
-## VLAN 30 - Guest - ✅
+## VLAN 30 - Guest - 
 
-- [x] Review Guest VLAN Rules [priority:: 1] ✅ 2025-12-16
-- [x] Update Guest VLAN Rules [priority:: 3] ✅ 2025-12-16
+- [x] Review Guest VLAN Rules [priority:: 1]  2025-12-16
+- [x] Update Guest VLAN Rules [priority:: 3]  2025-12-16
 
 **Subnet:** 10.0.30.0/25  
 **Interface:** VLAN30_GUEST  
@@ -123,12 +125,12 @@ tags:
 
 ### Outbound Rules
 
-| Action | Interface                | Protocol | Source     | Destination       | Port(s) | Description                                        | Done |
-| ------ | ------------------------ | -------- | ---------- | ----------------- | ------- | -------------------------------------------------- | ---- |
-| Pass   | VLAN30                   | UDP      | VLAN30 net | pihole            | 53      | Allow DNS resolution to local server.              | Y    |
-| Pass   | VLAN30                   | TCP      | VLAN30 net | Any (WAN)         | 80, 443 | HTTP/HTTPS web browsing                            | Y    |
-| Pass   | VLAN30                   | UDP      | VLAN30 net | VLAN60_GATEWAY_IP | 123     | Allow NTP time sync to local server (Specific IP). | Y    |
-| Block  | [[#VLAN 30 - Guest - ✅]] | Any      | VLAN30 net | VLAN90 net        | Any     | Block Guest VLAN                                   | Y    |
+| Action | Interface | Protocol | Source     | Destination       | Port(s) | Description                                        | Done |
+| ------ | --------- | -------- | ---------- | ----------------- | ------- | -------------------------------------------------- | ---- |
+| Pass   | VLAN30    | UDP      | VLAN30 net | pihole            | 53      | Allow DNS resolution to local server.              | Y    |
+| Pass   | VLAN30    | TCP      | VLAN30 net | Any (WAN)         | 80, 443 | HTTP/HTTPS web browsing                            | Y    |
+| Pass   | VLAN30    | UDP      | VLAN30 net | VLAN60_GATEWAY_IP | 123     | Allow NTP time sync to local server (Specific IP). | Y    |
+| Block  | [[#VLAN 30 - Guest - ]] | Any      | VLAN30 net | VLAN90 net        | Any     | Block Guest VLAN                                   | Y    |
 
 ### Inbound Rules (Deny)
 
@@ -142,10 +144,10 @@ tags:
 
 ---
 
-## VLAN 40 - Homelab - ✅
+## VLAN 40 - Homelab - 
 
-- [x] Review HomeLab VLAN Rules [priority:: 3] ✅ 2025-12-24
-- [x] Update HomeLab VLAN Rules [priority:: 1] ✅ 2025-12-24
+- [x] Review HomeLab VLAN Rules [priority:: 3]  2025-12-24
+- [x] Update HomeLab VLAN Rules [priority:: 1]  2025-12-24
 
 **Subnet:** 10.0.40.0/24  
 **Interface:** VLAN40_HOMELAB  
@@ -183,10 +185,10 @@ tags:
 
 ---
 
-## VLAN 50 - Media - ✅
+## VLAN 50 - Media - 
 
-- [x] Review media VLAN Rules [priority:: 1] ✅ 2025-12-23
-- [x] Update media VLAN Rules [priority:: 2] ✅ 2025-12-24
+- [x] Review media VLAN Rules [priority:: 1]  2025-12-23
+- [x] Update media VLAN Rules [priority:: 2]  2025-12-24
 
 **Subnet:** 10.0.50.0/24  
 **Interface:** VLAN50_MEDIA  
@@ -212,18 +214,18 @@ tags:
 ### Inbound Rules (Allow)
 | **Action** | **Interface**                   | **Protocol** | **Source**     | **Destination**   | **Port(s)**     | **Description**                                                    | Done |
 | ---------- | ------------------------------- | ------------ | -------------- | ----------------- | --------------- | ------------------------------------------------------------------ | ---- |
-| Pass       | [[#VLAN 90 - Management - ✅]]   | TCP          | **VLAN90 net** | VLAN50 net        | **22, 80, 443** | **Admin Access** (SSH/Web UIs for management from your Admin VLAN) | Y    |
-| Pass       | [[#VLAN 10 - Home Network - ✅]] | TCP          | VLAN10 net     | Plex (10.0.50.20) | 32400           | Home VLAN → Plex                                                   | Y    |
-| Pass       | [[#VLAN 20 - IoT - ✅]]          | TCP          | VLAN10 net     | Plex (10.0.50.20) | 32400           |                                                                    | Y    |
-| Pass       | [[#VLAN 80 - DMZ - ✅]]          | TCP          | VLAN10 net     | Plex (10.0.50.20) | 32400           |                                                                    | Y    |
+| Pass       | [[#VLAN 90 - Management - ]]   | TCP          | **VLAN90 net** | VLAN50 net        | **22, 80, 443** | **Admin Access** (SSH/Web UIs for management from your Admin VLAN) | Y    |
+| Pass       | [[#VLAN 10 - Home Network - ]] | TCP          | VLAN10 net     | Plex (10.0.50.20) | 32400           | Home VLAN  Plex                                                   | Y    |
+| Pass       | [[#VLAN 20 - IoT - ]]          | TCP          | VLAN10 net     | Plex (10.0.50.20) | 32400           |                                                                    | Y    |
+| Pass       | [[#VLAN 80 - DMZ - ]]          | TCP          | VLAN10 net     | Plex (10.0.50.20) | 32400           |                                                                    | Y    |
 ![[Pasted image 20251224100337.png]]
 
 ---
 
-## VLAN 60 - Infrastructure - ✅
+## VLAN 60 - Infrastructure - 
  
-- [x] Review Infrastructure VLAN Rules [priority:: 1] ✅ 2025-12-24
-- [x] Update Infrastructure VLAN Rules [priority:: 3] ✅ 2025-12-24
+- [x] Review Infrastructure VLAN Rules [priority:: 1]  2025-12-24
+- [x] Update Infrastructure VLAN Rules [priority:: 3]  2025-12-24
 
 **Subnet:** 10.0.60.0/25  
 **Interface:** VLAN60_INFRASTRUCTURE  
@@ -242,7 +244,7 @@ tags:
 | ------ | --------- | -------- | ---------- | ----------- | ------------ | --------------------------- |
 | Pass   | VLAN60    | TCP/UDP  | VLAN70 net | VLAN60 net  | 53           | DNS from all internal VLANs |
 | Pass   | VLAN60    | TCP/UDP  | VLAN70 net | VLAN60 net  | Admin_Access | Admin management            |
-| Pass   | VLAN60    | TCP      | VLAN60 net | VLAN50 net  | 22           | SSH from Infrastructure to Media VMs (deploy automation) ✅ 2026-05-20 |
+| Pass   | VLAN60    | TCP      | VLAN60 net | VLAN50 net  | 22           | SSH from Infrastructure to Media VMs (deploy automation)  2026-05-20 |
 
 
 ### Inbound Rules (Deny)
@@ -253,10 +255,10 @@ tags:
 
 ---
 
-## VLAN 70 - Admin - ✅
+## VLAN 70 - Admin - 
 
-- [x] Review Infrastructure VLAN Rules [priority:: 1] ✅ 2025-12-24
-- [x] Update Infrastructure VLAN Rules [priority:: 3] ✅ 2025-12-24
+- [x] Review Infrastructure VLAN Rules [priority:: 1]  2025-12-24
+- [x] Update Infrastructure VLAN Rules [priority:: 3]  2025-12-24
 
 **Subnet:** 10.0.70.0/24  
 **Interface:** VLAN70_ADMIN  
@@ -285,10 +287,10 @@ tags:
 
 ---
 
-## VLAN 80 - DMZ - ✅
+## VLAN 80 - DMZ - 
 
-- [x] Review DMZ VLAN Rules [priority:: 1] ✅ 2025-12-16
-- [x] Update DMZ VLAN Rules [priority:: 3] ✅ 2025-12-16
+- [x] Review DMZ VLAN Rules [priority:: 1]  2025-12-16
+- [x] Update DMZ VLAN Rules [priority:: 3]  2025-12-16
 
 **Subnet:** 10.0.80.0/24  
 **Interface:** VLAN80_DMZ  
@@ -301,7 +303,7 @@ tags:
 | Pass   | VLAN80    | UDP      | VLAN80 net | pihole         | 53               | Allow DNS lookups.                             | Y    |
 | Pass   | VLAN80    | UDP      | VLAN80 net | VLAN60 Gateway | 123              | Allow time sync.                               | Y    |
 | Pass   | VLAN80    | TCP/UDP  | VLAN80 net | WAN            | WAN_OUTBOUND_DMZ | Allow restricted Internet access for services. | Y    |
-| Pass   | VLAN80    | UDP      | VLAN80 net | PlexIP         | 123              | DMZ VLAN → Plex                                | Y    |
+| Pass   | VLAN80    | UDP      | VLAN80 net | PlexIP         | 123              | DMZ VLAN  Plex                                | Y    |
 |        |           |          |            |                |                  |                                                |      |
 
 ### Inbound Rules (Deny)
@@ -309,18 +311,18 @@ tags:
 | Action | Interface              | Protocol | Source     | Destination     | Port(s) | Description                                                                        | Done |
 | ------ | ---------------------- | -------- | ---------- | --------------- | ------- | ---------------------------------------------------------------------------------- | ---- |
 | Block  | VLAN80                 | Any      | VLAN80 net | RFC1918_PRIVATE | Any     | **CRITICAL: Deny ALL internal network access.** (Consolidates all your Deny rules) | Y    |
-| Block  | VLAN80                 | Any      | Any        | ANy             | Any     | (The final implicit/explicit block.)                                               | Y    |
-| Block  | [[#VLAN 80 - DMZ - ✅]] | Any      | VLAN80 net | VLAN90 net      | Any     | Block DMZ                                                                          | Y    |
+| Block  | VLAN80                 | Any      | Any        | ANy             | Any     | (The final explicit block.)                                                        | Y    |
+| Block  | [[#VLAN 80 - DMZ - ]] | Any      | VLAN80 net | VLAN90 net      | Any     | Block DMZ                                                                          | Y    |
 
 ![[Pasted image 20251223184112.png]]
 
 
 ---
 
-## VLAN 90 - Management - ✅
+## VLAN 90 - Management - 
 
-- [x] Review Management VLAN Rules [priority:: 1] ✅ 2025-12-23
-- [x] Update Management VLAN Rules [priority:: 1] ✅ 2025-12-24
+- [x] Review Management VLAN Rules [priority:: 1]  2025-12-23
+- [x] Update Management VLAN Rules [priority:: 1]  2025-12-24
 
 **Subnet:** 10.0.90.0/25  
 **Interface:** VLAN90_MANAGEMENT  
@@ -331,7 +333,7 @@ tags:
 | Action | Interface                     | Protocol | Source         | Destination     | Port(s)         | Description                                                        | Done |
 | ------ | ----------------------------- | -------- | -------------- | --------------- | --------------- | ------------------------------------------------------------------ | ---- |
 | Pass   | VLAN90                        | TCP/UDP  | VLAN90 net     | WAN             | 80, 443, 53     | Internet access for updates                                        | Y    |
-| Pass   | [[#VLAN 90 - Management - ✅]] | TCP      | **VLAN90 net** | VLAN70 net      | **22, 80, 443** | **Admin Access** (SSH/Web UIs for management from your Admin VLAN) | Y    |
+| Pass   | [[#VLAN 90 - Management - ]] | TCP      | **VLAN90 net** | VLAN70 net      | **22, 80, 443** | **Admin Access** (SSH/Web UIs for management from your Admin VLAN) | Y    |
 | Pass   | VLAN90                        | Any      | VLAN90 net     | VLAN90 net      | Any             | Internal management communication                                  | Y    |
 | Pass   | VLAN90                        | UDP      | VLAN90 net     | WAN             | 123             | NTP time sync                                                      | Y    |
 | Pass   | VLAN90                        | UDP      | VLAN90         | VLAN90          | 53              | DNS                                                                | Y    |
@@ -351,13 +353,13 @@ tags:
 
 | Action | Interface                       | Protocol | Source     | Destination | Port(s) | Description                   | Done |
 | ------ | ------------------------------- | -------- | ---------- | ----------- | ------- | ----------------------------- | ---- |
-| Block  | [[#VLAN 10 - Home Network - ✅]] | Any      | VLAN10 net | VLAN90 net  | Any     | Block Home VLAN               | Y    |
-| Block  | [[#VLAN 20 - IoT - ✅]]          | Any      | VLAN20 net | VLAN90 net  | Any     | Block IoT VLAN                | Y    |
-| Block  | [[#VLAN 30 - Guest - ✅]]        | Any      | VLAN30 net | VLAN90 net  | Any     | Block Guest VLAN              | Y    |
+| Block  | [[#VLAN 10 - Home Network - ]] | Any      | VLAN10 net | VLAN90 net  | Any     | Block Home VLAN               | Y    |
+| Block  | [[#VLAN 20 - IoT - ]]          | Any      | VLAN20 net | VLAN90 net  | Any     | Block IoT VLAN                | Y    |
+| Block  | [[#VLAN 30 - Guest - ]]        | Any      | VLAN30 net | VLAN90 net  | Any     | Block Guest VLAN              | Y    |
 | Block  | [[#VLAN 40 - Homelab]]          | Any      | VLAN40 net | VLAN90 net  | Any     | Block Homelab (unless needed) | Y    |
 | Block  | [[#VLAN 50 - Media]]            | Any      | VLAN50 net | VLAN90 net  | Any     | Block Media VLAN              | Y    |
 | Block  | [[#VLAN 60 - Infrastructure]]   | Any      | VLAN60 net | VLAN90 net  | Any     | Block Infrastructure          | Y    |
-| Block  | [[#VLAN 80 - DMZ - ✅]]          | Any      | VLAN80 net | VLAN90 net  | Any     | Block DMZ                     | Y    |
+| Block  | [[#VLAN 80 - DMZ - ]]          | Any      | VLAN80 net | VLAN90 net  | Any     | Block DMZ                     | Y    |
 | Block  | VLAN90                          | Any      | Any        | Any         | Any     | Default Deny                  | Y    |
 
 ![[Pasted image 20251224101207.png]]
@@ -370,11 +372,11 @@ tags:
 
 ----
 
-### 🔐 pfSense Firewall Rules
+###  pfSense Firewall Rules
 
-#### Allow Swarm Control Traffic (VLAN 65 ↔ 85)
+#### Allow Swarm Control Traffic (VLAN 65  85)
 
-On **VLAN 65 → 85**:
+On **VLAN 65  85**:
 
 - Allow TCP `2377` to VLAN 85 (Swarm control plane)
     
@@ -383,7 +385,7 @@ On **VLAN 65 → 85**:
 - Allow UDP `4789` to VLAN 85 (Overlay networking)
     
 
-On **VLAN 85 → 65**:
+On **VLAN 85  65**:
 
 - Same rules in reverse to allow bidirectional traffic
     

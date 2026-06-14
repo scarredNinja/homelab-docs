@@ -1,9 +1,9 @@
 ---
-date: 2026-05-07
+date: '2026-05-07T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 7: Backup Verification"
+phase: 'Phase 7: Backup Verification'
 session_type: Code
-status: Complete
+status: Completed
 tags:
   - Backup
   - ZFS

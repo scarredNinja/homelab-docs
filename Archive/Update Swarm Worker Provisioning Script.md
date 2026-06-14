@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 ./provision_swarm_vm.sh <vm-name> --autojoin --volume configs,20G,zfs --nfs media
 
 
@@ -154,4 +161,3 @@ echo "[✓] VM $VM_NAME (VMID $VMID) provisioned."
 echo "    MAC Address: $MAC"
 echo "    DHCP recommended before starting."
 qm config $VMID
-

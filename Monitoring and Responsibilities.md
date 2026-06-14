@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 # Swarm Services + Monitoring Responsibilities
 
 | Service / Component      | Node / VLAN                 | Monitored By                  | Metrics / Notes |

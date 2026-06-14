@@ -1,15 +1,11 @@
 ---
-
-project_id: FinanceDev-2026 
+project_id: FinanceDev-2026
 tags:
-
-- docker
-- deployment
-- devops
-- finance-app 
-
-created: 2026-04-01
-
+  - finance-dev
+  - reference
+created: '2026-04-01T00:00:00.000Z'
+status: Reference
+phase: 'Phase 1: Foundation'
 ---
 
 # 🐳 Finance App — Docker Compose Setup

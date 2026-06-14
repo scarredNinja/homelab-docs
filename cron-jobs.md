@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 # Proxmox Host — Cron Jobs
 
 Drop the file below into `/etc/cron.d/backup-jobs` on the Proxmox host.

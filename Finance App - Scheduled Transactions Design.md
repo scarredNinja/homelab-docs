@@ -1,14 +1,10 @@
 ---
-
-project_id: FinanceDev-2026 
+project_id: FinanceDev-2026
 tags:
-
-- scheduled-transactions
-- design
-- finance-app
-- recurring 
-- created: 2026-04-01
-
+  - finance-dev
+  - reference
+status: Reference
+phase: 'Phase 1: Foundation'
 ---
 
 # 📅 Finance App — Scheduled Transactions Design

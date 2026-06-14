@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 ## [[(Archived) - provision-docker-swarm-vm v12]] Usaage
 
 # Docker Swarm VM Provisioning Script Options (v9)

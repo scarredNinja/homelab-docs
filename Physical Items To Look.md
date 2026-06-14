@@ -1,8 +1,9 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 2: Physical Setup"
+phase: 'Phase 2: Physical Setup'
 tags:
   - Hardware
+status: Reference
 ---
 
 # Physical Items To Look

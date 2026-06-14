@@ -1,7 +1,7 @@
 ---
-date: 2026-04-12
+date: '2026-04-12T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Phase 1.5 Monitoring"
+phase: 'Phase 5: Docker Swarm — Phase 1.5 Monitoring'
 tags:
   - SessionNotes
   - DockerSwarm
@@ -13,7 +13,7 @@ tags:
   - overlay2
   - BugFix
 session_type: Code + Planning
-status: Complete
+status: Completed
 ---
 
 # Session Notes — 2026-04-12 (Monitoring Deploy)

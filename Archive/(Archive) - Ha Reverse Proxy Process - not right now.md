@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 - [x] ⏫ Update the documented process #HomeLabRebuild/Phase5 #HomeLabRebuild/SwarmMonitoring ⏳ 2025-10-19 ✅ 2025-10-27
 	- Portainer (to fix)
 	- Monitoring (grafana, promethus)

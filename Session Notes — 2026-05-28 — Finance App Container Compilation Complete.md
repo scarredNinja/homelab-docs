@@ -1,9 +1,9 @@
 ---
-date: 2026-05-28
+date: '2026-05-28T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Dev Sandboxes & Ingestion Setup"
-session_type: "Code"
-status: "Complete"
+phase: 'Phase 5: Docker Swarm — Dev Sandboxes & Ingestion Setup'
+session_type: Code
+status: Completed
 tags:
   - SessionNotes
   - Finance

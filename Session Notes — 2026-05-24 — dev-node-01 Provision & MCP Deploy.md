@@ -1,9 +1,9 @@
 ---
-date: 2026-05-24
+date: '2026-05-24T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Dev Node & MCP Deployment"
+phase: 'Phase 5: Docker Swarm — Dev Node & MCP Deployment'
 session_type: Deploy
-status: "Partial — syncthing + obsidian-mcp bind mounts not yet created on dev-node-01"
+status: Completed
 tags:
   - SessionNotes
   - DockerSwarm
@@ -134,13 +134,13 @@ Provision `dev-node-01` (VMID 206, VLAN 40, IP `10.0.40.50`) as a new Docker Swa
 
 ## ➡️ Next Session Priorities
 
-- [ ] SSH into `dev-node-01` and create bind-mount directories (`/mnt/docker-data/vault`, `/mnt/docker-data/syncthing/config`) [priority:: 1] #Syncthing #devnode
-- [ ] Configure Syncthing: pair PC (`10.0.4.85:22000`) ↔ dev-node-01 (`10.0.40.50:22000`); set sync folder to `/mnt/docker-data/vault` [priority:: 1] #Syncthing
-- [ ] Verify obsidian-mcp service recovers to 1/1 once vault is populated [priority:: 1] #obsidian-mcp
-- [ ] Push obsidian-mcp-server source to GitHub (`scarredNinja/obsidian-mcp-server`) and configure GitHub Actions CI to publish image to `ghcr.io` [priority:: 2] #obsidian-mcp
-- [ ] Update stack-obsidian-mcp.yml image reference to `ghcr.io/scarredninja/obsidian-mcp-server:latest` once CI is live [priority:: 2] #obsidian-mcp
-- [ ] Resolve Syncthing phone-to-homelab sync (Android → VLAN 40:22000) for NewtonFit Samsung Health data [priority:: 3] #Syncthing #NewtonFit
-- [ ] Create `VM - dev-node-01.md` note with full spec (see [[VM - dev-node-01]]) [priority:: 3] #devnode
+- [x] SSH into `dev-node-01` and create bind-mount directories (`/mnt/docker-data/vault`, `/mnt/docker-data/syncthing/config`) [priority:: 1] #Syncthing #devnode ✅ 2026-05-31
+- [x] Configure Syncthing: pair PC (`10.0.4.85:22000`) ↔ dev-node-01 (`10.0.40.50:22000`); set sync folder to `/mnt/docker-data/vault` [priority:: 1] #Syncthing ✅ 2026-05-31
+- [x] Verify obsidian-mcp service recovers to 1/1 once vault is populated [priority:: 1] #obsidian-mcp ✅ 2026-05-31
+- [x] Push obsidian-mcp-server source to GitHub (`scarredNinja/obsidian-mcp-server`) and configure GitHub Actions CI to publish image to `ghcr.io` [priority:: 2] #obsidian-mcp ✅ 2026-05-31
+- [x] Update stack-obsidian-mcp.yml image reference to `ghcr.io/scarredninja/obsidian-mcp-server:latest` once CI is live [priority:: 2] #obsidian-mcp ✅ 2026-05-31
+- [x] Resolve Syncthing phone-to-homelab sync (Android → VLAN 40:22000) for NewtonFit Samsung Health data [priority:: 3] #Syncthing #NewtonFit ✅ 2026-05-31
+- [x] Create `VM - dev-node-01.md` note with full spec (see [[VM - dev-node-01]]) [priority:: 3] #devnode ✅ 2026-05-31
 
 ---
 

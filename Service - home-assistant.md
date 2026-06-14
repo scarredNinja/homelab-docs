@@ -1,30 +1,26 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
   - SmartHome
-
 service_name: Home Assistant
 vm: worker-controller-01
-swarm_constraint: "node.labels.zone == controller"
+swarm_constraint: node.labels.zone == controller
 vlan: 60
-
 service_status: running
 stack_file: /mnt/docker-swarm/stacks/controller/stack-controller.yml
 port: 8123
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://homeassistant.home.purvishome.com
-
+url_internal: 'https://homeassistant.home.purvishome.com'
 zfs_dataset: rpool/docker-data/homeassistant
 mount_path: /mnt/docker-data/homeassistant
-
-last_updated: 2026-04-28
+last_updated: '2026-04-28'
+status: Completed
 ---
-
 # Home Assistant
 
 Smart home automation. Needs VLAN 20 (IoT) access via secondary NIC on controller worker.
@@ -47,3 +43,4 @@ Single-instance — must never float to another node.
 - [ ] Allow Home VLAN access — (1) pfSense rule: VLAN 10 (`10.0.10.0/25`) → `10.0.60.42:8123`; (2) add `10.0.10.0/25` to Traefik `internal-only` middleware allowlist in `middlewares.yaml`
 - [ ] Disable analytics telemetry — Settings → System → Analytics (reduces Pi-hole ECONNREFUSED log noise)
 - [ ] Check HACS for Redback integration update fixing `ActiveExportedPowerInstantaneouskW` KeyError
+- [ ] Migrate Home Assistant off Swarm — network_mode: host is silently ignored in Swarm mode, breaking mDNS/Bonjour IoT discovery. Migrate HA to a plain docker compose stack with host networking on worker-controller-01

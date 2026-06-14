@@ -1,10 +1,17 @@
 ---
-date: 2026-05-17
+date: '2026-05-17T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm & Virtualisation"
+phase: 'Phase 5: Docker Swarm & Virtualisation'
 session_type: implementation
-status: partial
-tags: [vpn, gluetun, wireguard, monitoring, exportarr, arr, performance]
+status: Completed
+tags:
+  - vpn
+  - gluetun
+  - wireguard
+  - monitoring
+  - exportarr
+  - arr
+  - performance
 ---
 
 # Session Notes — 2026-05-17 — WireGuard Migration & Exportarr

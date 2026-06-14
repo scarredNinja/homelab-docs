@@ -1,16 +1,11 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-20
+date: '2026-05-20T00:00:00.000Z'
 tags:
-  - homelab
   - session-note
-  - vpn
-  - gluetun
-  - wireguard
-  - exportarr
-  - swarm
-  - compose-vpn
-status: Complete
+  - homelab
+status: Completed
+phase: 'Phase 5: Docker Swarm'
 ---
 # Session Notes — 2026-05-20 — Exportarr & compose-vpn Update
 

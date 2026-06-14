@@ -1,15 +1,29 @@
 ---
+date: '2026-05-25'
+phase: 'Phase 7: Backup Verification'
 project_id: Homelab-2025
-phase: 'Phase 5: Docker Swarm'
+status: Reference
 tags:
   - homelab
   - roadmap
   - planning
   - DockerSwarm
   - infrastructure
-date: '2026-05-25'
-status: reference
 ---
+
+# Homelab Next Phase — Review & Roadmap
+**Path:** Homelab Next Phase — Review & Roadmap.md
+**Modified:** 2026-06-01T23:52:34.435Z
+**Tags:** Automation, DockerSwarm, NewtonFit, homelab, infrastructure, planning, roadmap
+**Frontmatter:**
+  - date: "2026-05-25"
+  - phase: 'Phase 7: Backup Verification'
+  - project_id: "Homelab-2025"
+  - status: "reference"
+  - tags: ["homelab","roadmap","planning","DockerSwarm","infrastructure"]
+
+---
+
 # Homelab Next Phase — Review & Roadmap
 
 > Full homelab state review + next phase planning. Generated 2026-05-25.
@@ -17,19 +31,19 @@ status: reference
 
 ---
 
-## ✅ Easy Wins (Do These First)
+## 📋 Easy Wins (Do These First)
 
 > [!tip] These are all low-effort, high-value. Each under 30 minutes.
 
 | #   | Item                                                      | Action                                                                                                                                                                                                         | Effort    |
 | --- | --------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| 1   | **Pi-hole wildcard DNS**                                  | Add `address=/.home.purvishome.com/10.0.60.40` to `/etc/dnsmasq.d/02-homelab-wildcard.conf` — fixes homepage, alertmanager, and all future subdomains in one shot                                              | 10 min    |
-| 2   | **Pi-hole DNS fix on dev-node-01**                        | Change upstream from `100.100.100.1` → `10.0.60.40` (wrong Tailscale IP set at provision time)                                                                                                                 | 5 min     |
+| 1   | ~~**Pi-hole wildcard DNS**~~ ✅                           | ~~Add `address=/.home.purvishome.com/10.0.60.40` to `/etc/dnsmasq.d/02-homelab-wildcard.conf` — fixes homepage, alertmanager, and all future subdomains in one shot~~ | ✅ Done    |
+| 2   | ~~**Pi-hole DNS fix on dev-node-01**~~ ✅                 | ~~Change upstream from `100.100.100.1` upstream to `10.0.60.40` (wrong Tailscale IP set at provision time)~~ Verified pointing to local DNS | ✅ Done    |
 | 3   | **Uptime Kuma status page**                               | Create public status page with a slug, update `widgets.yaml` kuma slug in Homepage config                                                                                                                      | 20 min    |
 | 4   | **Grafana backup-status v5 re-import**                    | Re-import `configs/monitoring/dashboards/backup-status.json` (may be running v4)                                                                                                                               | 10 min    |
 | 5   | ~~**Fix `(( idx++ ))` bug in 02-provision-vm.sh:376**~~ ✅ | ~~Change to `idx=$((idx+1))` — exits silently under `set -e` when idx=0~~ Fixed in [PR #57](https://github.com/scarredNinja/docker-swarm-home/pull/57) — all `(( ++ ))` patterns replaced with safe arithmetic | ✅ Done    |
 | 6   | ~~**Syncthing peering**~~ ✅                               | ~~Complete Windows client pairing on dev-node-01~~ Peered 2026-05-25                                                                                                                                           | ✅ Done    |
-| 7   | **Alert rule: backup job staleness**                      | Add Prometheus alert firing if backup textfile metric not updated in >26h                                                                                                                                      | 30 min    |
+| 7   | ~~**Alert rule: backup job staleness**~~ ✅                      | ~~Add Prometheus alert firing if backup textfile metric not updated in >26h~~ | ✅ Done    |
 | 8   | **UniFi 404 diagnostics**                                 | `docker service logs traefik_traefik \| grep -i unifi` on traefik-dmz-01                                                                                                                                       | 30 min    |
 | 9   | **Tailscale ERR_ADDRESS_UNREACHABLE**                     | Ping `10.0.60.1` from phone; check IP forwarding + pfSense firewall logs                                                                                                                                       | 30-60 min |
 
@@ -41,10 +55,10 @@ status: reference
 
 | Asset | Detail |
 |---|---|
-| **Primary server** | HPE DL360p Gen8 — 2× Intel Xeon, 128 GB RAM, 1U rack |
+| **Primary server** | HPE DL360p Gen8 — 2 Intel Xeon, 128 GB RAM, 1U rack |
 | **Storage** | LD01 RAID 0 (558 GiB), LD02 RAID 5 (1117 GiB), LD03 RAID 0 (838 GiB), LD04 RAID 5 999 GiB SSD |
 | **NAS** | Synology ~16.2 TB, VLAN 100, 10.0.100.20 |
-| **Switch** | Extreme X440-48p (48× 1 Gbps, PoE, LACP capable) |
+| **Switch** | Extreme X440-48p (48 1 Gbps, PoE, LACP capable) |
 | **Firewall** | pfSense — edge routing, DHCP, VLAN segmentation |
 
 ### VM Roster
@@ -79,9 +93,9 @@ All core stacks operational: `traefik` · `portainer` · `monitoring` · `plex` 
 
 ### Architecture
 - [ ] **Home Assistant in Swarm** — `network_mode: host` silently ignored in Swarm mode; mDNS/Bonjour IoT discovery broken. Should run as plain `docker compose` with host networking.
-- [ ] **NetBox on manager node** — stateful Postgres + Redis on the management plane. Move to worker once provisioned.
-- [ ] **compose-vpn is a Swarm blind spot** — systemd unit on worker-mediamanagement-01; not auto-restored by Swarm on reprovision.
-- [ ] **No backup staleness alerting** — backup textfile metrics exist but no alert fires on silence >26h.
+- [x] **NetBox on manager node** — stateful Postgres + Redis on the management plane. Move to worker once provisioned. [priority:: 1] [[NetBox & Compose-VPN Review Plan]] ✅ 2026-06-05
+- [x] **compose-vpn is a Swarm blind spot** — systemd unit on worker-mediamanagement-01; not auto-restored by Swarm on reprovision. [priority:: 2] [[NetBox & Compose-VPN Review Plan]] ✅ 2026-06-05
+- [x] **No backup staleness alerting** — backup textfile metrics exist but no alert fires on silence >26h. Alert rule configured in backups.yml ✅
 
 ---
 
@@ -95,7 +109,7 @@ manager-02 (VMID 210, 10.0.60.31) and manager-03 (VMID 211, 10.0.60.32) provisio
 
 ---
 
-### Phase B — Synology Dual NIC
+### ~~Phase B — Synology Dual NIC~~ ✅ Done 2026-05-29
 
 Split media streaming and backup traffic onto separate physical links. Synology already has two NICs — just needs cabling and config.
 
@@ -106,6 +120,7 @@ Split media streaming and backup traffic onto separate physical links. Synology 
 | **Multipath NFS** | Overkill for homelab |
 
 **Steps (dedicated IP approach):**
+- [x] Implement Synology NIC updates [priority::2] ✅ 2026-05-29
 1. Plug Synology NIC 2 into switch port tagged VLAN 60
 2. Assign static IP `10.0.60.45`
 3. Update `stack-restic.yml` NFS volume to use `10.0.60.45`
@@ -117,11 +132,11 @@ Split media streaming and backup traffic onto separate physical links. Synology 
 ### Phase C — Environment Segregation
 
 - dev-node-01 on VLAN 40 ✅ correctly isolated
-- [ ] Add `dev-public` overlay (10.200.10.0/24) — dev stacks attach here, not `traefik-public`
-- [ ] Second Traefik entrypoint (port 8444) with `*.dev.home.purvishome.com` wildcard
+- [x] Add `dev-public` overlay (10.200.10.0/24) — dev stacks attach here, not `traefik-public` ✅ 2026-06-03
+- [x] Second Traefik entrypoint (port 8444) with `*.dev.home.purvishome.com` wildcard ✅ 2026-06-03
 - [ ] Restrict VLAN 40 → VLAN 60 to specific ports only in pfSense
 - [ ] Migrate Home Assistant to plain `docker compose` with `network_mode: host` for mDNS
-- [ ] Move NetBox off manager-01 to a worker node
+- [ ] Move NetBox off manager-01 to a worker node (move to general or redeploy)
 
 ---
 
@@ -129,25 +144,18 @@ Split media streaming and backup traffic onto separate physical links. Synology 
 
 Software-only additions to the existing media stack — no new hardware required.
 
-- [ ] **Overseerr** — request management UI, integrates with Sonarr/Radarr. Add to `stack-arr.yml`
+- [x] **Seerr** — request management UI, rebranded successor of Overseerr. Add to `stack-arr.yml` Then look at profile setups ✅ 2026-06-03
 - [ ] **Bazarr** — subtitle automation, integrates with Sonarr/Radarr
 - [ ] **Recyclarr** — syncs TRaSH Guide quality profiles to Sonarr/Radarr as a cron container
-- [ ] **Jellyfin** — consider as Plex companion; no Plex Pass needed for HW transcoding, better subtitle/chapter support
 
 ---
 
-### Phase E — Dev Environment Expansion
+### 📦 Detached Advanced Projects
 
-| Service | Purpose | Priority |
-|---|---|---|
-| **Gitea / Forgejo** | Self-hosted Git — mirror GitHub repos, trigger CI | High |
-| **Woodpecker CI** | Lightweight CI/CD — auto shellcheck/yamllint on every PR | High |
-| **Harbor** | Self-hosted container registry — replace ghcr.io for custom images | Medium |
-| **code-server** | Browser-based VS Code — code from any device on LAN/VPN | Medium |
-| **n8n** | Workflow automation — Samsung Health, Plex events, Discord hooks | Medium |
-| **Vaultwarden** | Self-hosted Bitwarden password manager | Medium |
-| **Immich** | Self-hosted Google Photos — Syncthing backup path | Low |
-| **MinIO** | S3-compatible object storage for dev + restic off-site target | Low |
+To prevent scope creep and maintain absolute focus on core Swarm stability, advanced services have been migrated into their own independent, detached project boards:
+
+- 🛠️ **Developer Toolchain & CI/CD Platform:** Handled in [[06 Self-Hosted Developer Platform — Master Hub]]
+- 🧠 **Advanced Applications & ML Platforms:** Handled in [[07 Advanced Application Hosting — Master Hub]]
 
 ---
 
@@ -217,6 +225,5 @@ DL360p Gen8 has no iGPU. Options when ready:
 - [x] Migrate testing sandbox for NewtonFit to dev-node-01 (`stack-dev-newtonfit.yml`) and verify health and sync [priority:: 1] #NewtonFit ✅ 2026-05-28
 - [x] Clear/remove the existing production `newtonfit` stack from `worker-monitoring-01` until sandbox testing completes [priority:: 2] #NewtonFit ✅ 2026-05-28
 - [x] Add obsidian-mcp-server integration to **Google Antigravity** project ✅ 2026-05-25
-- [ ] Implement Git post-commit hooks triggering `session-note-writer` subagent to automate future session note-taking [priority:: 1] #Automation
-- [ ] Configure webhook-triggered vault sync to run `vault-sync` subagent automatically on Git pushes [priority:: 2] #Automation
-
+- [x] Implement Git post-commit hooks triggering `session-note-writer` subagent to automate future session note-taking [priority:: 1] #Automation ✅ 2026-05-28
+- [x] Configure webhook-triggered vault sync to run `vault-sync` subagent automatically on Git pushes [priority:: 2] #Automation ✅ 2026-05-28

@@ -1,8 +1,9 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Storage Config"
+phase: 'Phase 4: Storage Config'
 tags:
   - Storage
+status: Reference
 ---
 
 https://claude.ai/chat/3183aef4-fa64-41ee-88a4-bbdacc0e4808

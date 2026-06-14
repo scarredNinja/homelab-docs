@@ -1,4 +1,10 @@
-
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 portainer:
   image: portainer/portainer-ce:latest
   command: -H unix:///var/run/docker.sock

@@ -1,8 +1,9 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 3: Network Config"
+phase: 'Phase 3: Network Config'
 tags:
   - Networking
+status: Reference
 ---
 # High-Level Network Plan
 #HomeLabRebuild/VLAN #HomeLabRebuild/Network 

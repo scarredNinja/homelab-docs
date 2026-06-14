@@ -1,13 +1,13 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 4: Storage Config"
+phase: 'Phase 4: Storage Config'
 tags:
   - Networking
   - Proxmox
-  - vlan 
-  - lacp 
+  - vlan
+  - lacp
   - infrastructure
-
+status: Reference
 ---
 # Proxmox Network Configuration
 

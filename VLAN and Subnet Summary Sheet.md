@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 3: Network Config"
+phase: 'Phase 3: Network Config'
 tags:
   - VLAN
-  - "Subnet"
+  - Subnet
+status: Reference
 ---
 
 Network setup found: [[(Archive) - Network Correction]]
@@ -59,7 +60,7 @@ Network setup found: [[(Archive) - Network Correction]]
 | VPN Gateway      | 70       | VPN            | 10.0.75.1         | 255.255.255.128 | 10.0.75.1 | WireGuard/OpenVPN on pfSense |                                               |     |
 | Management VLAN  | 90       | Management     | 10.0.90.2         | 255.255.255.128 | 10.0.90.1 | iLO/iDRAC, switches, etc.    |                                               |     |
 | Synology         | 60       | Storage        | 10.0.60.80        | 255.255.255.128 | 10.0.60.1 | Synology Nas                 |                                               |     |
-| Synology         | 60       | Storage        | 10.0.60.11        | 255.255.255.128 | 10.0.60.1 | Synology Nas Port 2          |                                               |     |
+| Synology         | 60       | Storage        | 10.0.60.45        | 255.255.255.128 | 10.0.60.1 | Synology Nas Port 2          |                                               |     |
 | UpTime Kuma      | 60       | Admin          | 10.0.60.11        | 255.255.255.0   | 10.0.60.1 | Uptime Kuma                  |                                               |     |
 | Dashy            | 60       | Admin          | 10.0.60.30        | 255.255.255.0   | 10.0.60.1 | Main Dashboard               |                                               |     |
 | Traefik          | 60       | Infrastructure | 10.0.60.30        | 255.255.255.0   | 10.0.60.1 | Reverse Proxy                | https://traefik.home.purvishome.com/          | Y   |

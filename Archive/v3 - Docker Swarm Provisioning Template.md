@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 #HomeLabRebuild/Swarm #HomeLabRebuild/Automation
 # Docker Swarm Worker VM Provisioning (NFS + multi ZFS + autojoin)
 

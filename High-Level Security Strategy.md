@@ -1,13 +1,15 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 9: External Access"
+phase: 'Phase 9: External Access'
 tags:
   - Security
   - Networking
   - DMZ
   - Traefik
   - VPN
-date: 2026-04-21
+date: '2026-04-21T00:00:00.000Z'
+status: Reference
+service_status: deployed
 ---
 
 # High-Level Security Strategy

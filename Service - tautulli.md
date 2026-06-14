@@ -1,30 +1,27 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
   - Media
   - Monitoring
-
 service_name: Tautulli
 vm: worker-media-01
-swarm_constraint: "node.labels.type == media"
+swarm_constraint: node.labels.type == media
 vlan: 50
-
 service_status: running
 stack_file: proxmox-swarm/stacks/stack-plex.yml
-comment: "stack_file is repo-relative (Portainer Git deployment)"
+comment: stack_file is repo-relative (Portainer Git deployment)
 port: 8181
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://tautulli.home.purvishome.com
-
+url_internal: 'https://tautulli.home.purvishome.com'
 zfs_dataset: rpool/docker-data/tautulli
 mount_path: /mnt/docker-data/tautulli
-
-last_updated: 2026-05-08
+last_updated: '2026-05-08T00:00:00.000Z'
+status: Completed
 ---
 
 # Tautulli

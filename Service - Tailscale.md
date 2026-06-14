@@ -1,19 +1,18 @@
 ---
 type: pfsense-service
 project_id: Homelab-2025
-phase: "Phase 9: External Access"
+phase: 'Phase 9: External Access'
 tags:
   - Tailscale
   - VPN
   - AdminAccess
   - pfSense
-
 service_name: Tailscale
 vm: pfSense (not a Swarm service)
 service_status: running
 deployment: pfSense package (System → Package Manager)
-
-last_updated: 2026-05-08
+last_updated: '2026-05-08T00:00:00.000Z'
+status: Completed
 ---
 
 # Tailscale — Admin VPN

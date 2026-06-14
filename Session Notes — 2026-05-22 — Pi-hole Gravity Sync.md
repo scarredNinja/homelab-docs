@@ -1,12 +1,13 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-22
-phase: "Phase 3: Network Config"
+date: '2026-05-22T00:00:00.000Z'
+phase: 'Phase 3: Network Config'
 tags:
   - session-note
+  - homelab
   - pihole
   - gravity-sync
-status: Complete
+status: Completed
 ---
 
 # Session Notes — 2026-05-22 — Pi-hole Gravity Sync

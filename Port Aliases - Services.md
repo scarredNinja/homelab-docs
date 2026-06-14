@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 | Alias Name         | Ports / Protocols             | Description                  |
 | ------------------ | ----------------------------- | ---------------------------- |
 | `Plex`             | 32400 TCP                     | Plex server API / streaming  |

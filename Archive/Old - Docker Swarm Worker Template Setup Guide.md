@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 # Docker Swarm Worker Template Setup Guide
 
 > [!info] Overview This guide covers converting a Docker Swarm Manager template into a Worker template, including cleanup, configuration, and verification steps.

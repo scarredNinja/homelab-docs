@@ -1,7 +1,7 @@
 ---
 type: swarm-service
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - DockerSwarm
   - Service
@@ -15,10 +15,11 @@ stack_file: /mnt/docker-swarm/stacks/arr/stack-arr.yml
 port: 9696
 external_access: false
 traefik_entrypoint: websecure
-url_internal: https://prowlarr.home.purvishome.com
+url_internal: 'https://prowlarr.home.purvishome.com'
 zfs_dataset: rpool/docker-data/prowlarr
 mount_path: /mnt/docker-data/prowlarr
-last_updated: 2026-04-24
+last_updated: '2026-04-24T00:00:00.000Z'
+status: Completed
 ---
 
 # Prowlarr

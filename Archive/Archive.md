@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 # Archive Index
 
 Files in this folder are superseded by current docs. Kept for historical reference only — do not follow instructions or configs from these files without verifying against current state.

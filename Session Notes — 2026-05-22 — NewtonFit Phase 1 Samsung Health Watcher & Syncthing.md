@@ -1,14 +1,13 @@
 ---
-phase: "Phase 1: Ingestion & Target Sync"
+phase: 'Phase 1: Ingestion & Target Sync'
 project_id: FitnessDev-2026
-date: 2026-05-22
-status: In Progress
+date: '2026-05-22T00:00:00.000Z'
+status: Completed
 tags:
-  - newtonfit
-  - fitness-app
-  - samsung-health
+  - session-note
+  - fitness-dev
   - syncthing
-  - session-notes
+  - newtonfit
 ---
 
 # 📝 Session Notes — 2026-05-22 — NewtonFit Phase 1: Samsung Health Watcher & Syncthing
@@ -60,7 +59,7 @@ tags:
 
 **Goal**: Establish a working Syncthing sync between the Android phone and the Windows PC on the LAN.
 
-- [ ] Try setting a **static listen address** in PC Syncthing options: `tcp://10.0.4.85:22000` [priority:: 1] #Syncthing
+- [ ] Try setting a **static listen address** in PC Syncthing options: `tcp://10.0.4.85:22000` [priority:: 1] #Syncthing #deferred
 - [ ] Check if the Android phone is on a **guest/IoT VLAN** (separate subnet that blocks device-to-device traffic) [priority:: 1] #Syncthing
 - [ ] Review **NordVPN kill-switch** settings — disable kill-switch temporarily and test Syncthing connectivity [priority:: 1] #Syncthing
 - [ ] Check Windows Defender Firewall — ensure **inbound rule for port 22000** is allowed for Private networks [priority:: 2] #Syncthing
@@ -75,12 +74,12 @@ tags:
 | Samsung Health drop path | `data/imports/samsung_health/` |
 | Health Sync phone folder | `/storage/emulated/0/Download/HealthSync/` |
 
-### ⏰ 2. Schedule Obsidian Sync PowerShell Script
+### ⏰ 2. Schedule Obsidian Sync PowerShell Script (deferred)
 
-- [ ] Register the daily sync script as a Windows Task Scheduler job via `Register-ScheduledTask` [priority:: 2] #Automation
-- [ ] Script location: `automation/sync-obsidian-goals.ps1` in `docker-swarm-home` repo
-- [ ] Set trigger: **Daily at 08:00 AM** (or preferred morning time)
-- [ ] Verify the task runs correctly and updates [[Physical Goals & Biomarkers]] frontmatter
+- [ ] Register the daily sync script as a Windows Task Scheduler job via `Register-ScheduledTask` [priority:: 2] #automation #deferred
+- [ ] Script location: `automation/sync-obsidian-goals.ps1` in `docker-swarm-home` repo #deferred 
+- [ ] Set trigger: **Daily at 08:00 AM** (or preferred morning time) #deferred 
+- [ ] Verify the task runs correctly and updates [[Physical Goals & Biomarkers]] front matter #deferred
 
 ### 🚀 3. Deploy Production Updates to Docker Swarm
 

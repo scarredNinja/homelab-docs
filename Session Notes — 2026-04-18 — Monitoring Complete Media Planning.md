@@ -1,7 +1,7 @@
 ---
-date: 2026-04-18
+date: '2026-04-18T00:00:00.000Z'
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm — Monitoring + Media"
+phase: 'Phase 5: Docker Swarm — Monitoring + Media'
 tags:
   - SessionNotes
   - DockerSwarm
@@ -14,7 +14,7 @@ tags:
   - Media
   - Plex
 session_type: Planning + Code
-status: Partial — VLAN 100 blocking media NFS
+status: Completed
 ---
 
 # Session Notes — 2026-04-18

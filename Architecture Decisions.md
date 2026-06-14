@@ -1,7 +1,12 @@
 ---
-tags: [decisions, architecture, homelab]
-last_updated: 2026-05-24
+tags:
+  - decisions
+  - architecture
+  - homelab
+last_updated: '2026-05-24T00:00:00.000Z'
 project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Architecture Decisions

@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 # Homelab Rebuild - Master Checklist
 
 > **Project Status:** Preparation & Planning 
@@ -28,13 +35,13 @@
 
 ### Planning & Design
 
-- [/] **Network Diagram:** Draw detailed network diagram with all VLANs (10,20,30,40,50,60,70,75,80,90) and IP subnets #HomeLabRebuild/Network #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 🔼 ✅ 2025-09-25
+- [x] **Network Diagram:** Draw detailed network diagram with all VLANs (10,20,30,40,50,60,70,75,80,90) and IP subnets #HomeLabRebuild/Network #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 🔼 ✅ 2025-09-25
 - [x] **IP Addressing Scheme:** Define static IPs for infrastructure and DHCP ranges #HomeLabRebuild/Network #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 #todoist ⏫ ✅ 2025-08-22
 - [x]  All pfSense VLAN Rules outlined and documented ✅ 2025-08-04 #HomeLabRebuild/Network #HomeLabRebuild/pfSense #HomeLabRebuild/Documentation #todoist
-- [ ]  Update current networking config for pfSense and switch #HomeLabRebuild/Network #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 #todoist
+- [x] Update current networking config for pfSense and switch #HomeLabRebuild/Network #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 #todoist ✅ 2026-06-02
 - [x]  Update IP address scheme as configured ✅ 2025-08-04 #HomeLabRebuild/Network #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 #todoist
 - [x]  Document pfSense rules ✅ 2025-08-04 #HomeLabRebuild/pfSense #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 #todoist
-- [/] Document pfSense rules #HomeLabRebuild/pfSense #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 ⏫ 🛫 2025-07-01 ⏳ 2025-08-15 📅 2025-10-01
+- [/] Document pfSense rules #HomeLabRebuild/pfSense #HomeLabRebuild/Documentation #HomeLabRebuild/Phase1 ⏫ 🛫 2025-07-01 ⏳ 2025-08-15 📅 2026-06-19
 
 ### Infrastructure Preparation
 
@@ -72,7 +79,7 @@
 ### DNS & Core Services
 
 - [x] 🔼 **Set up DNS:** Configure DNS resolver/forwarder in pfSense (pihole) #HomeLabRebuild/pfSense #HomeLabRebuild/DNS #HomeLabRebuild/Phase3 ✅ 2025-11-03
-- [ ] 🔼 Add in the Traeflik work - internal/external #HomeLabRebuild/pfSense #HomeLabRebuild/DNS #HomeLabRebuild/Phase3 
+- [ ] 🔼 Add in the Traeflik work - internal/external #HomeLabRebuild/pfSense #HomeLabRebuild/DNS #HomeLabRebuild/Phase3  #archive 
 
 
 
@@ -110,23 +117,22 @@
 ### Infrastructure Services
 
 
-- [ ] **Deploy Proxmox Backup Server (PBS):** Create on VLAN 60, install and configure PBS #HomeLabRebuild/Backup #HomeLabRebuild/Infrastructure #HomeLabRebuild/Update
+- [ ] **Deploy Proxmox Backup Server (PBS):** Create on VLAN 60, install and configure PBS #HomeLabRebuild/Backup #HomeLabRebuild/Infrastructure #HomeLabRebuild/Update #archive 
 
 ### Application Services
 
-- [ ] Update list of work services and arwas/VLANS #HomeLabRebuild/Update ⏫ ➕ 2025-09-25 ⏳ 2025-09-26
+- [ ] Update list of work services and arwas/VLANS #HomeLabRebuild/Update ⏫ #archive
 
-- [ ]  **Deploy Media Services (VLAN 50):** Plex, qBittorrent, Tdarr with NFS mounts #HomeLabRebuild/Docker #HomeLabRebuild/Media 
-- [ ]  **Deploy Media Management (VLAN 50):** Sonarr, Radarr, Prowlarr with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/MediaMgmt 
-- [ ]  **Deploy Homelab Services (VLAN 40):** Home Assistant, Grafana with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/Homelab #todoist
-- [ ]  **Deploy Database Services (VLAN 65):** PostgreSQL, MariaDB, Redis with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/Database #todoist
-- [ ]  **Deploy DMZ Services (VLAN 80):** External Access Dashboard (Dashy) with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/DMZ #todoist
-
----
-
+- [ ]  **Deploy Media Services (VLAN 50):** Plex, qBittorrent, Tdarr with NFS mounts #HomeLabRebuild/Docker #HomeLabRebuild/Media #archive 
+- [ ]  **Deploy Media Management (VLAN 50):** Sonarr, Radarr, Prowlarr with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/MediaMgmt #archive 
+- [ ]  **Deploy Homelab Services (VLAN 40):** Home Assistant, Grafana with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/Homelab #todoist #archive 
+- [ ]  **Deploy Database Services (VLAN 65):** PostgreSQL, MariaDB, Redis with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/Database #todoist #archive 
+- [ ]  **Deploy DMZ Services (VLAN 80):** External Access Dashboard (Dashy) with NFS persistence #HomeLabRebuild/Docker #HomeLabRebuild/DMZ #todoist #archive 
 
 ---
 
 
 ---
 
+
+---

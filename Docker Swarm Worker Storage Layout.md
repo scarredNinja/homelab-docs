@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 -- old
 
 | VM Name / Role        | NFS Shares (Synology) | Optional ZFS Disks   | VM Mount Points                  | Docker Volumes                                                       | Notes                                           |

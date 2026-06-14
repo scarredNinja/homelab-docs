@@ -1,12 +1,10 @@
 ---
-
-project_id: Homelab-2025 
-phase: "Phase 5: Docker Swarm" 
+project_id: Homelab-2025
+phase: 'Phase 5: Docker Swarm'
 tags:
-
-- DockerSwarm
-- Topology
-
+  - DockerSwarm
+  - Topology
+status: Reference
 ---
 
 # Swarm Topology — Living Dashboard

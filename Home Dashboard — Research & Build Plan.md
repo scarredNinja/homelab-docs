@@ -1,19 +1,21 @@
 ---
 type: project
 project_id: Homelab-2025
-status: Research complete — build pending
+status: Reference
 tags:
   - Dashboard
   - Homepage
   - DockerSwarm
   - Monitoring
-last_updated: 2026-05-07
+last_updated: '2026-05-07T00:00:00.000Z'
+priority: High
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Home Dashboard — Research & Build Plan
 
 > [!abstract] Status
-> Research complete. **Homepage** selected. Build pending — deploy Uptime Kuma first, then proceed with stack.
+> Complete. **Homepage** selected and fully deployed. Uptime Kuma and Grafana service widgets are live, secure, and fully aligned with local secrets.
 
 ---
 
@@ -104,28 +106,28 @@ Discord webhooks are outbound-only — no dashboard can receive from Discord. Th
 > Homepage's Uptime Kuma widget connects to the Uptime Kuma API. Deploy and configure Uptime Kuma before building the dashboard so status widgets are live on first deploy.
 
 ### Step 1 — Deploy Uptime Kuma (prerequisite)
-- Pre-deploy checklist: create `/mnt/docker-data/uptime-kuma` directory on Proxmox host
-- Deploy `stack-uptime-kuma.yml` via Portainer (merged PR #16, pending deploy)
-- Configure monitors for all services
-- Verify `https://uptime-kuma.home.purvishome.com` loads
+- [x] Pre-deploy checklist: create `/mnt/docker-data/uptime-kuma` directory on Proxmox host
+- [x] Deploy `stack-uptime-kuma.yml` via Portainer (merged PR #16, pending deploy)
+- [x] Configure monitors for all services
+- [x] Verify `https://uptime-kuma.home.purvishome.com` loads
 
 ### Step 2 — Code session: build Homepage stack
 Create in repo:
-- `proxmox-swarm/stacks/dashboard/stack-homepage.yml` — Swarm stack with Traefik labels, `zone=monitoring` placement, manager node socket for label discovery
-- `proxmox-swarm/stacks/dashboard/config/settings.yaml` — title, theme, layout
-- `proxmox-swarm/stacks/dashboard/config/services.yaml` — full service list grouped by category (see above)
-- `proxmox-swarm/stacks/dashboard/config/widgets.yaml` — Uptime Kuma, Plex, Sonarr, Radarr, Prowlarr, Proxmox, UniFi
-- `proxmox-swarm/stacks/dashboard/config/bookmarks.yaml` — Grafana dashboard quick links
+- [x] `proxmox-swarm/stacks/dashboard/stack-homepage.yml` — Swarm stack with Traefik labels, `zone=monitoring` placement, manager node socket for label discovery
+- [x] `proxmox-swarm/stacks/dashboard/config/settings.yaml` — title, theme, layout
+- [x] `proxmox-swarm/stacks/dashboard/config/services.yaml` — full service list grouped by category (see above)
+- [x] `proxmox-swarm/stacks/dashboard/config/widgets.yaml` — Uptime Kuma, Plex, Sonarr, Radarr, Prowlarr, Proxmox, UniFi
+- [x] `proxmox-swarm/stacks/dashboard/config/bookmarks.yaml` — Grafana dashboard quick links
 
 ### Step 3 — Deploy and configure
-- Copy config to Proxmox host virtiofs share (or use Portainer Git integration)
-- Deploy stack via Portainer
-- Verify all widgets connect and show live data
-- Add Traefik dynamic config entry if needed
+- [x] Copy config to Proxmox host virtiofs share (or use Portainer Git integration)
+- [x] Deploy stack via Portainer
+- [x] Verify all widgets connect and show live data
+- [x] Add Traefik dynamic config entry if needed
 
 ### Step 4 — Runbook update
-- Add Homepage to Appendix C stack reference table
-- Add `https://dashboard.home.purvishome.com` to infrastructure routes
+- [x] Add Homepage to Appendix C stack reference table
+- [x] Add `https://dashboard.home.purvishome.com` to infrastructure routes
 
 ---
 

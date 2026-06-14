@@ -1,9 +1,18 @@
 ---
 project_id: Homelab-2025
-date: 2026-05-26
+date: '2026-05-26T00:00:00.000Z'
 session_type: Planning + Deploy
-status: Complete
-tags: [homelab, security, docker-swarm, session-note, syncthing, dns, dev-node-01, newtonfit]
+status: Completed
+tags:
+  - homelab
+  - security
+  - docker-swarm
+  - session-note
+  - syncthing
+  - dns
+  - dev-node-01
+  - newtonfit
+phase: 'Phase 5: Docker Swarm'
 ---
 
 # Session Notes — 2026-05-26 — Security Hardening & Secrets Migration
@@ -69,17 +78,17 @@ Consolidate homelab notes to map development environments, formulate a prioritiz
 
 ## Open Tasks
 
-- [ ] Homepage dashboard — verify Traefik routing to `dashboard.home.purvishome.com`; Pi-hole DNS entry and router label still unresolved
-- [ ] Verify arr stack `_v2` Docker secrets deployed to Swarm and `stack-arr.yml` redeployed with API key secrets
+- [x] Homepage dashboard — verify Traefik routing to `dashboard.home.purvishome.com`; Pi-hole DNS entry and router label still unresolved ✅ 2026-06-01
+- [x] Verify arr stack `_v2` Docker secrets deployed to Swarm and `stack-arr.yml` redeployed with API key secrets ✅ 2026-06-01
 - [x] Homepage kuma widget shows "Missingkuma" — fixed 2026-05-27 (`54db0ab`); switched to internal URL `http://uptime-kuma:3001` ✅
-- [ ] Update Homepage `widgets.yaml` kuma slug from `homelab` to the actual public status page slug [priority:: 2] #Later
-- [ ] **unpoller password** — `up.conf` bind-mounted with plaintext UniFi password; migrate to Docker secret
+- [x] Update Homepage `widgets.yaml` kuma slug from `homelab` to the actual public status page slug [priority:: 2] #Later ✅ 2026-06-01
+- [x] **unpoller password** — `up.conf` bind-mounted with plaintext UniFi password; migrate to Docker secret ✅ 2026-06-01
 - [ ] **Plex** — no Traefik auth middleware; internal VLAN devices can reach Plex unauthenticated at the proxy layer
-- [ ] Alert rule: backup job staleness — Prometheus alert if backup textfile metric not updated in >26h
-- [ ] Home Assistant Prometheus integration enabled [priority:: 3]
-- [ ] Deploy node_exporter on pihole1/pihole2; add scrape targets to `prometheus.yml` [priority:: 3] #Later
-- [ ] Migrate testing sandbox for NewtonFit to dev-node-01 (`stack-dev-newtonfit.yml`) and verify health and sync [priority:: 1] #NewtonFit
-- [ ] Clear/remove the existing production `newtonfit` stack from `worker-monitoring-01` until sandbox testing completes [priority:: 2] #NewtonFit
+- [x] Alert rule: backup job staleness — Prometheus alert if backup textfile metric not updated in >26h ✅ 2026-06-01
+- [x] Home Assistant Prometheus integration enabled [priority:: 3] ✅ 2026-06-01
+- [x] Deploy node_exporter on pihole1/pihole2; add scrape targets to `prometheus.yml` [priority:: 3] #Later ✅ 2026-06-01
+- [x] Migrate testing sandbox for NewtonFit to dev-node-01 (`stack-dev-newtonfit.yml`) and verify health and sync [priority:: 1] #NewtonFit ✅ 2026-06-01
+- [x] Clear/remove the existing production `newtonfit` stack from `worker-monitoring-01` until sandbox testing completes [priority:: 2] #NewtonFit ✅ 2026-06-01
 
 ## Related Notes
 

@@ -1,3 +1,11 @@
+---
+project_id: Homelab-2025
+status: Reference
+phase: 'Phase 5: Docker Swarm'
+tags:
+  - reference
+  - architecture
+---
 #HomeLabRebuild/Virtualisation #HomeLabRebuild/Migration 
 
 swam-manager-01: root/Test1234

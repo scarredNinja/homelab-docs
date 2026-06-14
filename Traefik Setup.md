@@ -1,9 +1,10 @@
 ---
 project_id: Homelab-2025
-phase: "Phase 5: Docker Swarm"
+phase: 'Phase 5: Docker Swarm'
 tags:
   - Traefik
   - DockerSwarm
+status: Reference
 ---
 
 > [!note] Superseded

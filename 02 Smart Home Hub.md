@@ -5,6 +5,7 @@ status: Planning
 tags:
   - SmartHome
   - HomeAssistant
+phase: Smart Home
 ---
 
 # 🏠 Smart Home Hub

@@ -1,3 +1,10 @@
+---
+project_id: Homelab-2025
+status: Archived
+phase: Archive
+tags:
+  - archive
+---
 # Provisioning Script Updates – Swarm Managers Storage
 
 ## Purpose

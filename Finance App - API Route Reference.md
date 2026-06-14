@@ -1,13 +1,10 @@
 ---
-
-project_id: FinanceDev-2026 
+project_id: FinanceDev-2026
 tags:
-
-- api
-- routes
-- reference
-- finance-app created: 2026-04-01
-
+  - finance-dev
+  - reference
+status: Reference
+phase: 'Phase 1: Foundation'
 ---
 
 # 📡 Finance App — API Route Reference

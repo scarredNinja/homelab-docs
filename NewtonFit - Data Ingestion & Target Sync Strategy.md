@@ -1,14 +1,15 @@
 ---
 type: technical-strategy
 project_id: FitnessDev-2026
-phase: "Phase 1: Foundation"
+phase: 'Phase 1: Foundation'
 tags:
   - Fitness
   - NewtonFit
   - DockerSwarm
   - Automation
   - TechnicalReference
-last_updated: 2026-05-21
+last_updated: '2026-05-21T00:00:00.000Z'
+status: Reference
 ---
 
 # 📈 NewtonFit — Data Ingestion & Target Sync Strategy

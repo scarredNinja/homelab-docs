@@ -1,12 +1,13 @@
 ---
 project_type: Laundry Renovation
 project_id: Laundry-2026
-status: Planning
+status: pending
 priority: Low
 tags:
   - home-improvement
   - laundry-design
   - renovation
+phase: Laundry Renovation
 ---
 
 # 🧺 Laundry Renovation Hub
